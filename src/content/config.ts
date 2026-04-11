@@ -3,7 +3,7 @@ import { defineCollection, z, reference } from "astro:content";
 
 // ── BRANDS ──────────────────────────────────────────────
 const brandsCollection = defineCollection({
-  type: "content",
+  type: "data",
   schema: z.object({
     name: z.string(),
     logo: z.string().optional(),
@@ -13,7 +13,7 @@ const brandsCollection = defineCollection({
 
 // ── CATEGORIES ──────────────────────────────────────────
 const categoriesCollection = defineCollection({
-  type: "content",
+  type: "data",
   schema: z.object({
     name: z.string(),
     description: z.string().optional(),

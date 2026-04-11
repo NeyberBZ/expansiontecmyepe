@@ -2,8 +2,8 @@
 title: Teclado Logitech G915 TKL Inalámbrico
 price: 650
 salePrice: 520
-brand: content/brands/logitech.json
-category: content/categories/perifericos.json
+brand: logitech
+category: perifericos
 locations:
   - location: content/locations/sucursal-miraflores.md
 images:
@@ -26,4 +26,4 @@ publishedAt: 2026-04-11T00:00:00.000Z
 
 ## Descripción
 
-El Logitech G915 TKL combina un diseño ultra delgado con rendimiento de alto nivel. 
+El Logitech G915 TKL combina un diseño ultra delgado con rendimiento de alto nivel.

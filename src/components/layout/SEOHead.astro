@@ -4,47 +4,58 @@ interface Props {
   title: string;
   description: string;
   image?: string;
-  type?: "website" | "product";
-  canonicalUrl?: string;
+  type?: "website" | "product" | "article";
+  canonicalURL?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
   description,
-  image = "/og-default.webp",
+  image = "/og-default.png",
   type = "website",
-  canonicalUrl,
+  canonicalURL = Astro.url.href,
+  noindex = false,
 } = Astro.props;
 
-const siteUrl = Astro.site ?? new URL("https://expansiontecmyepe.vercel.app");
-const canonical = canonicalUrl ?? new URL(Astro.url.pathname, siteUrl).href;
-const ogImage = new URL(image, siteUrl).href;
-const fullTitle = `${title} | ExpansionTec`;
+const siteName = "ExpansionTec";
+const fullTitle = title === "Inicio" ? siteName : `${title} | ${siteName}`;
+const absoluteImage = image.startsWith("http")
+  ? image
+  : new URL(image, Astro.site).href;
 ---
 
+<!-- Básico -->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="generator" content={Astro.generator} />
-<title>{fullTitle}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonical} />
-
-<!-- Open Graph -->
-<meta property="og:type" content={type} />
-<meta property="og:title" content={fullTitle} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={ogImage} />
-<meta property="og:url" content={canonical} />
-<meta property="og:site_name" content="ExpansionTec" />
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={fullTitle} />
-<meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImage} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="canonical" href={canonicalURL} />
+<title>{fullTitle}</title>
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-<!-- Fonts preconnect -->
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={absoluteImage} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:locale" content="es_PE" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteImage} />
+
+<!-- Preconnect fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://api.fontshare.com" />
+
+<!-- Performance hints -->
+<meta http-equiv="x-dns-prefetch-control" content="on" />

@@ -19,8 +19,6 @@
     "@astrojs/react": "^4.0.0",
     "@astrojs/sitemap": "^3.7.2",
     "@astrojs/tailwind": "^5.0.0",
-    "@tailwindcss/postcss": "^4.2.2",
-    "@tailwindcss/vite": "^4.2.2",
     "astro": "^5.0.0",
     "autoprefixer": "^10.4.27",
     "esbuild": "0.21.5",

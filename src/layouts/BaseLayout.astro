@@ -1,28 +1,57 @@
 ---
 // src/layouts/BaseLayout.astro
+import "../styles/global.css";
 import SEOHead from "../components/layout/SEOHead.astro";
 import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
-import "../styles/global.css";
 
 interface Props {
   title: string;
   description: string;
   image?: string;
-  type?: "website" | "product";
+  type?: "website" | "product" | "article";
+  noindex?: boolean;
 }
 
-const { title, description, image, type } = Astro.props;
+const { title, description, image, type, noindex } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
-    <SEOHead {title} {description} {image} {type} />
+    <SEOHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+    />
+    <!-- Fonts: Cabinet Grotesk (display) + Satoshi (body) -->
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=satoshi@400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Schema Organization global -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "ExpansionTec",
+        url: Astro.site,
+        logo: new URL("/favicon.svg", Astro.site).href,
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer service",
+          areaServed: "PE",
+          availableLanguage: "Spanish",
+        },
+      })}
+    />
   </head>
-  <body class="flex flex-col min-h-dvh bg-[var(--color-bg)]">
+  <body>
     <Header />
-    <main class="flex-1">
+    <main id="main-content">
       <slot />
     </main>
     <Footer />
