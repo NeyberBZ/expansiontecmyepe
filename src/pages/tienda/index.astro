@@ -1,0 +1,88 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FilterPanel from "../../components/shop/FilterPanel.tsx";
+
+// Build time — carga todos los productos con sus referencias resueltas
+const allProducts = await getCollection("products");
+
+// Resuelve referencias de brand y category para cada producto
+const productIndex = await Promise.all(
+  allProducts.map(async (p) => {
+    const brand = await getEntry(p.data.brand);
+    const category = await getEntry(p.data.category);
+    return {
+      id: p.slug,
+      title: p.data.title,
+      price: p.data.price,
+      salePrice: p.data.salePrice ?? null,
+      brand: brand?.data.name ?? "",
+      brandId: p.data.brand.id,
+      category: category?.data.name ?? "",
+      categoryId: p.data.category.id,
+      locations: p.data.locations.map((l: any) => l.location?.id ?? l.id ?? ""),
+      images: p.data.images,
+      inStock: p.data.inStock,
+      featured: p.data.featured,
+      tags: p.data.tags,
+    };
+  }),
+);
+
+// Opciones únicas para los filtros
+const brands = [...new Set(productIndex.map((p) => p.brand))].filter(Boolean);
+const categories = [...new Set(productIndex.map((p) => p.category))].filter(
+  Boolean,
+);
+const locations = [...new Set(productIndex.flatMap((p) => p.locations))].filter(
+  Boolean,
+);
+const maxPrice = Math.max(...productIndex.map((p) => p.price), 0);
+---
+
+<BaseLayout
+  title="Tienda"
+  description="Encuentra los mejores periféricos gaming y tecnología en ExpansionTec Lima."
+>
+  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+    <h1
+      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:0.5rem;"
+    >
+      Tienda
+    </h1>
+    <p style="color:var(--color-text-muted);margin-bottom:2rem;">
+      {productIndex.length} productos disponibles
+    </p>
+
+    <FilterPanel
+      client:load
+      products={productIndex}
+      brands={brands}
+      categories={categories}
+      locations={locations}
+      maxPrice={maxPrice}
+    />
+  </div>
+  <script>
+    // Sidebar filtros: visible siempre en desktop, toggle en mobile
+    const sidebar = document.getElementById("filter-sidebar");
+    const btn = document.getElementById("toggle-filters-btn");
+
+    function handleResize() {
+      if (!sidebar) return;
+      if (window.innerWidth >= 768) {
+        sidebar.style.display = "block";
+      } else {
+        sidebar.style.display = "none";
+      }
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    btn?.addEventListener("click", () => {
+      if (!sidebar) return;
+      sidebar.style.display =
+        sidebar.style.display === "none" ? "block" : "none";
+    });
+  </script>
+</BaseLayout>
