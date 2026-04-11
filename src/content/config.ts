@@ -48,7 +48,9 @@ const activationsCollection = defineCollection({
     startDate: z.date(),
     endDate: z.date(),
     location: reference("locations"),
-    products: z.array(reference("products")).optional(),
+    products: z.array(z.object({
+      product: reference("products"),
+    })).optional(),
     banner: z.string().optional(),
     isPublished: z.boolean().default(true),
   }),
@@ -63,9 +65,14 @@ const productsCollection = defineCollection({
     salePrice: z.number().positive().optional(),
     brand: reference("brands"),
     category: reference("categories"),
-    locations: z.array(reference("locations")),
+    locations: z.array(z.object({
+      location: reference("locations"),
+    })),
     images: z.array(z.string()).min(1),
-    specs: z.record(z.string()),    // { RAM: "16GB", Pantalla: "15.6\"" }
+    specs: z.array(z.object({
+      key: z.string(),
+      value: z.string(),
+    })),
     inStock: z.boolean().default(true),
     featured: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
