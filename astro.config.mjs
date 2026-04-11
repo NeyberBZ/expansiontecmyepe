@@ -7,7 +7,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  site: "https://tu-dominio.com", // ← cambiar al dominio real en Vercel
+  site: "https://expansiontecmyepe.vercel.app/", // ← cambiar al dominio real en Vercel
   output: "static",
   integrations: [
     react(),
