@@ -26,4 +26,4 @@ publishedAt: 2026-04-11T00:00:00.000Z
 
 ## Descripción
 
-El Logitech G915 TKL combina un diseño ultra delgado con rendimiento de alto nivel. Esto es una prueba
+El Logitech G915 TKL combina un diseño ultra delgado con rendimiento de alto nivel. 
