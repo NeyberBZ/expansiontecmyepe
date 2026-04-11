@@ -1,0 +1,75 @@
+---
+// src/components/layout/Footer.astro
+const year = new Date().getFullYear();
+---
+
+<footer
+  class="border-t border-[var(--color-border)] bg-[var(--color-surface)] mt-auto"
+>
+  <div class="mx-auto max-w-wide px-4 py-10">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
+      <div>
+        <p class="font-display font-bold text-[var(--color-text)] mb-2">
+          ExpansionTec
+        </p>
+        <p class="text-sm text-[var(--color-text-muted)]">
+          Tecnología y periféricos gaming en Lima. Visítanos en nuestras
+          sucursales.
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-[var(--color-text)] mb-3">
+          Navegación
+        </p>
+        <ul class="space-y-2">
+          {
+            [
+              { href: "/tienda", label: "Tienda" },
+              { href: "/sucursales", label: "Sucursales" },
+              { href: "/activaciones", label: "Activaciones" },
+              { href: "/contacto", label: "Contacto" },
+            ].map(({ href, label }) => (
+              <li>
+                <a
+                  href={href}
+                  class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)] transition-colors"
+                >
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-[var(--color-text)] mb-3">
+          Contacto
+        </p>
+        <ul class="space-y-2 text-sm text-[var(--color-text-muted)]">
+          <li>Lima, Perú</li>
+          <li>
+            <a
+              href="/contacto"
+              class="hover:text-[var(--color-primary)] transition-colors"
+            >
+              Escríbenos aquí
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-8 pt-6 border-t border-[var(--color-divider)] flex flex-col sm:flex-row items-center justify-between gap-2"
+    >
+      <p class="text-xs text-[var(--color-text-faint)]">
+        © {year} ExpansionTec. Todos los derechos reservados.
+      </p>
+      <p class="text-xs text-[var(--color-text-faint)]">
+        Hecho con <span aria-label="amor">♥</span> en Lima
+      </p>
+    </div>
+  </div>
+</footer>

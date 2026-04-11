@@ -6,10 +6,14 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "tinacms dev -c \"astro dev\"",
+    "dev": "astro dev",
+    "dev:cms": "tinacms dev -c \"astro dev\"",
     "build": "tinacms build && astro build",
     "preview": "astro preview",
     "astro": "astro"
+  },
+  "overrides": {
+    "esbuild": "0.21.5"
   },
   "dependencies": {
     "@astrojs/react": "^4.0.0",
