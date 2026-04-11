@@ -11,8 +11,8 @@ export default defineConfig({
   output: "static",
   integrations: [
     react(),
+    tailwind(),
     sitemap(),
-    tailwind({ applyBaseStyles: false }), sitemap()
   ],
   image: {
     service: {
