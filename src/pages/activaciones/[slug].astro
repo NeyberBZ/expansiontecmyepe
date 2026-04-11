@@ -1,0 +1,127 @@
+---
+// src/pages/activaciones/[slug].astro
+import { getCollection, getEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BreadCrumb from "../../components/ui/BreadCrumb.astro";
+import Badge from "../../components/ui/Badge.astro";
+
+export async function getStaticPaths() {
+  const activations = await getCollection("activations");
+  return activations.map((a: any) => ({ params: { slug: a.slug } }));
+}
+
+const { slug } = Astro.params;
+const activation = await getEntry("activations", slug!);
+if (!activation) return Astro.redirect("/activaciones");
+
+const { Content } = await activation.render();
+const location = await getEntry(activation.data.location);
+
+const now = new Date();
+const isActive =
+  new Date(activation.data.startDate) <= now &&
+  new Date(activation.data.endDate) >= now;
+const isUpcoming = new Date(activation.data.startDate) > now;
+const isPast = new Date(activation.data.endDate) < now;
+---
+
+<BaseLayout
+  title={activation.data.title}
+  description={`${activation.data.title} en ${location?.data.name}. Del ${new Date(activation.data.startDate).toLocaleDateString("es-PE")} al ${new Date(activation.data.endDate).toLocaleDateString("es-PE")}.`}
+  image={activation.data.banner}
+>
+  <div style="max-width:960px;margin:0 auto;padding:2rem 1rem;">
+    <BreadCrumb
+      crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Activaciones", href: "/activaciones" },
+        { label: activation.data.title },
+      ]}
+    />
+
+    {
+      activation.data.banner && (
+        <div style="aspect-ratio:16/6;border-radius:12px;overflow:hidden;margin-bottom:2rem;background:var(--color-surface-offset);">
+          <img
+            src={activation.data.banner}
+            alt={activation.data.title}
+            width="960"
+            height="360"
+            loading="eager"
+            style="width:100%;height:100%;object-fit:cover;"
+          />
+        </div>
+      )
+    }
+
+    <div
+      style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap;"
+    >
+      <Badge
+        variant={isActive ? "success" : isUpcoming ? "primary" : "default"}
+      >
+        {isActive ? "Activa ahora" : isUpcoming ? "Próximamente" : "Finalizada"}
+      </Badge>
+      {
+        location && (
+          <a
+            href={`/sucursales/${location.slug}`}
+            style="font-size:0.875rem;color:var(--color-primary);text-decoration:none;"
+          >
+            📍 {location.data.name}
+          </a>
+        )
+      }
+    </div>
+
+    <h1
+      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:1rem;"
+    >
+      {activation.data.title}
+    </h1>
+
+    <div
+      style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:2rem;padding:1rem 1.25rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;"
+    >
+      <div>
+        <p
+          style="font-size:0.7rem;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:0.05em;"
+        >
+          Inicio
+        </p>
+        <p style="font-size:0.9rem;font-weight:600;color:var(--color-text);">
+          {
+            new Date(activation.data.startDate).toLocaleDateString("es-PE", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </p>
+      </div>
+      <div style="width:1px;background:var(--color-divider);"></div>
+      <div>
+        <p
+          style="font-size:0.7rem;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:0.05em;"
+        >
+          Fin
+        </p>
+        <p style="font-size:0.9rem;font-weight:600;color:var(--color-text);">
+          {
+            new Date(activation.data.endDate).toLocaleDateString("es-PE", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </p>
+      </div>
+    </div>
+
+    <div style="color:var(--color-text);line-height:1.8;font-size:0.95rem;">
+      <Content />
+    </div>
+  </div>
+</BaseLayout>

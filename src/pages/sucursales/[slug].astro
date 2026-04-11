@@ -1,0 +1,183 @@
+---
+// src/pages/sucursales/[slug].astro
+import { getCollection, getEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BreadCrumb from "../../components/ui/BreadCrumb.astro";
+import Badge from "../../components/ui/Badge.astro";
+
+export async function getStaticPaths() {
+  const locations = await getCollection("locations");
+  return locations.map((l: any) => ({ params: { slug: l.slug } }));
+}
+
+const { slug } = Astro.params;
+const location = await getEntry("locations", slug!);
+if (!location) return Astro.redirect("/sucursales");
+
+const { Content } = await location.render();
+
+// Activaciones vinculadas a esta sucursal
+const allActivations = await getCollection("activations");
+const linkedActivations = allActivations.filter(
+  (a: any) => a.data.location.id === slug && a.data.isPublished,
+);
+
+const mapsUrl = `https://www.google.com/maps?q=${location.data.coordinates.lat},${location.data.coordinates.lng}`;
+const embedUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyD-placeholder&q=${location.data.coordinates.lat},${location.data.coordinates.lng}`;
+---
+
+<BaseLayout
+  title={location.data.name}
+  description={`Visita ${location.data.name} en ${location.data.address}, ${location.data.district}. ${location.data.schedule}`}
+>
+  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+    <BreadCrumb
+      crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Sucursales", href: "/sucursales" },
+        { label: location.data.name },
+      ]}
+    />
+
+    <div
+      style="display:grid;grid-template-columns:1fr;gap:2rem;"
+      id="location-layout"
+    >
+      <!-- Info principal -->
+      <div>
+        <div
+          style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;"
+        >
+          <h1
+            style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);"
+          >
+            {location.data.name}
+          </h1>
+          <Badge variant="primary">{location.data.district}</Badge>
+        </div>
+
+        <!-- Datos de contacto -->
+        <div
+          style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;"
+        >
+          <h2
+            style="font-size:0.8rem;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1rem;"
+          >
+            Información de contacto
+          </h2>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            {
+              [
+                {
+                  icon: "📍",
+                  label: "Dirección",
+                  value: `${location.data.address}, ${location.data.district}, ${location.data.city}`,
+                },
+                { icon: "📞", label: "Teléfono", value: location.data.phone },
+                { icon: "🕐", label: "Horario", value: location.data.schedule },
+                ...(location.data.email
+                  ? [{ icon: "✉️", label: "Email", value: location.data.email }]
+                  : []),
+              ].map((item) => (
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                  <span style="font-size:1.1rem;flex-shrink:0;">
+                    {item.icon}
+                  </span>
+                  <div>
+                    <p style="font-size:0.75rem;color:var(--color-text-faint);margin-bottom:2px;">
+                      {item.label}
+                    </p>
+                    <p style="font-size:0.9rem;color:var(--color-text);">
+                      {item.value}
+                    </p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Botón Google Maps -->
+        <a
+          href={mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;background:var(--color-primary);color:white;text-decoration:none;font-size:0.875rem;font-weight:600;"
+        >
+          📍 Ver en Google Maps
+        </a>
+
+        <!-- Descripción Markdown -->
+        {
+          Content && (
+            <div style="margin-top:1.5rem;color:var(--color-text);line-height:1.8;font-size:0.95rem;">
+              <Content />
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Mapa embebido -->
+      <div>
+        <div
+          style="border-radius:12px;overflow:hidden;border:1px solid var(--color-border);aspect-ratio:16/9;background:var(--color-surface-offset);display:flex;align-items:center;justify-content:center;"
+        >
+          <p
+            style="text-align:center;color:var(--color-text-muted);font-size:0.875rem;padding:2rem;"
+          >
+            🗺️ Coordenadas: {location.data.coordinates.lat}, {
+              location.data.coordinates.lng
+            }<br />
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style="color:var(--color-primary);"
+            >
+              Abrir en Google Maps →
+            </a>
+          </p>
+        </div>
+
+        <!-- Activaciones vinculadas -->
+        {
+          linkedActivations.length > 0 && (
+            <div style="margin-top:1.5rem;">
+              <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);margin-bottom:1rem;">
+                Activaciones en esta sucursal
+              </h2>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                {linkedActivations.map((act: any) => (
+                  <a
+                    href={`/activaciones/${act.slug}`}
+                    style="text-decoration:none;"
+                  >
+                    <div style="padding:12px 16px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
+                      <span style="font-size:0.875rem;font-weight:600;color:var(--color-text);">
+                        {act.data.title}
+                      </span>
+                      <span style="font-size:0.75rem;color:var(--color-text-muted);">
+                        {act.data.startDate.toLocaleDateString("es-PE")}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  function handleResize() {
+    const layout = document.getElementById("location-layout");
+    if (!layout) return;
+    layout.style.gridTemplateColumns =
+      window.innerWidth >= 768 ? "1fr 1fr" : "1fr";
+  }
+  handleResize();
+  window.addEventListener("resize", handleResize);
+</script>
