@@ -1,0 +1,292 @@
+---
+// src/pages/contacto/index.astro
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BreadCrumb from "../../components/ui/BreadCrumb.astro";
+
+const locations = await getCollection("locations", (l: any) => l.data.isActive);
+---
+
+<BaseLayout
+  title="Contacto"
+  description="Contáctanos en ExpansionTec. Estamos en Lima con varias sucursales para atenderte."
+>
+  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+    <BreadCrumb
+      crumbs={[{ label: "Inicio", href: "/" }, { label: "Contacto" }]}
+    />
+
+    <h1
+      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:0.5rem;"
+    >
+      Contacto
+    </h1>
+    <p style="color:var(--color-text-muted);margin-bottom:2rem;">
+      Escríbenos o visítanos en nuestras sucursales
+    </p>
+
+    <div
+      style="display:grid;grid-template-columns:1fr;gap:2rem;"
+      id="contact-layout"
+    >
+      <!-- Formulario -->
+      <div>
+        <div
+          style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:1.75rem;"
+        >
+          <h2
+            style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);margin-bottom:1.5rem;"
+          >
+            Envíanos un mensaje
+          </h2>
+
+          <form
+            id="contact-form"
+            style="display:flex;flex-direction:column;gap:1.25rem;"
+          >
+            <div
+              style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;"
+              id="name-email-grid"
+            >
+              <div>
+                <label
+                  for="name"
+                  style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                >
+                  Nombre *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="Tu nombre"
+                  style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;transition:border-color 180ms ease;"
+                  onfocus="this.style.borderColor='var(--color-primary)'"
+                  onblur="this.style.borderColor='var(--color-border)'"
+                />
+              </div>
+              <div>
+                <label
+                  for="email"
+                  style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                >
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="tu@email.com"
+                  style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;transition:border-color 180ms ease;"
+                  onfocus="this.style.borderColor='var(--color-primary)'"
+                  onblur="this.style.borderColor='var(--color-border)'"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="subject"
+                style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+              >
+                Asunto
+              </label>
+              <select
+                id="subject"
+                name="subject"
+                style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;cursor:pointer;"
+              >
+                <option value="">Selecciona un tema</option>
+                <option value="producto">Consulta de producto</option>
+                <option value="disponibilidad"
+                  >Disponibilidad en sucursal</option
+                >
+                <option value="precio">Precio y ofertas</option>
+                <option value="soporte">Soporte técnico</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                for="message"
+                style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+              >
+                Mensaje *
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows="5"
+                placeholder="¿En qué podemos ayudarte?"
+                style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;resize:vertical;font-family:inherit;transition:border-color 180ms ease;"
+                onfocus="this.style.borderColor='var(--color-primary)'"
+                onblur="this.style.borderColor='var(--color-border)'"
+              ></textarea>
+            </div>
+
+            <!-- Selector de sucursal -->
+            <div>
+              <label
+                for="location"
+                style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+              >
+                Sucursal de interés
+              </label>
+              <select
+                id="location"
+                name="location"
+                style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;cursor:pointer;"
+              >
+                <option value="">Cualquier sucursal</option>
+                {
+                  locations.map((loc: any) => (
+                    <option value={loc.slug}>
+                      {loc.data.name} — {loc.data.district}
+                    </option>
+                  ))
+                }
+              </select>
+            </div>
+
+            <!-- Submit -->
+            <button
+              type="submit"
+              id="submit-btn"
+              style="padding:12px 28px;border-radius:8px;background:var(--color-primary);color:white;font-weight:600;font-size:0.95rem;border:none;cursor:pointer;transition:background 180ms ease;align-self:flex-start;"
+              onmouseover="this.style.background='var(--color-primary-hover)'"
+              onmouseout="this.style.background='var(--color-primary)'"
+            >
+              Enviar mensaje →
+            </button>
+
+            <!-- Feedback -->
+            <div id="form-feedback" style="display:none;"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sucursales + Mapa -->
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <h2
+          style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);"
+        >
+          Nuestras tiendas
+        </h2>
+
+        {
+          locations.map((loc: any) => (
+            <a href={`/sucursales/${loc.slug}`} style="text-decoration:none;">
+              <div
+                style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:1rem 1.25rem;transition:box-shadow 180ms ease;"
+                onmouseover="this.style.boxShadow='0 4px 12px oklch(0.2 0.01 80/0.08)'"
+                onmouseout="this.style.boxShadow='none'"
+              >
+                <p style="font-weight:700;font-size:0.9rem;color:var(--color-text);margin-bottom:6px;">
+                  {loc.data.name}
+                </p>
+                <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;">
+                  📍 {loc.data.address}
+                </p>
+                <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;">
+                  📞 {loc.data.phone}
+                </p>
+                <p style="font-size:0.8rem;color:var(--color-text-muted);">
+                  🕐 {loc.data.schedule}
+                </p>
+              </div>
+            </a>
+          ))
+        }
+
+        <!-- Mapa estático con link -->
+        <div
+          style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;overflow:hidden;"
+        >
+          <div
+            style="padding:1rem 1.25rem;border-bottom:1px solid var(--color-divider);"
+          >
+            <p
+              style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);"
+            >
+              📍 Encuéntranos en Lima
+            </p>
+          </div>
+          <div
+            style="aspect-ratio:16/9;background:var(--color-surface-offset);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;"
+          >
+            <p style="font-size:2rem;">🗺️</p>
+            <p style="font-size:0.8rem;color:var(--color-text-muted);">
+              Lima, Perú
+            </p>
+            <a
+              href="https://www.google.com/maps/search/Lima,Peru"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="font-size:0.8rem;color:var(--color-primary);font-weight:600;"
+            >
+              Abrir Google Maps →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Layout responsive
+  function handleResize() {
+    const layout = document.getElementById("contact-layout");
+    const nameEmailGrid = document.getElementById("name-email-grid");
+    if (!layout || !nameEmailGrid) return;
+    if (window.innerWidth >= 768) {
+      layout.style.gridTemplateColumns = "1fr 1fr";
+      nameEmailGrid.style.gridTemplateColumns = "1fr 1fr";
+    } else {
+      layout.style.gridTemplateColumns = "1fr";
+      nameEmailGrid.style.gridTemplateColumns = "1fr";
+    }
+  }
+  handleResize();
+  window.addEventListener("resize", handleResize);
+
+  // Form submit — preparado para conectar con Formspree, Resend o EmailJS
+  document
+    .getElementById("contact-form")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("submit-btn") as HTMLButtonElement;
+      const feedback = document.getElementById("form-feedback")!;
+      const form = e.target as HTMLFormElement;
+
+      btn.disabled = true;
+      btn.textContent = "Enviando...";
+
+      // TODO: reemplaza esta URL con tu endpoint de Formspree o Resend
+      // const res = await fetch('https://formspree.io/f/TU_ID', {
+      //   method: 'POST',
+      //   body: new FormData(form),
+      //   headers: { Accept: 'application/json' },
+      // });
+
+      // Simulación por ahora
+      await new Promise((r) => setTimeout(r, 1000));
+      const success = true;
+
+      if (success) {
+        feedback.style.display = "block";
+        feedback.innerHTML = `<div style="padding:12px 16px;border-radius:8px;background:var(--color-primary-highlight);color:var(--color-primary);font-size:0.875rem;font-weight:600;">✅ Mensaje enviado. Te contactaremos pronto.</div>`;
+        form.reset();
+      } else {
+        feedback.style.display = "block";
+        feedback.innerHTML = `<div style="padding:12px 16px;border-radius:8px;background:#fde8e8;color:#c0392b;font-size:0.875rem;">❌ Error al enviar. Intenta nuevamente.</div>`;
+      }
+
+      btn.disabled = false;
+      btn.textContent = "Enviar mensaje →";
+    });
+</script>

@@ -7,16 +7,16 @@ import Badge from "../../components/ui/Badge.astro";
 
 const activations = await getCollection(
   "activations",
-  (a) => a.data.isPublished,
+  (a: any) => a.data.isPublished,
 );
 const sorted = activations.sort(
-  (a, b) =>
+  (a: any, b: any) =>
     new Date(a.data.startDate).getTime() - new Date(b.data.startDate).getTime(),
 );
 
 const now = new Date();
-const upcoming = sorted.filter((a) => new Date(a.data.endDate) >= now);
-const past = sorted.filter((a) => new Date(a.data.endDate) < now);
+const upcoming = sorted.filter((a: any) => new Date(a.data.endDate) >= now);
+const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
 ---
 
 <BaseLayout
@@ -107,7 +107,7 @@ const past = sorted.filter((a) => new Date(a.data.endDate) < now);
             Anteriores
           </h2>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            {past.map(async (act) => {
+            {past.map(async (act: any) => {
               const loc = await getEntry(act.data.location);
               const endStr = new Date(act.data.endDate).toLocaleDateString(
                 "es-PE",
