@@ -8,7 +8,7 @@ const allProducts = await getCollection("products");
 
 // Resuelve referencias de brand y category para cada producto
 const productIndex = await Promise.all(
-  allProducts.map(async (p) => {
+  allProducts.map(async (p: any) => {
     const brand = await getEntry(p.data.brand);
     const category = await getEntry(p.data.category);
     return {

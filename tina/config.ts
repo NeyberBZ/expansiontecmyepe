@@ -26,7 +26,7 @@ export default defineConfig({
         name: "brands",
         label: "Marcas",
         path: "src/content/brands",
-        format: "json",
+        format: "md",
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true },
           { type: "image", name: "logo", label: "Logo" },
