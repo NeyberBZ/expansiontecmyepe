@@ -1,6 +1,21 @@
 // src/content/config.ts
 import { defineCollection, z, reference } from "astro:content";
 
+// ── SLIDERS ──────────────────────────────────────────────
+const sliders = defineCollection({
+  type: "data",
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    ctaLabel: z.string().optional(),
+    ctaUrl: z.string().optional(),
+    image: z.string(),        // URL de TinaCMS
+    imageAlt: z.string().optional(),
+    order: z.number().default(0),
+    active: z.boolean().default(true),
+  }),
+});
+
 // ── BRANDS ──────────────────────────────────────────────
 const brandsCollection = defineCollection({
   type: "data",
@@ -88,4 +103,5 @@ export const collections = {
   brands: brandsCollection,
   locations: locationsCollection,
   activations: activationsCollection,
+  sliders
 };

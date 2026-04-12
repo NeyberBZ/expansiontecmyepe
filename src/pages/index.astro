@@ -3,6 +3,7 @@
 import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Badge from "../components/ui/Badge.astro";
+import HeroSlider from "../components/home/HeroSlider.astro";
 
 // Productos destacados
 const allProducts = await getCollection("products");
@@ -53,7 +54,7 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
   description="ExpansionTec — Tecnología y periféricos gaming al mejor precio en Lima. Visítanos en nuestras sucursales."
 >
   <!-- HERO -->
-  <section
+  <!-- <section
     style="background:linear-gradient(135deg,var(--color-surface) 0%,var(--color-surface-offset) 100%);border-bottom:1px solid var(--color-border);padding:clamp(3rem,8vw,6rem) 1rem;"
   >
     <div style="max-width:960px;margin:0 auto;text-align:center;">
@@ -92,7 +93,9 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
         </a>
       </div>
     </div>
-  </section>
+  </section> -->
+
+  <HeroSlider />
 
   <!-- STATS -->
   <section

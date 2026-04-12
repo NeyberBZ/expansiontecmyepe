@@ -1,0 +1,107 @@
+---
+import { getCollection } from "astro:content";
+
+const allSlides = await getCollection("sliders");
+const slides = allSlides
+  .filter((s: any) => s.data.active)
+  .sort((a: any, b: any) => a.data.order - b.data.order);
+---
+
+<section class="hero-slider relative w-full overflow-hidden" style="height: 420px;">
+  <!-- Slides -->
+  {slides.map((slide: any, i: number) => (
+    <div
+      class={`slide absolute inset-0 transition-opacity duration-700 ${i === 0 ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+      data-index={i}
+    >
+      <!-- Imagen de fondo -->
+      <img
+        src={slide.data.image}
+        alt={slide.data.imageAlt ?? slide.data.title}
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+      <!-- Overlay oscuro -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10"></div>
+
+      <!-- Contenido -->
+      <div class="relative z-10 h-full flex flex-col justify-center px-12 max-w-2xl">
+        <h2 class="text-white font-display font-black text-5xl md:text-6xl leading-tight mb-3">
+          {slide.data.title}
+        </h2>
+        {slide.data.subtitle && (
+          <p class="text-white/80 text-lg mb-6">{slide.data.subtitle}</p>
+        )}
+        {slide.data.ctaUrl && slide.data.ctaLabel && (
+          <a
+            href={slide.data.ctaUrl}
+            class="inline-flex items-center gap-2 self-start border border-white text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-white hover:text-black transition-colors duration-200"
+          >
+            {slide.data.ctaLabel}
+            <span>→</span>
+          </a>
+        )}
+      </div>
+    </div>
+  ))}
+
+  <!-- Flecha izquierda -->
+  <button
+    id="prev-btn"
+    aria-label="Slide anterior"
+    class="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+  >‹</button>
+
+  <!-- Flecha derecha -->
+  <button
+    id="next-btn"
+    aria-label="Siguiente slide"
+    class="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+  >›</button>
+
+  <!-- Dots -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+    {slides.map((_: any, i: number) => (
+      <button
+        class={`dot h-1 rounded-full transition-all duration-300 ${i === 0 ? "w-6 bg-white" : "w-2 bg-white/40"}`}
+        data-dot={i}
+        aria-label={`Ir al slide ${i + 1}`}
+      />
+    ))}
+  </div>
+</section>
+
+<script>
+  const slides = document.querySelectorAll<HTMLElement>(".slide");
+  const dots = document.querySelectorAll<HTMLElement>(".dot");
+  let current = 0;
+  let timer: ReturnType<typeof setInterval>;
+
+  function goTo(index: number) {
+    slides[current].classList.replace("opacity-100", "opacity-0");
+    slides[current].classList.replace("z-10", "z-0");
+    dots[current].classList.remove("w-6", "bg-white");
+    dots[current].classList.add("w-2", "bg-white/40");
+
+    current = (index + slides.length) % slides.length;
+
+    slides[current].classList.replace("opacity-0", "opacity-100");
+    slides[current].classList.replace("z-0", "z-10");
+    dots[current].classList.remove("w-2", "bg-white/40");
+    dots[current].classList.add("w-6", "bg-white");
+  }
+
+  function startTimer() {
+    timer = setInterval(() => goTo(current + 1), 5000);
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    startTimer();
+  }
+
+  document.getElementById("prev-btn")?.addEventListener("click", () => { goTo(current - 1); resetTimer(); });
+  document.getElementById("next-btn")?.addEventListener("click", () => { goTo(current + 1); resetTimer(); });
+  dots.forEach((dot, i) => dot.addEventListener("click", () => { goTo(i); resetTimer(); }));
+
+  startTimer();
+</script>

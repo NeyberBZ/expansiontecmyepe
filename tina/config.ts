@@ -1,5 +1,6 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
+import { slidersCollection } from "./collections/sliders";
 
 export default defineConfig({
   branch: "main",
@@ -20,6 +21,9 @@ export default defineConfig({
 
   schema: {
     collections: [
+
+      // ── SLIDERS ──────────────────────────────────────
+      slidersCollection,
 
       // ── BRANDS ──────────────────────────────────────
       {
