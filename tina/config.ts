@@ -47,7 +47,8 @@ export default defineConfig({
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true },
           { type: "string", name: "description", label: "Descripción" },
-          { type: "string", name: "icon", label: "Ícono" },
+          { type: "image",  name: "image",       label: "Imagen" },       // ← cambio
+          { type: "string", name: "slug",        label: "Slug URL" },
         ],
       },
 

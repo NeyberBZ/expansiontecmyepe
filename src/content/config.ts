@@ -32,7 +32,8 @@ const categoriesCollection = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string().optional(),
-    icon: z.string().optional(),
+    image: z.string().optional(),    // ← reemplaza icon
+    slug: z.string().optional(),     // ← útil para filtrar productos por categoría
   }),
 });
 

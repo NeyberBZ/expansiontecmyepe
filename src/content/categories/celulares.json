@@ -1,5 +1,6 @@
 {
   "name": "Celulares",
   "description": "Smartphones y accesorios móviles",
-  "icon": "smartphone"
+  "image": "/uploads/moviles.webp",
+  "slug": "celulares"
 }
