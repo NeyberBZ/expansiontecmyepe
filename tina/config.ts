@@ -47,8 +47,10 @@ export default defineConfig({
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true },
           { type: "string", name: "description", label: "Descripción" },
-          { type: "image",  name: "image",       label: "Imagen" },       // ← cambio
-          { type: "string", name: "slug",        label: "Slug URL" },
+          { type: "image",  name: "image", label: "Imagen" },       // ← cambio
+          { type: "image",  name: "featuredImage",  label: "Imagen destacada (card grande)" },
+          { type: "image",  name: "banner", label: "Banner (cabecera de página)" },
+          { type: "string", name: "slug", label: "Slug URL" },
         ],
       },
 

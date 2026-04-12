@@ -33,6 +33,8 @@ const categoriesCollection = defineCollection({
     name: z.string(),
     description: z.string().optional(),
     image: z.string().optional(),    // ← reemplaza icon
+    featuredImage: z.string().optional(),   // card grande en home
+    banner: z.string().optional(),   // hero en página /categoria/[slug]
     slug: z.string().optional(),     // ← útil para filtrar productos por categoría
   }),
 });

@@ -2,5 +2,6 @@
   "name": "Accesorios",
   "description": "Teclados, mouse, headsets y accesorios",
   "image": "/uploads/accesorios.webp",
+  "featuredImage": "/uploads/accesorios.webp",
   "slug": "accesorios"
 }

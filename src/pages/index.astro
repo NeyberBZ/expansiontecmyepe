@@ -4,6 +4,7 @@ import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Badge from "../components/ui/Badge.astro";
 import HeroSlider from "../components/home/HeroSlider.astro";
+import CategoryList from "../components/home/CategoryList.astro";
 
 // Productos destacados
 const allProducts = await getCollection("products");
@@ -96,6 +97,7 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
   </section> -->
 
   <HeroSlider />
+  <CategoryList />
 
   <!-- STATS -->
   <section
