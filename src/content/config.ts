@@ -63,8 +63,8 @@ const activationsCollection = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
-    startDate: z.date(),
-    endDate: z.date(),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date(),
     location: reference("locations"),
     products: z.array(z.object({
       product: reference("products"),
