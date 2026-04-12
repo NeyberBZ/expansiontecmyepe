@@ -96,7 +96,7 @@ const productsCollection = defineCollection({
     tags: z.array(z.string()).default([]),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
-    publishedAt: z.date().default(() => new Date()),
+    publishedAt: z.coerce.date().default(() => new Date()),
   }),
 });
 

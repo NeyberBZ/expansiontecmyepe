@@ -1,10 +1,10 @@
 ---
 title: "REDMI Pad 2 Pro Keyboard"
-price: 0
-brand: "brands/redmi"
-category: "categories/accesorios"
+price: 1
+brand: "redmi"
+category: "accesorios"
 locations:
-  - location: "locations/villa-maria-del-triunfo"
+  - location: "villa-maria-del-triunfo"
 images:
   - "/uploads/products/redmi-pad-2-pro-keyboard-1.png"
   - "/uploads/products/redmi-pad-2-pro-keyboard-2.png"

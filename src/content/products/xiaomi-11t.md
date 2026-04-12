@@ -1,11 +1,11 @@
 ---
 title: "Redmi Note 15 Pro + 5G"
-price: 0
-brand: "brands/xiaomi"
-category: "categories/celulares"
+price: 1
+brand: "xiaomi"
+category: "celulares"
 locations:
-  - location: "locations/los-olivos"
-  - location: "locations/santa-anita"
+  - location: "los-olivos"
+  - location: "santa-anita"
 images:
   - "/uploads/products/xiaomi-11t-1.webp"
   - "/uploads/products/xiaomi-11t-2.png"

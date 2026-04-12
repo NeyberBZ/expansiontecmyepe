@@ -1,10 +1,10 @@
 ---
 title: "Redmi Smart Pen"
-price: 0
-brand: "brands/redmi"
-category: "categories/accesorios"
+price: 1
+brand: "redmi"
+category: "accesorios"
 locations:
-  - location: "locations/villa-maria-del-triunfo"
+  - location: "villa-maria-del-triunfo"
 images:
   - "/uploads/products/redmi-smart-pen-1.png"
   - "/uploads/products/redmi-smart-pen-2.png"

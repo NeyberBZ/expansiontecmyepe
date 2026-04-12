@@ -1,11 +1,11 @@
 ---
 title: "POCO F8 Pro 5G"
-price: 0
-brand: "brands/xiaomi"
-category: "categories/celulares"
+price: 1
+brand: "xiaomi"
+category: "celulares"
 locations:
-  - location: "locations/los-olivos"
-  - location: "locations/santa-anita"
+  - location: "los-olivos"
+  - location: "santa-anita"
 images:
   - "/uploads/products/poco-f8-pro-5g-1.png"
   - "/uploads/products/poco-f8-pro-5g-2.png"
