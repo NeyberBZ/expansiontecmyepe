@@ -79,6 +79,7 @@ const productsCollection = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
+    shortDescription: z.string().optional(),
     price: z.number().positive(),
     salePrice: z.number().positive().optional(),
     brand: reference("brands"),

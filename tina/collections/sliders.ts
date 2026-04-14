@@ -9,8 +9,8 @@ export const slidersCollection: Collection = {
     allowedActions: { create: true, delete: true },
   },
   fields: [
-    { type: "string",  name: "title",     label: "Título",      required: true },
-    { type: "string",  name: "subtitle",  label: "Subtítulo" },
+    { type: "string",  name: "title",     label: "Título", required: true, searchable: true },
+    { type: "string",  name: "subtitle",  label: "Subtítulo", searchable: true },
     { type: "string",  name: "ctaLabel",  label: "Texto del botón" },
     { type: "string",  name: "ctaUrl",    label: "URL del botón" },
     { type: "image",   name: "image",     label: "Imagen de fondo", required: true },

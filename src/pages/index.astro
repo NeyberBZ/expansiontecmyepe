@@ -5,6 +5,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Badge from "../components/ui/Badge.astro";
 import HeroSlider from "../components/home/HeroSlider.astro";
 import CategoryList from "../components/home/CategoryList.astro";
+import Icon from "../components/ui/Icon.astro";
 
 // Productos destacados
 const allProducts = await getCollection("products");
@@ -87,21 +88,25 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
   <!-- PRODUCTOS DESTACADOS -->
   {
     featuredWithData.length > 0 && (
-      <section style="padding:clamp(2rem,5vw,4rem) 1rem;">
-        <div style="max-width:1200px;margin:0 auto;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:8px;">
-            <h2 style="font-family:var(--font-display);font-size:clamp(1.25rem,1rem+1vw,1.75rem);font-weight:700;color:var(--color-text);">
-              Productos destacados
-            </h2>
-            <a
-              href="/tienda"
-              style="font-size:0.875rem;color:var(--color-primary);font-weight:600;text-decoration:none;"
-            >
-              Ver todos →
-            </a>
+      <section class="py-12 sm:py-16">
+        <div class="container mx-auto px-4">
+          <div class="flex justify-center items-center mb-8">
+            <div class="flex items-center gap-3">
+              <Icon id="icon-bag" name="bag" class="w-8 h-8 text-orange-500" />
+              <h2 class="font-satoshi text-3xl sm:text-4xl font-medium text-gray-900">
+                Productos Destacados
+              </h2>
+              {/* <a
+                href="/tienda"
+                style="font-size:0.875rem;color:var(--color-primary);font-weight:600;text-decoration:none;"
+              >
+                Ver todos →
+              </a> */}
+            </div>
           </div>
-
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:1rem;">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+          >
             {featuredWithData.map((p) => {
               const discount = p.data.salePrice
                 ? Math.round((1 - p.data.salePrice / p.data.price) * 100)
@@ -109,53 +114,87 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
               return (
                 <a href={`/tienda/${p.slug}`} style="text-decoration:none;">
                   <article
-                    style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;height:100%;transition:box-shadow 180ms ease,transform 180ms ease;"
-                    onmouseover="this.style.boxShadow='0 8px 24px oklch(0.2 0.01 80/0.12)';this.style.transform='translateY(-2px)'"
-                    onmouseout="this.style.boxShadow='none';this.style.transform='none'"
+                    class="group relative bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
                   >
-                    <div style="aspect-ratio:4/3;background:var(--color-surface-offset);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
-                      {p.data.images[0] ? (
-                        <img
-                          src={p.data.images[0]}
-                          alt={p.data.title}
-                          loading="lazy"
-                          width="400"
-                          height="300"
-                          style="width:100%;height:100%;object-fit:cover;"
-                        />
-                      ) : (
-                        <span style="font-size:3rem;">📦</span>
-                      )}
-                      {discount && (
-                        <span style="position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:999px;background:var(--color-error);color:white;font-size:0.7rem;font-weight:700;">
-                          -{discount}%
-                        </span>
-                      )}
-                    </div>
-                    <div style="padding:1rem;">
-                      <p style="font-size:0.7rem;color:var(--color-text-muted);margin-bottom:4px;">
-                        {p.brandName} · {p.categoryName}
-                      </p>
-                      <h3 style="font-size:0.875rem;font-weight:600;color:var(--color-text);margin-bottom:8px;line-height:1.3;">
+                    <!-- Contenido izquierdo -->
+                    <div class="relative p-4 flex flex-col gap-1">
+
+                      <!-- Título -->
+                      <h3
+                        class="font-bold text-base sm:text-lg text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2"
+                      >
                         {p.data.title}
                       </h3>
-                      <div style="display:flex;align-items:center;gap:8px;">
-                        {p.data.salePrice ? (
-                          <>
-                            <span style="font-weight:700;color:var(--color-primary);">
-                              S/ {p.data.salePrice}
-                            </span>
-                            <span style="font-size:0.8rem;color:var(--color-text-faint);text-decoration:line-through;">
-                              S/ {p.data.price}
-                            </span>
-                          </>
-                        ) : (
-                          <span style="font-weight:700;color:var(--color-text);">
-                            S/ {p.data.price}
+
+                      {p.data.shortDescription && (
+                        <p class="text-[0.75rem] text-gray-600 line-clamp-1">
+                          {p.data.shortDescription}
+                        </p>
+                      )}
+
+                      <!-- Badge "Te ahorras" -->
+                      {p.data.salePrice && (
+                        <div class="flex flex-wrap gap-2">
+                          <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
+                            Te ahorras {(p.data.price - p.data.salePrice).toFixed(0)} S/
                           </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 h-full">
+                      {/* Columna 1: Información del producto */}
+                      <div class="p-4 flex flex-col justify-between">
+                        <!-- Spacer para empujar el contenido hacia abajo -->
+                        <div class="flex-1"></div>
+                        <!-- Precios -->
+                        <div>
+                          {p.data.salePrice ? (
+                            <div class="space-y-1">
+                              <div class="flex flex-col gap-1">
+                                <p class="text-xs text-gray-500">De</p>
+                                <p class="text-xl font-bold text-gray-900">
+                                  S/ {p.data.salePrice.toFixed(2)}
+                                </p>
+                                <p class="text-sm text-gray-400 line-through">
+                                  S/ {p.data.price.toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <p class="text-xl font-bold text-gray-900">
+                              S/ {p.data.price.toFixed(2)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {/* Columna 2: Imagen del producto */}
+                      <div class="relative">
+                        {p.data.images[0] ? (
+                          <img
+                            src={p.data.images[0]}
+                            alt={p.data.title}
+                            class="w-full h-full object-contain p-1 transform group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            width="200"
+                            height="200"
+                          />
+                        ) : (
+                          <div class="w-full h-full flex items-center justify-center bg-gray-50 rounded-lg">
+                            <Icon id="icon-image" name="image" class="w-12 h-12 text-gray-300" />
+                          </div>
                         )}
                       </div>
                     </div>
+
+                    <!-- Descuento % (opcional, esquina superior derecha) -->
+                    {discount && (
+                      <span
+                        class="absolute top-4 right-4 px-2 py-1 bg-orange-600 text-white text-xs font-bold rounded-full"
+                      >
+                        -{discount}%
+                      </span>
+                    )}
                   </article>
                 </a>
               );

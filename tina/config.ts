@@ -7,6 +7,15 @@ export default defineConfig({
   clientId: process.env.TINA_CLIENT_ID ?? "",
   token: process.env.TINA_TOKEN ?? "",
 
+  search: {
+    tina: {
+      indexerToken: process.env.TINA_SEARCH_TOKEN ?? "",
+      stopwordLanguages: ["spa"],
+    },
+    indexBatchSize: 100,
+    maxSearchIndexFieldLength: 100,
+  },
+
   media: {
     tina: {
       mediaRoot: "uploads",
@@ -32,9 +41,9 @@ export default defineConfig({
         path: "src/content/brands",
         format: "json",
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true },
+          { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
           { type: "image", name: "logo", label: "Logo" },
-          { type: "string", name: "website", label: "Sitio web" },
+          { type: "string", name: "website", label: "Sitio web", searchable: true },
         ],
       },
 
@@ -45,12 +54,12 @@ export default defineConfig({
         path: "src/content/categories",
         format: "json",
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true },
-          { type: "string", name: "description", label: "Descripción" },
-          { type: "image",  name: "image", label: "Imagen" },       // ← cambio
-          { type: "image",  name: "featuredImage",  label: "Imagen destacada (card grande)" },
-          { type: "image",  name: "banner", label: "Banner (cabecera de página)" },
-          { type: "string", name: "slug", label: "Slug URL" },
+          { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
+          { type: "string", name: "description", label: "Descripción", searchable: true },
+          { type: "image",  name: "image", label: "Imagen", searchable: true },       // ← cambio
+          { type: "image",  name: "featuredImage",  label: "Imagen destacada (card grande)", searchable: true },
+          { type: "image",  name: "banner", label: "Banner (cabecera de página)", searchable: true },
+          { type: "string", name: "slug", label: "Slug URL", searchable: true },
         ],
       },
 
@@ -61,12 +70,12 @@ export default defineConfig({
         path: "src/content/locations",
         format: "md",
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true },
-          { type: "string", name: "district", label: "Distrito", required: true },
-          { type: "string", name: "city", label: "Ciudad" },
-          { type: "string", name: "address", label: "Dirección", required: true },
-          { type: "string", name: "phone", label: "Teléfono", required: true },
-          { type: "string", name: "email", label: "Email" },
+          { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
+          { type: "string", name: "district", label: "Distrito", required: true, searchable: true },
+          { type: "string", name: "city", label: "Ciudad", searchable: true },
+          { type: "string", name: "address", label: "Dirección", required: true, searchable: true },
+          { type: "string", name: "phone", label: "Teléfono", required: true, searchable: true },
+          { type: "string", name: "email", label: "Email", searchable: true },
           {
             type: "object",
             name: "coordinates",
@@ -89,7 +98,7 @@ export default defineConfig({
         path: "src/content/activations",
         format: "md",
         fields: [
-          { type: "string", name: "title", label: "Título", required: true },
+          { type: "string", name: "title", label: "Título", required: true, searchable: true },
           { type: "datetime", name: "startDate", label: "Fecha inicio", required: true },
           { type: "datetime", name: "endDate", label: "Fecha fin", required: true },
           {
@@ -126,15 +135,17 @@ export default defineConfig({
         path: "src/content/products",
         format: "md",
         fields: [
-          { type: "string", name: "title", label: "Nombre del producto", required: true },
-          { type: "number", name: "price", label: "Precio", required: true },
-          { type: "number", name: "salePrice", label: "Precio oferta" },
+          { type: "string", name: "title", label: "Nombre del producto", required: true, searchable: true },
+          { type: "string", name: "shortDescription", label: "Descripción corta",  ui: { component: "textarea" }, searchable: true },
+          { type: "number", name: "price", label: "Precio", required: true, searchable: true },
+          { type: "number", name: "salePrice", label: "Precio oferta", searchable: true },
           {
             type: "reference",
             name: "brand",
             label: "Marca",
             collections: ["brands"],
             required: true,
+            searchable: true,
           },
           {
             type: "reference",
@@ -142,6 +153,7 @@ export default defineConfig({
             label: "Categoría",
             collections: ["categories"],
             required: true,
+            searchable: true,
           },
           {
             type: "object",
@@ -156,6 +168,7 @@ export default defineConfig({
                 collections: ["locations"],
               },
             ],
+            searchable: true,
           },
           {
             type: "image",
