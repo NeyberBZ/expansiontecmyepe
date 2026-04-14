@@ -43,7 +43,7 @@ export default defineConfig({
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
           { type: "image", name: "logo", label: "Logo" },
-          { type: "string", name: "website", label: "Sitio web", searchable: true },
+          { type: "string", name: "website", label: "Sitio web", searchable: false },
         ],
       },
 
@@ -56,10 +56,10 @@ export default defineConfig({
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
           { type: "string", name: "description", label: "Descripción", searchable: true },
-          { type: "image",  name: "image", label: "Imagen", searchable: true },       // ← cambio
-          { type: "image",  name: "featuredImage",  label: "Imagen destacada (card grande)", searchable: true },
-          { type: "image",  name: "banner", label: "Banner (cabecera de página)", searchable: true },
-          { type: "string", name: "slug", label: "Slug URL", searchable: true },
+          { type: "image",  name: "image", label: "Imagen", searchable: false },       // ← cambio
+          { type: "image",  name: "featuredImage", label: "Imagen destacada (card grande)", searchable: false },
+          { type: "image",  name: "banner", label: "Banner (cabecera de página)", searchable: false },
+          { type: "string", name: "slug", label: "Slug URL", searchable: false },
         ],
       },
 
@@ -74,8 +74,8 @@ export default defineConfig({
           { type: "string", name: "district", label: "Distrito", required: true, searchable: true },
           { type: "string", name: "city", label: "Ciudad", searchable: true },
           { type: "string", name: "address", label: "Dirección", required: true, searchable: true },
-          { type: "string", name: "phone", label: "Teléfono", required: true, searchable: true },
-          { type: "string", name: "email", label: "Email", searchable: true },
+          { type: "string", name: "phone", label: "Teléfono", required: true, searchable: false },
+          { type: "string", name: "email", label: "Email", searchable: false },
           {
             type: "object",
             name: "coordinates",
@@ -137,8 +137,8 @@ export default defineConfig({
         fields: [
           { type: "string", name: "title", label: "Nombre del producto", required: true, searchable: true },
           { type: "string", name: "shortDescription", label: "Descripción corta",  ui: { component: "textarea" }, searchable: true },
-          { type: "number", name: "price", label: "Precio", required: true, searchable: true },
-          { type: "number", name: "salePrice", label: "Precio oferta", searchable: true },
+          { type: "number", name: "price", label: "Precio", required: true, searchable: false },
+          { type: "number", name: "salePrice", label: "Precio oferta", searchable: false },
           {
             type: "reference",
             name: "brand",
