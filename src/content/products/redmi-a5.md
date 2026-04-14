@@ -7,11 +7,7 @@ locations:
   - location: los-olivos
   - location: santa-anita
 images:
-  - /uploads/products/redmi-a5-1.png
-  - /uploads/products/redmi-a5-2.png
-  - /uploads/products/redmi-a5-3.png
-  - /uploads/products/redmi-a5-4.png
-  - /uploads/products/redmi-a5-5.png
+  - /uploads/e49c493667d44960797bdb900abad611.png
 specs:
   - key: Sistema Operativo
     value: Xiaomi HyperOS 2
