@@ -7,11 +7,11 @@ const slides = allSlides
   .sort((a: any, b: any) => a.data.order - b.data.order);
 ---
 
-<section class="hero-slider relative w-full overflow-hidden" style="height: 420px;">
+<section class="hero-slider relative w-full h-96 md:h-96 lg:h-[480px] overflow-hidden">
   <!-- Slides -->
   {slides.map((slide: any, i: number) => (
     <div
-      class={`slide absolute inset-0 transition-opacity duration-700 ${i === 0 ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+      class={`slide absolute inset-0 transition-opacity w-full h-full duration-700 ${i === 0 ? "opacity-100 z-10" : "opacity-0 z-0"}`}
       data-index={i}
     >
       <!-- Imagen de fondo -->
