@@ -117,21 +117,19 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
                     class="group relative bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
                   >
                     <!-- Contenido izquierdo -->
-                    <div class="relative p-4 flex flex-col gap-1">
-
+                    <div class="relative p-4 flex flex-col gap-1 min-h-28">
                       <!-- Título -->
-                      <h3
-                        class="font-bold text-base sm:text-lg text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2"
-                      >
+                      <h3 class="font-bold text-base sm:text-lg text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2" >
                         {p.data.title}
                       </h3>
-
-                      {p.data.shortDescription && (
-                        <p class="text-[0.75rem] text-gray-600 line-clamp-1">
-                          {p.data.shortDescription}
-                        </p>
-                      )}
-
+                      {/* DESCRIPCION  */}
+                      <div class="">
+                        {p.data.shortDescription && (
+                          <div class="text-[0.75rem] text-gray-600 line-clamp-1">
+                            {p.data.shortDescription}
+                          </div>
+                        )}
+                      </div>
                       <!-- Badge "Te ahorras" -->
                       {p.data.salePrice && (
                         <div class="flex flex-wrap gap-2">

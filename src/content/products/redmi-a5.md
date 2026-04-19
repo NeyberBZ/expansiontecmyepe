@@ -1,8 +1,9 @@
 ---
 title: Redmi A5
-price: 1
-brand: xiaomi
-category: celulares
+price: 450
+salePrice: 320
+brand: src/content/brands/redmi.json
+category: src/content/categories/celulares.json
 locations:
   - location: los-olivos
   - location: santa-anita
