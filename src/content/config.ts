@@ -98,6 +98,8 @@ const productsCollection = defineCollection({
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     publishedAt: z.coerce.date().default(() => new Date()),
+    stockQuantity: z.number().int().min(0).default(0), // ← NUEVO
+    maxPerOrder: z.number().int().min(1).default(5), // ← NUEVO (límite)
   }),
 });
 

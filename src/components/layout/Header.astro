@@ -1,6 +1,7 @@
 ---
 // src/components/layout/Header.astro
 import Icon from "../../components/ui/Icon.astro";
+import CartIcon from "../../components/shop/CartIcon.tsx";
 const navLinks = [
   { href: "/tienda", label: "Tienda" },
   { href: "/sucursales", label: "Sucursales" },
@@ -117,6 +118,8 @@ const currentPath = Astro.url.pathname;
           <Icon id="icon-search" name="search" class="w-5 h-5" />
         </button>
 
+        <CartIcon client:load />
+
         <!-- Dark/Light toggle -->
         <button
           data-theme-toggle
@@ -167,11 +170,7 @@ const currentPath = Astro.url.pathname;
               class="px-3.5 py-1.5 font-medium text-base tracking-wider text-gray-700 hover:text-orange-600 dark:text-gray-200 dark:hover:text-red-600"
               style={`
               transition: all 180ms ease;
-              ${
-                isActive
-                  ? "color: #cc2200;"
-                  : "color: #374151;"
-              }
+              ${isActive ? "color: #cc2200;" : "color: #374151;"}
             `}
             >
               {label}

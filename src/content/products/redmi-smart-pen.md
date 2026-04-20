@@ -1,8 +1,8 @@
 ---
 title: Redmi Smart Pen
 price: 250
-brand: src/content/brands/redmi.json
-category: src/content/categories/accesorios.json
+brand: redmi
+category: accesorios
 locations:
   - location: villa-maria-del-triunfo
 images:

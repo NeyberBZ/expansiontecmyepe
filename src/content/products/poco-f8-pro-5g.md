@@ -3,8 +3,8 @@ title: POCO F8 Pro 5G
 shortDescription: Batería de 6580mAh
 price: 850
 salePrice: 750
-brand: src/content/brands/xioami.json
-category: src/content/categories/celulares.json
+brand: xiaomi
+category: celulares
 locations:
   - location: los-olivos
   - location: santa-anita

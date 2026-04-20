@@ -1,8 +1,8 @@
 ---
 title: "Xiaomi Pad 7 / 7 Pro Keyboard"
 price: 1
-brand: "redmi"
-category: "accesorios"
+brand: redmi
+category: accesorios
 locations:
   - location: "villa-maria-del-triunfo"
 images:

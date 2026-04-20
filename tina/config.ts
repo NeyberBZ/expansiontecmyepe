@@ -1,4 +1,5 @@
 // tina/config.ts
+import React from "react";
 import { defineConfig } from "tinacms";
 import { slidersCollection } from "./collections/sliders";
 
@@ -146,6 +147,11 @@ export default defineConfig({
             collections: ["brands"],
             required: true,
             searchable: true,
+            ui: {
+              optionComponent: (props) => (
+                // Custom component si es necesario
+              )
+            }
           },
           {
             type: "reference",

@@ -4,6 +4,7 @@ import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 import Badge from "../../components/ui/Badge.astro";
+import AddToCart from "../../components/shop/AddToCart.tsx";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -15,8 +16,34 @@ const product = await getEntry("products", slug!);
 if (!product) return Astro.redirect("/tienda");
 
 const { Content } = await product.render();
-const brand    = await getEntry(product.data.brand);
-const category = await getEntry(product.data.category);
+
+// ✅ Helper robusto para extraer ID de referencia
+function extractRefId(ref: unknown): string {
+  if (ref == null) return '';
+
+  if (typeof ref === 'string') {
+    if (ref.includes('/')) {
+      const parts = ref.split('/');
+      const filename = parts[parts.length - 1];
+      return filename.replace(/\.(json|md)$/, '');
+    }
+    return ref;
+  }
+
+  if (typeof ref === 'object' && ref !== null) {
+    const obj = ref as Record<string, unknown>;
+    if (typeof obj.id === 'string') return obj.id;
+    if (typeof obj.slug === 'string') return obj.slug;
+  }
+
+  return String(ref);
+}
+
+const brandId = extractRefId(product.data.brand);
+const categoryId = extractRefId(product.data.category);
+
+const brand = brandId ? await getEntry("brands", brandId) : undefined;
+const category = categoryId ? await getEntry("categories", categoryId) : undefined;
 
 const discount = product.data.salePrice
   ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
@@ -25,67 +52,91 @@ const discount = product.data.salePrice
 
 <BaseLayout
   title={product.data.seoTitle ?? product.data.title}
-  description={product.data.seoDescription ?? `Compra ${product.data.title} en ExpansionTec Lima.`}
+  description={product.data.seoDescription ??
+    `Compra ${product.data.title} en ExpansionTec Lima.`}
   image={product.data.images[0]}
   type="product"
 >
   <!-- JSON-LD Product -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.data.title,
-    image: product.data.images,
-    offers: {
-      "@type": "Offer",
-      price: product.data.salePrice ?? product.data.price,
-      priceCurrency: "PEN",
-      availability: product.data.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
-    },
-  })} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.data.title,
+      image: product.data.images,
+      offers: {
+        "@type": "Offer",
+        price: product.data.salePrice ?? product.data.price,
+        priceCurrency: "PEN",
+        availability: product.data.inStock
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      },
+    })}
+  />
 
   <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
-    <BreadCrumb crumbs={[
-      { label: "Inicio", href: "/" },
-      { label: "Tienda", href: "/tienda" },
-      { label: product.data.title },
-    ]} />
+    <BreadCrumb
+      crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Tienda", href: "/tienda" },
+        { label: product.data.title },
+      ]}
+    />
 
-    <div style="display:grid;grid-template-columns:1fr;gap:2rem;" id="product-layout">
-
+    <div
+      style="display:grid;grid-template-columns:1fr;gap:2rem;"
+      id="product-layout"
+    >
       <!-- Galería de imágenes -->
       <div id="product-images">
         <!-- Imagen principal -->
-        <div style="aspect-ratio:4/3;background:var(--color-surface-offset);border-radius:12px;overflow:hidden;margin-bottom:0.75rem;">
-          {product.data.images[0] ? (
-            <img
-              id="main-image"
-              src={product.data.images[0]}
-              alt={product.data.title}
-              width="800" height="600"
-              loading="eager"
-              fetchpriority="high"
-              style="width:100%;height:100%;object-fit:cover;"
-            />
-          ) : (
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">📦</div>
-          )}
+        <div
+          style="aspect-ratio:4/3;background:var(--color-surface-offset);border-radius:12px;overflow:hidden;margin-bottom:0.75rem;"
+        >
+          {
+            product.data.images[0] ? (
+              <img
+                id="main-image"
+                src={product.data.images[0]}
+                alt={product.data.title}
+                width="800"
+                height="600"
+                loading="eager"
+                fetchpriority="high"
+                style="width:100%;height:100%;object-fit:cover;"
+              />
+            ) : (
+              <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">
+                📦
+              </div>
+            )
+          }
         </div>
 
         <!-- Thumbnails -->
-        {product.data.images.length > 1 && (
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-            {product.data.images.map((img: any, i: any) => (
-              <button
-                onclick={`document.getElementById('main-image').src='${img}'`}
-                style="width:72px;height:72px;border-radius:8px;overflow:hidden;border:2px solid var(--color-border);padding:0;cursor:pointer;background:var(--color-surface-offset);"
-              >
-                <img src={img} alt={`Vista ${i + 1}`} width="72" height="72" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
-              </button>
-            ))}
-          </div>
-        )}
+        {
+          product.data.images.length > 1 && (
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              {product.data.images.map((img: any, i: any) => (
+                <button
+                  onclick={`document.getElementById('main-image').src='${img}'`}
+                  style="width:72px;height:72px;border-radius:8px;overflow:hidden;border:2px solid var(--color-border);padding:0;cursor:pointer;background:var(--color-surface-offset);"
+                >
+                  <img
+                    src={img}
+                    alt={`Vista ${i + 1}`}
+                    width="72"
+                    height="72"
+                    loading="lazy"
+                    style="width:100%;height:100%;object-fit:cover;"
+                  />
+                </button>
+              ))}
+            </div>
+          )
+        }
       </div>
 
       <!-- Info del producto -->
@@ -98,102 +149,149 @@ const discount = product.data.salePrice
         </div>
 
         <!-- Marca y categoría -->
-        <p style="font-size:0.875rem;color:var(--color-text-muted);margin-bottom:0.5rem;">
+        <p
+          style="font-size:0.875rem;color:var(--color-text-muted);margin-bottom:0.5rem;"
+        >
           {brand?.data.name} · {category?.data.name}
         </p>
 
         <!-- Título -->
-        <h1 style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:1rem;line-height:1.2;">
+        <h1
+          style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:1rem;line-height:1.2;"
+        >
           {product.data.title}
         </h1>
 
         <!-- Precio -->
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
-          {product.data.salePrice ? (
-            <>
-              <span style="font-size:1.75rem;font-weight:800;color:var(--color-primary);">
-                S/ {product.data.salePrice.toLocaleString("es-PE")}
-              </span>
-              <span style="font-size:1.1rem;color:var(--color-text-faint);text-decoration:line-through;">
+        <div
+          style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;"
+        >
+          {
+            product.data.salePrice ? (
+              <>
+                <span style="font-size:1.75rem;font-weight:800;color:var(--color-primary);">
+                  S/ {product.data.salePrice.toLocaleString("es-PE")}
+                </span>
+                <span style="font-size:1.1rem;color:var(--color-text-faint);text-decoration:line-through;">
+                  S/ {product.data.price.toLocaleString("es-PE")}
+                </span>
+              </>
+            ) : (
+              <span style="font-size:1.75rem;font-weight:800;color:var(--color-text);">
                 S/ {product.data.price.toLocaleString("es-PE")}
               </span>
-            </>
-          ) : (
-            <span style="font-size:1.75rem;font-weight:800;color:var(--color-text);">
-              S/ {product.data.price.toLocaleString("es-PE")}
-            </span>
-          )}
+            )
+          }
         </div>
 
         <!-- Disponibilidad -->
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;">
-          <span style={`width:8px;height:8px;border-radius:50%;background:${product.data.inStock ? "var(--color-success)" : "var(--color-error)"};display:inline-block;`}></span>
+        <div
+          style="display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;"
+        >
+          <span
+            style={`width:8px;height:8px;border-radius:50%;background:${product.data.inStock ? "var(--color-success)" : "var(--color-error)"};display:inline-block;`}
+          ></span>
           <span style="font-size:0.875rem;color:var(--color-text-muted);">
             {product.data.inStock ? "En stock" : "Sin stock"}
           </span>
         </div>
+
+        <AddToCart
+          client:load
+          product={{
+            slug: product.slug,
+            title: product.data.title,
+            price: product.data.salePrice || product.data.price,
+            image: product.data.images[0],
+            brand: brand.data.name,
+            inStock: product.data.inStock
+          }}
+        />
 
         <!-- CTA -->
         <a
           href="/contacto"
           style={`display:inline-block;padding:12px 28px;border-radius:8px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:background 180ms ease;${product.data.inStock ? "background:var(--color-primary);color:white;" : "background:var(--color-surface-offset);color:var(--color-text-muted);pointer-events:none;"}`}
         >
-          {product.data.inStock ? "Consultar disponibilidad →" : "No disponible"}
+          {
+            product.data.inStock
+              ? "Consultar disponibilidad →"
+              : "No disponible"
+          }
         </a>
 
         <!-- Sucursales -->
-        {product.data.locations?.length > 0 && (
-          <div style="margin-top:1.5rem;padding:1rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;">
-            <p style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Disponible en</p>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              {product.data.locations.map((loc: any) => (
-                <a
-                  href={`/sucursales/${loc.location?.id ?? loc.id ?? ""}`}
-                  style="font-size:0.8rem;padding:4px 10px;border-radius:999px;background:var(--color-primary-highlight);color:var(--color-primary);text-decoration:none;"
-                >
-                  {loc.location?.id ?? loc.id ?? ""}
-                </a>
-              ))}
+        {
+          product.data.locations?.length > 0 && (
+            <div style="margin-top:1.5rem;padding:1rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;">
+              <p style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">
+                Disponible en
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                {product.data.locations.map((loc: any) => (
+                  <a
+                    href={`/sucursales/${loc.location?.id ?? loc.id ?? ""}`}
+                    style="font-size:0.8rem;padding:4px 10px;border-radius:999px;background:var(--color-primary-highlight);color:var(--color-primary);text-decoration:none;"
+                  >
+                    {loc.location?.id ?? loc.id ?? ""}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         <!-- Tags -->
-        {product.data.tags?.length > 0 && (
-          <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:6px;">
-            {product.data.tags.map((tag: string) => (
-              <span style="font-size:0.75rem;padding:3px 10px;border-radius:999px;background:var(--color-surface-offset);color:var(--color-text-muted);">
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
+        {
+          product.data.tags?.length > 0 && (
+            <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:6px;">
+              {product.data.tags.map((tag: string) => (
+                <span style="font-size:0.75rem;padding:3px 10px;border-radius:999px;background:var(--color-surface-offset);color:var(--color-text-muted);">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
 
     <!-- Especificaciones técnicas -->
-    {product.data.specs?.length > 0 && (
-      <div style="margin-top:3rem;">
-        <h2 style="font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--color-text);margin-bottom:1rem;">
-          Especificaciones técnicas
-        </h2>
-        <div style="border:1px solid var(--color-border);border-radius:10px;overflow:hidden;">
-          {product.data.specs.map((spec: any, i: number) => (
-            <div style={`display:grid;grid-template-columns:1fr 2fr;padding:12px 16px;${i % 2 === 0 ? "background:var(--color-surface);" : "background:var(--color-surface-2);"}`}>
-              <span style="font-size:0.875rem;font-weight:600;color:var(--color-text-muted);">{spec.key}</span>
-              <span style="font-size:0.875rem;color:var(--color-text);">{spec.value}</span>
-            </div>
-          ))}
+    {
+      product.data.specs?.length > 0 && (
+        <div style="margin-top:3rem;">
+          <h2 style="font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--color-text);margin-bottom:1rem;">
+            Especificaciones técnicas
+          </h2>
+          <div style="border:1px solid var(--color-border);border-radius:10px;overflow:hidden;">
+            {product.data.specs.map((spec: any, i: number) => (
+              <div
+                style={`display:grid;grid-template-columns:1fr 2fr;padding:12px 16px;${i % 2 === 0 ? "background:var(--color-surface);" : "background:var(--color-surface-2);"}`}
+              >
+                <span style="font-size:0.875rem;font-weight:600;color:var(--color-text-muted);">
+                  {spec.key}
+                </span>
+                <span style="font-size:0.875rem;color:var(--color-text);">
+                  {spec.value}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )
+    }
 
     <!-- Descripción (contenido Markdown) -->
     <div style="margin-top:3rem;max-width:720px;">
-      <h2 style="font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--color-text);margin-bottom:1rem;">
+      <h2
+        style="font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--color-text);margin-bottom:1rem;"
+      >
         Descripción
       </h2>
-      <div style="color:var(--color-text);line-height:1.8;font-size:0.95rem;" class="prose">
+      <div
+        style="color:var(--color-text);line-height:1.8;font-size:0.95rem;"
+        class="prose"
+      >
         <Content />
       </div>
     </div>
@@ -203,14 +301,14 @@ const discount = product.data.salePrice
 <script>
   // Layout de 2 columnas en desktop
   function handleResize() {
-    const layout = document.getElementById('product-layout');
+    const layout = document.getElementById("product-layout");
     if (!layout) return;
     if (window.innerWidth >= 768) {
-      layout.style.gridTemplateColumns = '1fr 1fr';
+      layout.style.gridTemplateColumns = "1fr 1fr";
     } else {
-      layout.style.gridTemplateColumns = '1fr';
+      layout.style.gridTemplateColumns = "1fr";
     }
   }
   handleResize();
-  window.addEventListener('resize', handleResize);
+  window.addEventListener("resize", handleResize);
 </script>

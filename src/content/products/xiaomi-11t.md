@@ -3,8 +3,8 @@ title: Redmi Note 15 Pro + 5G
 shortDescription: Batería de 6580mAh
 price: 2020
 salePrice: 1900
-brand: src/content/brands/redmi.json
-category: src/content/categories/celulares.json
+brand: redmi
+category: celulares
 locations:
   - location: los-olivos
   - location: santa-anita

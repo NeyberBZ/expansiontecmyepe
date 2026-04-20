@@ -2,8 +2,8 @@
 title: Redmi Note 15 Pro
 price: 1250
 salePrice: 1050
-brand: src/content/brands/redmi.json
-category: src/content/categories/celulares.json
+brand: redmi
+category: celulares
 locations:
   - location: los-olivos
   - location: santa-anita

@@ -1,8 +1,8 @@
 ---
 title: "Redmi A5 Plus Pro"
 price: 1
-brand: "xiaomi"
-category: "celulares"
+brand: xiaomi
+category: celulares
 locations:
   - location: "los-olivos"
   - location: "santa-anita"
@@ -50,7 +50,8 @@ specs:
   - key: "3G"
     value: "WCDMA: B1/B2/B4/B5/B6/B8/B19"
   - key: "4G"
-    value: "LTE FDD: B1/B2/B3/B4/B5/B7/B8/B12/B13/B17/B18/B19/B20/B26/B28/B32/B66 LTE TDD: B38/B40/B41/B42/B48"
+    value: "LTE FDD: B1/B2/B3/B4/B5/B7/B8/B12/B13/B17/B18/B19/B20/B26/B28/B32/B66
+ LTE TDD: B38/B40/B41/B42/B48"
   - key: "5G"
     value: "si"
   - key: "WiFi"
