@@ -41,8 +41,15 @@ export default defineConfig({
         label: "Marcas",
         path: "src/content/brands",
         format: "json",
+        ui: {
+          // Importante: permite que Tina use el filename como ID
+          filename: {
+            readonly: false,
+            slugify: (val) => val.toLowerCase().replace(/\s+/g, '-'),
+          },
+        },
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
+          { type: "string", name: "name", label: "Nombre", required: true, searchable: true, isTitle: true },
           { type: "image", name: "logo", label: "Logo" },
           { type: "string", name: "website", label: "Sitio web", searchable: false },
         ],
@@ -54,8 +61,13 @@ export default defineConfig({
         label: "Categorías",
         path: "src/content/categories",
         format: "json",
+        ui: {
+          filename: {
+            readonly: false,
+          },
+        },
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
+          { type: "string", name: "name", label: "Nombre", required: true, searchable: true, isTitle: true },
           { type: "string", name: "description", label: "Descripción", searchable: true },
           { type: "image",  name: "image", label: "Imagen", searchable: false },       // ← cambio
           { type: "image",  name: "featuredImage", label: "Imagen destacada (card grande)", searchable: false },
@@ -70,8 +82,13 @@ export default defineConfig({
         label: "Sucursales",
         path: "src/content/locations",
         format: "md",
+        ui: {
+          filename: {
+            readonly: false,
+          },
+        },
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true, searchable: true },
+          { type: "string", name: "name", label: "Nombre", required: true, searchable: true, isTitle: true },
           { type: "string", name: "district", label: "Distrito", required: true, searchable: true },
           { type: "string", name: "city", label: "Ciudad", searchable: true },
           { type: "string", name: "address", label: "Dirección", required: true, searchable: true },
@@ -147,11 +164,18 @@ export default defineConfig({
             collections: ["brands"],
             required: true,
             searchable: true,
+            // 🔑 Configuración clave: forzar que guarde solo el ID
             ui: {
-              optionComponent: (props) => (
-                // Custom component si es necesario
-              )
-            }
+              displayFields: ["name"],
+              // Esto asegura que el valor guardado sea solo el filename
+              optionComponent: (props) => {
+                return props.name;
+              },
+            },
+            // 🔑 Importante: usar parse/serialize si es necesario
+            parser: {
+              type: "string",
+            },
           },
           {
             type: "reference",
@@ -160,6 +184,12 @@ export default defineConfig({
             collections: ["categories"],
             required: true,
             searchable: true,
+            ui: {
+              displayFields: ["name"],
+              optionComponent: (props) => {
+                return props.name;
+              },
+            },
           },
           {
             type: "object",
@@ -172,6 +202,12 @@ export default defineConfig({
                 name: "location",
                 label: "Sucursal",
                 collections: ["locations"],
+                ui: {
+                  displayFields: ["name"],
+                  optionComponent: (props) => {
+                    return `${props.name} - ${props.district || ''}`;
+                  },
+                },
               },
             ],
             searchable: true,

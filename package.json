@@ -10,7 +10,9 @@
     "dev:cms": "tinacms dev -c \"astro dev\"",
     "build": "tinacms build && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "fix:refs": "node scripts/fix-tina-refs.mjs",
+    "fix:refs:watch": "node scripts/fix-tina-refs.mjs --watch"
   },
   "overrides": {
     "esbuild": "0.21.5"
