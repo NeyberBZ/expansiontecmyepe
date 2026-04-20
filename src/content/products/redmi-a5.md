@@ -2,10 +2,10 @@
 title: Redmi A5
 price: 450
 salePrice: 320
-brand: redmi
-category: celulares
+brand: src/content/brands/redmi.json
+category: src/content/categories/celulares.json
 locations:
-  - location: los-olivos
+  - location: src/content/locations/Sucursal-Lima-Norte.md
   - location: santa-anita
 images:
   - /uploads/e49c493667d44960797bdb900abad611.png
