@@ -1,7 +1,4 @@
-# npm test
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
+# .husky/pre-commit (NUEVO FORMATO - sin shebang ni .husky.sh)
 echo "🔧 Verificando referencias de Tina CMS..."
 
 # Ejecutar el script de corrección
