@@ -1,10 +1,10 @@
 ---
 title: Redmi A5 Plus Pro
 price: 1
-brand: src/content/brands/redmi.json
-category: src/content/categories/celulares.json
+brand: redmi
+category: celulares
 locations:
-  - location: src/content/locations/sucursal-miraflores.md
+  - location: sucursal-miraflores
 images:
   - /uploads/products/redmi-a5-plus-pro-1.png
   - /uploads/products/redmi-a5-plus-pro-2.png

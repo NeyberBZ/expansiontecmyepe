@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "fix:refs": "node scripts/fix-tina-refs.mjs",
-    "fix:refs:watch": "node scripts/fix-tina-refs.mjs --watch"
+    "fix:refs:watch": "node scripts/fix-tina-refs.mjs --watch",
+    "prepare": "husky"
   },
   "overrides": {
     "esbuild": "0.21.5"
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@tinacms/cli": "^2.2.2",
     "@types/node": "^25.6.0",
-    "@types/react": "^19.2.14"
+    "@types/react": "^19.2.14",
+    "husky": "^9.1.7"
   }
 }
