@@ -2,11 +2,10 @@
 title: POCO F8 Pro
 price: 650
 salePrice: 550
-brand: redmi
+brand: xiaomi
 category: celulares
 locations:
   - location: sucursal-miraflores
-  - location: Sucursal-Lima-Norte
 images:
   - /uploads/products/poco-f8-pro-1.png
   - /uploads/products/poco-f8-pro-2.png
