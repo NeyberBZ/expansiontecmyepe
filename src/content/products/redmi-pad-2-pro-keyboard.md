@@ -5,14 +5,16 @@ salePrice: 350
 brand: redmi
 category: accesorios
 locations:
-  - location: sucursal-miraflores
+  - location: miraflores
 images:
   - /uploads/products/redmi-pad-2-pro-keyboard-1.png
   - /uploads/products/redmi-pad-2-pro-keyboard-2.png
   - /uploads/products/redmi-pad-2-pro-keyboard-3.png
 specs:
-  - key: ''
-    value: ''
+  - key: "Tipo"
+    value: "Teclado Bluetooth"
+  - key: "Compatibilidad"
+    value: "Redmi Pad Pro"
 inStock: true
 featured: false
 tags:

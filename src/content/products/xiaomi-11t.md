@@ -6,7 +6,7 @@ salePrice: 1900
 brand: xiaomi
 category: celulares
 locations:
-  - location: Sucursal-Lima-Norte
+  - location: los-olivos
 images:
   - /uploads/a365dac6c6b371e09a6f4ec7ce3fedce.png
   - /uploads/products/xiaomi-11t-1.webp

@@ -15,19 +15,24 @@ const activation = await getEntry("activations", slug!);
 if (!activation) return Astro.redirect("/activaciones");
 
 const { Content } = await activation.render();
-const location = await getEntry(activation.data.location);
+
+// CORRECCIÓN: Especificar la colección 'locations' para el ID string
+const location = activation.data.location
+  ? await getEntry("locations", activation.data.location)
+  : null;
 
 const now = new Date();
-const isActive =
-  new Date(activation.data.startDate) <= now &&
-  new Date(activation.data.endDate) >= now;
-const isUpcoming = new Date(activation.data.startDate) > now;
-const isPast = new Date(activation.data.endDate) < now;
+const startDate = new Date(activation.data.startDate);
+const endDate = new Date(activation.data.endDate);
+
+const isActive = startDate <= now && endDate >= now;
+const isUpcoming = startDate > now;
+const isPast = endDate < now;
 ---
 
 <BaseLayout
   title={activation.data.title}
-  description={`${activation.data.title} en ${location?.data.name}. Del ${new Date(activation.data.startDate).toLocaleDateString("es-PE")} al ${new Date(activation.data.endDate).toLocaleDateString("es-PE")}.`}
+  description={`${activation.data.title} en ${location?.data.name ?? 'ExpansionTec'}. Del ${startDate.toLocaleDateString("es-PE")} al ${endDate.toLocaleDateString("es-PE")}.`}
   image={activation.data.banner}
 >
   <div style="max-width:960px;margin:0 auto;padding:2rem 1rem;">
@@ -54,9 +59,7 @@ const isPast = new Date(activation.data.endDate) < now;
       )
     }
 
-    <div
-      style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap;"
-    >
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap;">
       <Badge
         variant={isActive ? "success" : isUpcoming ? "primary" : "default"}
       >
@@ -65,7 +68,7 @@ const isPast = new Date(activation.data.endDate) < now;
       {
         location && (
           <a
-            href={`/sucursales/${location.slug}`}
+            href={`/sucursales/${location.id}`} // CORRECCIÓN: Usar .id ya que slug puede no estar en data
             style="font-size:0.875rem;color:var(--color-primary);text-decoration:none;"
           >
             📍 {location.data.name}
@@ -74,24 +77,18 @@ const isPast = new Date(activation.data.endDate) < now;
       }
     </div>
 
-    <h1
-      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:1rem;"
-    >
+    <h1 style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:1rem;">
       {activation.data.title}
     </h1>
 
-    <div
-      style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:2rem;padding:1rem 1.25rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;"
-    >
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:2rem;padding:1rem 1.25rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;">
       <div>
-        <p
-          style="font-size:0.7rem;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:0.05em;"
-        >
+        <p style="font-size:0.7rem;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:0.05em;">
           Inicio
         </p>
         <p style="font-size:0.9rem;font-weight:600;color:var(--color-text);">
           {
-            new Date(activation.data.startDate).toLocaleDateString("es-PE", {
+            startDate.toLocaleDateString("es-PE", {
               weekday: "long",
               year: "numeric",
               month: "long",
@@ -102,14 +99,12 @@ const isPast = new Date(activation.data.endDate) < now;
       </div>
       <div style="width:1px;background:var(--color-divider);"></div>
       <div>
-        <p
-          style="font-size:0.7rem;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:0.05em;"
-        >
+        <p style="font-size:0.7rem;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:0.05em;">
           Fin
         </p>
         <p style="font-size:0.9rem;font-weight:600;color:var(--color-text);">
           {
-            new Date(activation.data.endDate).toLocaleDateString("es-PE", {
+            endDate.toLocaleDateString("es-PE", {
               weekday: "long",
               year: "numeric",
               month: "long",

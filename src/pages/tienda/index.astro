@@ -9,18 +9,23 @@ const allProducts = await getCollection("products");
 // Resuelve referencias de brand y category para cada producto
 const productIndex = await Promise.all(
   allProducts.map(async (p: any) => {
-    const brand = await getEntry(p.data.brand);
-    const category = await getEntry(p.data.category);
+    const brand = p.data.brand ? await getEntry("brands", p.data.brand) : null;
+    const category = p.data.category
+      ? await getEntry("categories", p.data.category)
+      : null;
     return {
       id: p.slug,
       title: p.data.title,
       price: p.data.price,
       salePrice: p.data.salePrice ?? null,
-      brand: brand?.data.name ?? "",
-      brandId: p.data.brand.id,
-      category: category?.data.name ?? "",
-      categoryId: p.data.category.id,
-      locations: p.data.locations.map((l: any) => l.location?.id ?? l.id ?? ""),
+      brand: brand?.data.name ?? "Sin Marca",
+      // CORRECCIÓN: p.data.brand ya es el ID (string), no tiene propiedad .id
+      brandId: p.data.brand,
+      category: category?.data.name ?? "Sin Categoría",
+      // CORRECCIÓN: p.data.category ya es el ID (string)
+      categoryId: p.data.category,
+      // CORRECCIÓN: locations ahora es un array de objetos con strings
+      locations: p.data.locations.map((l: any) => l.location ?? ""),
       images: p.data.images,
       inStock: p.data.inStock,
       featured: p.data.featured,

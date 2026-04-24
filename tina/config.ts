@@ -1,7 +1,7 @@
 // tina/config.ts
-import React from "react";
 import { defineConfig } from "tinacms";
 import { slidersCollection } from "./collections/sliders";
+import { brandOptions, categoryOptions, locationOptions } from "./options";
 
 export default defineConfig({
   branch: "main",
@@ -13,8 +13,8 @@ export default defineConfig({
       indexerToken: process.env.TINA_SEARCH_TOKEN ?? "",
       stopwordLanguages: ["spa"],
     },
-    indexBatchSize: 100,
-    maxSearchIndexFieldLength: 100,
+    indexBatchSize: 50,
+    maxSearchIndexFieldLength: 200,
   },
 
   media: {
@@ -42,7 +42,6 @@ export default defineConfig({
         path: "src/content/brands",
         format: "json",
         ui: {
-          // Importante: permite que Tina use el filename como ID
           filename: {
             readonly: false,
             slugify: (val) => val.toLowerCase().replace(/\s+/g, '-'),
@@ -69,9 +68,9 @@ export default defineConfig({
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true, searchable: true, isTitle: true },
           { type: "string", name: "description", label: "Descripción", searchable: true },
-          { type: "image",  name: "image", label: "Imagen", searchable: false },       // ← cambio
-          { type: "image",  name: "featuredImage", label: "Imagen destacada (card grande)", searchable: false },
-          { type: "image",  name: "banner", label: "Banner (cabecera de página)", searchable: false },
+          { type: "image", name: "image", label: "Imagen", searchable: false },
+          { type: "image", name: "featuredImage", label: "Imagen destacada (card grande)", searchable: false },
+          { type: "image", name: "banner", label: "Banner (cabecera de página)", searchable: false },
           { type: "string", name: "slug", label: "Slug URL", searchable: false },
         ],
       },
@@ -120,10 +119,10 @@ export default defineConfig({
           { type: "datetime", name: "startDate", label: "Fecha inicio", required: true },
           { type: "datetime", name: "endDate", label: "Fecha fin", required: true },
           {
-            type: "reference",
+            type: "string",
             name: "location",
             label: "Sucursal",
-            collections: ["locations"],
+            options: locationOptions,
             required: true,
           },
           {
@@ -133,10 +132,10 @@ export default defineConfig({
             list: true,
             fields: [
               {
-                type: "reference",
+                type: "string",
                 name: "product",
                 label: "Producto",
-                collections: ["products"],
+                options: [], // Se llena dinámicamente o se usa búsqueda
               },
             ],
           },
@@ -152,45 +151,57 @@ export default defineConfig({
         label: "Productos",
         path: "src/content/products",
         format: "md",
+        ui: {
+          previewSrc: (values) => values.images?.[0] || '',
+        },
         fields: [
-          { type: "string", name: "title", label: "Nombre del producto", required: true, searchable: true },
-          { type: "string", name: "shortDescription", label: "Descripción corta",  ui: { component: "textarea" }, searchable: true },
-          { type: "number", name: "price", label: "Precio", required: true, searchable: false },
-          { type: "number", name: "salePrice", label: "Precio oferta", searchable: false },
           {
-            type: "reference",
+            type: "string",
+            name: "title",
+            label: "Nombre del producto",
+            required: true,
+            searchable: true,
+            isTitle: true,
+          },
+          {
+            type: "string",
+            name: "shortDescription",
+            label: "Descripción corta",
+            ui: { component: "textarea" },
+            searchable: true
+          },
+          {
+            type: "number",
+            name: "price",
+            label: "Precio",
+            required: true,
+            searchable: false
+          },
+          {
+            type: "number",
+            name: "salePrice",
+            label: "Precio oferta",
+            searchable: false
+          },
+          // ✅ CAMBIO: reference → string con options
+          {
+            type: "string",
             name: "brand",
             label: "Marca",
-            collections: ["brands"],
+            options: brandOptions,
             required: true,
             searchable: true,
-            // 🔑 Configuración clave: forzar que guarde solo el ID
-            ui: {
-              displayFields: ["name"],
-              // Esto asegura que el valor guardado sea solo el filename
-              optionComponent: (props) => {
-                return props.name;
-              },
-            },
-            // 🔑 Importante: usar parse/serialize si es necesario
-            parser: {
-              type: "string",
-            },
           },
+          // ✅ CAMBIO: reference → string con options
           {
-            type: "reference",
+            type: "string",
             name: "category",
             label: "Categoría",
-            collections: ["categories"],
+            options: categoryOptions,
             required: true,
             searchable: true,
-            ui: {
-              displayFields: ["name"],
-              optionComponent: (props) => {
-                return props.name;
-              },
-            },
           },
+          // ✅ CAMBIO: reference → string con options
           {
             type: "object",
             name: "locations",
@@ -198,16 +209,10 @@ export default defineConfig({
             list: true,
             fields: [
               {
-                type: "reference",
+                type: "string",
                 name: "location",
                 label: "Sucursal",
-                collections: ["locations"],
-                ui: {
-                  displayFields: ["name"],
-                  optionComponent: (props) => {
-                    return `${props.name} - ${props.district || ''}`;
-                  },
-                },
+                options: locationOptions,
               },
             ],
             searchable: true,
@@ -236,8 +241,29 @@ export default defineConfig({
             label: "Tags",
             list: true,
           },
-          { type: "string", name: "seoTitle", label: "SEO: Título" },
-          { type: "string", name: "seoDescription", label: "SEO: Descripción", ui: { component: "textarea" } },
+          {
+            type: "string",
+            name: "seoTitle",
+            label: "SEO: Título",
+            ui: {
+              validate: (val) => {
+                if (val && val.length > 60) return "Máximo 60 caracteres para SEO";
+                return null;
+              }
+            }
+          },
+          {
+            type: "string",
+            name: "seoDescription",
+            label: "SEO: Descripción",
+            ui: {
+              component: "textarea",
+              validate: (val) => {
+                if (val && val.length > 160) return "Máximo 160 caracteres para SEO";
+                return null;
+              }
+            }
+          },
           { type: "datetime", name: "publishedAt", label: "Fecha publicación" },
           { type: "rich-text", name: "body", label: "Descripción del producto", isBody: true },
         ],

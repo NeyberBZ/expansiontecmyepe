@@ -4,14 +4,16 @@ price: 1
 brand: redmi
 category: accesorios
 locations:
-  - location: "villa-maria-del-triunfo"
+  - location: miraflores
 images:
   - "/uploads/products/xiaomi-pad-7-7-pro-keyboard-1.png"
   - "/uploads/products/xiaomi-pad-7-7-pro-keyboard-2.png"
   - "/uploads/products/xiaomi-pad-7-7-pro-keyboard-3.png"
 specs:
-  - key: ""
-    value: ""
+  - key: "Tipo"
+    value: "Teclado Bluetooth"
+  - key: "Compatibilidad"
+    value: "Redmi Pad Pro"
 inStock: true
 featured: false
 tags:

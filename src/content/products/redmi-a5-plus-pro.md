@@ -4,7 +4,7 @@ price: 1
 brand: redmi
 category: celulares
 locations:
-  - location: sucursal-miraflores
+  - location: miraflores
 images:
   - /uploads/products/redmi-a5-plus-pro-1.png
   - /uploads/products/redmi-a5-plus-pro-2.png

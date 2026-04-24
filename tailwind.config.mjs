@@ -5,27 +5,34 @@ export default {
   darkMode: ["class", '[data-theme="dark"]'],  // ← sintaxis v3
   theme: {
     extend: {
-      colors: {
-        bg: "var(--color-bg)",
-        surface: "var(--color-surface)",
-        "surface-2": "var(--color-surface-2)",
-        "surface-offset": "var(--color-surface-offset)",
-        border: "var(--color-border)",
-        divider: "var(--color-divider)",
-        text: { DEFAULT: "var(--color-text)", muted: "var(--color-text-muted)", faint: "var(--color-text-faint)", inverse: "var(--color-text-inverse)" },
-        primary: { DEFAULT: "var(--color-primary)", hover: "var(--color-primary-hover)", highlight: "var(--color-primary-highlight)" },
-        error: "var(--color-error)",
-        success: "var(--color-success)",
-        warning: "var(--color-warning)",
+      // ... colores existentes
+
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+        'bounce-short': 'bounceShort 0.5s ease-in-out 1',
       },
-      fontFamily: {
-        display: ["Cabinet Grotesk", "Georgia", "serif"],
-        body: ["Satoshi", "system-ui", "sans-serif"],
+
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        bounceShort: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
       },
-      maxWidth: {
-        narrow:  "640px",
-        default: "960px",
-        wide:    "1200px",
+
+      // Utilidades para el carrito
+      zIndex: {
+        'cart': '50',
+        'cart-overlay': '40',
+        'header': '30',
       },
     },
   },

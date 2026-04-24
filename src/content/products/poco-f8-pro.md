@@ -5,7 +5,7 @@ salePrice: 550
 brand: xiaomi
 category: celulares
 locations:
-  - location: sucursal-miraflores
+  - location: miraflores
 images:
   - /uploads/products/poco-f8-pro-1.png
   - /uploads/products/poco-f8-pro-2.png

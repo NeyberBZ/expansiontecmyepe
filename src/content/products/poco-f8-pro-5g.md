@@ -6,7 +6,8 @@ salePrice: 750
 brand: xiaomi
 category: celulares
 locations:
-  - location: Sucursal-Lima-Norte
+  - location: los-olivos
+  - location: miraflores
 images:
   - /uploads/products/7dd2b9ef0b4ab5ebf56ee5ebcad12a22.png
 specs:

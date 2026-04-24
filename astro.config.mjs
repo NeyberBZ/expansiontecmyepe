@@ -18,7 +18,11 @@ export default defineConfig({
     }),
   ],
   image: {
-    service: { entrypoint: "astro/assets/services/sharp" },
+    service: {
+      entrypoint: "astro/assets/services/sharp"
+    },
+    // Agregar dominios si usas imágenes externas
+    // domains: ["expansiontecmyepe.vercel.app"],
   },
   compressHTML: true,
   build: {
@@ -29,10 +33,23 @@ export default defineConfig({
       cssMinify: true,
       rollupOptions: {
         output: {
-          assetFileNames: "assets/[name]-[hash][extname]",
-          chunkFileNames: "chunks/[name]-[hash].js",
+          // Mejor splitting
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+            'nanostores': ['nanostores', '@nanostores/react', '@nanostores/persistent'],
+          },
         },
       },
     },
+    // Optimización de dependencias
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'nanostores'],
+    },
+  },
+
+  // Prefetch de rutas comunes
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
   },
 });

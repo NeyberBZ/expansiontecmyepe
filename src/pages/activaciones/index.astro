@@ -9,7 +9,22 @@ const activations = await getCollection(
   "activations",
   (a: any) => a.data.isPublished,
 );
-const sorted = activations.sort(
+
+// 1. Resolvemos las localizaciones antes de renderizar el HTML
+const activationsWithData = await Promise.all(
+  activations.map(async (act: any) => {
+    // CORRECCIÓN: Especificar la colección 'locations' y pasar el ID string
+    const loc = act.data.location
+      ? await getEntry("locations", act.data.location)
+      : null;
+    return {
+      ...act,
+      locationName: loc?.data.name ?? "Ubicación no especificada",
+    };
+  }),
+);
+
+const sorted = activationsWithData.sort(
   (a: any, b: any) =>
     new Date(a.data.startDate).getTime() - new Date(b.data.startDate).getTime(),
 );
@@ -37,7 +52,6 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
       Eventos y promociones especiales en nuestras tiendas
     </p>
 
-    <!-- Próximas -->
     {
       upcoming.length > 0 && (
         <section style="margin-bottom:3rem;">
@@ -46,11 +60,10 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
             Próximas y activas
           </h2>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:1rem;">
-            {upcoming.map(async (act: any) => {
-              const loc = await getEntry(act.data.location);
+            {upcoming.map((act) => {
               const startDate = new Date(act.data.startDate);
               const endDate = new Date(act.data.endDate);
-              const isActive = startDate < now; // ← fuera del JSX
+              const isActive = startDate < now;
               const startStr = startDate.toLocaleDateString("es-PE");
               const endStr = endDate.toLocaleDateString("es-PE");
               return (
@@ -58,11 +71,7 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
                   href={`/activaciones/${act.slug}`}
                   style="text-decoration:none;"
                 >
-                  <article
-                    style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;transition:box-shadow 180ms ease,transform 180ms ease;"
-                    onmouseover="this.style.boxShadow='0 8px 24px oklch(0.2 0.01 80/0.12)';this.style.transform='translateY(-2px)'"
-                    onmouseout="this.style.boxShadow='none';this.style.transform='none'"
-                  >
+                  <article style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;transition:box-shadow 180ms ease,transform 180ms ease;">
                     {act.data.banner && (
                       <div style="aspect-ratio:16/7;overflow:hidden;background:var(--color-surface-offset);">
                         <img
@@ -83,7 +92,7 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
                         </Badge>
                       </div>
                       <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:6px;">
-                        📍 {loc?.data.name}
+                        📍 {act.locationName}
                       </p>
                       <p style="font-size:0.8rem;color:var(--color-text-faint);">
                         {startStr} → {endStr}
@@ -98,7 +107,6 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
       )
     }
 
-    <!-- Pasadas -->
     {
       past.length > 0 && (
         <section>
@@ -107,8 +115,7 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
             Anteriores
           </h2>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            {past.map(async (act: any) => {
-              const loc = await getEntry(act.data.location);
+            {past.map((act) => {
               const endStr = new Date(act.data.endDate).toLocaleDateString(
                 "es-PE",
               );
@@ -123,7 +130,7 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
                         {act.data.title}
                       </span>
                       <p style="font-size:0.75rem;color:var(--color-text-muted);">
-                        📍 {loc?.data.name}
+                        📍 {act.locationName}
                       </p>
                     </div>
                     <span style="font-size:0.75rem;color:var(--color-text-faint);white-space:nowrap;">
@@ -135,15 +142,6 @@ const past = sorted.filter((a: any) => new Date(a.data.endDate) < now);
             })}
           </div>
         </section>
-      )
-    }
-
-    {
-      activations.length === 0 && (
-        <div style="text-align:center;padding:4rem 2rem;color:var(--color-text-muted);">
-          <p style="font-size:2rem;margin-bottom:1rem;">📅</p>
-          <p style="font-weight:600;">No hay activaciones disponibles</p>
-        </div>
       )
     }
   </div>

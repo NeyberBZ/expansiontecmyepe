@@ -17,33 +17,23 @@ if (!product) return Astro.redirect("/tienda");
 
 const { Content } = await product.render();
 
-// ✅ Helper robusto para extraer ID de referencia
-function extractRefId(ref: unknown): string {
-  if (ref == null) return '';
+// ✅ Simplificado: brand y category ahora son strings directos
+const brand = product.data.brand
+  ? await getEntry("brands", product.data.brand)
+  : undefined;
+const category = product.data.category
+  ? await getEntry("categories", product.data.category)
+  : undefined;
 
-  if (typeof ref === 'string') {
-    if (ref.includes('/')) {
-      const parts = ref.split('/');
-      const filename = parts[parts.length - 1];
-      return filename.replace(/\.(json|md)$/, '');
-    }
-    return ref;
-  }
-
-  if (typeof ref === 'object' && ref !== null) {
-    const obj = ref as Record<string, unknown>;
-    if (typeof obj.id === 'string') return obj.id;
-    if (typeof obj.slug === 'string') return obj.slug;
-  }
-
-  return String(ref);
-}
-
-const brandId = extractRefId(product.data.brand);
-const categoryId = extractRefId(product.data.category);
-
-const brand = brandId ? await getEntry("brands", brandId) : undefined;
-const category = categoryId ? await getEntry("categories", categoryId) : undefined;
+// Resolver locations
+const resolvedLocations = await Promise.all(
+  (product.data.locations || []).map(async (loc: any) => {
+    const locationId = loc.location;
+    if (!locationId) return null;
+    const location = await getEntry("locations", locationId).catch(() => null);
+    return location;
+  }),
+);
 
 const discount = product.data.salePrice
   ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
@@ -152,7 +142,9 @@ const discount = product.data.salePrice
         <p
           style="font-size:0.875rem;color:var(--color-text-muted);margin-bottom:0.5rem;"
         >
-          {brand?.data.name} · {category?.data.name}
+          {brand?.data?.name || product.data.brand} · {
+            category?.data?.name || product.data.category
+          }
         </p>
 
         <!-- Título -->
@@ -203,37 +195,25 @@ const discount = product.data.salePrice
             title: product.data.title,
             price: product.data.salePrice || product.data.price,
             image: product.data.images[0],
-            brand: brand.data.name,
-            inStock: product.data.inStock
+            brand: brand?.data?.name || product.data.brand,
+            inStock: product.data.inStock,
           }}
         />
 
-        <!-- CTA -->
-        <a
-          href="/contacto"
-          style={`display:inline-block;padding:12px 28px;border-radius:8px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:background 180ms ease;${product.data.inStock ? "background:var(--color-primary);color:white;" : "background:var(--color-surface-offset);color:var(--color-text-muted);pointer-events:none;"}`}
-        >
-          {
-            product.data.inStock
-              ? "Consultar disponibilidad →"
-              : "No disponible"
-          }
-        </a>
-
         <!-- Sucursales -->
         {
-          product.data.locations?.length > 0 && (
+          resolvedLocations.length > 0 && (
             <div style="margin-top:1.5rem;padding:1rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;">
               <p style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">
                 Disponible en
               </p>
               <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                {product.data.locations.map((loc: any) => (
+                {resolvedLocations.filter(Boolean).map((loc: any) => (
                   <a
-                    href={`/sucursales/${loc.location?.id ?? loc.id ?? ""}`}
+                    href={`/sucursales/${loc.slug}`}
                     style="font-size:0.8rem;padding:4px 10px;border-radius:999px;background:var(--color-primary-highlight);color:var(--color-primary);text-decoration:none;"
                   >
-                    {loc.location?.id ?? loc.id ?? ""}
+                    {loc.data?.name || loc.slug}
                   </a>
                 ))}
               </div>

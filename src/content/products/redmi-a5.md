@@ -5,7 +5,7 @@ salePrice: 320
 brand: redmi
 category: celulares
 locations:
-  - location: Sucursal-Lima-Norte
+  - location: los-olivos
 images:
   - /uploads/e49c493667d44960797bdb900abad611.png
 specs:

@@ -15,8 +15,10 @@ const featured = allProducts
 
 const featuredWithData = await Promise.all(
   featured.map(async (p: any) => {
-    const brand = await getEntry(p.data.brand);
-    const category = await getEntry(p.data.category);
+    // CORRECCIÓN: Pasar el nombre de la colección como primer argumento
+    const brand = p.data.brand ? await getEntry('brands', p.data.brand) : null;
+    const category = p.data.category ? await getEntry('categories', p.data.category) : null;
+
     return {
       ...p,
       brandName: brand?.data.name ?? "",
@@ -42,7 +44,8 @@ const upcomingActivations = allActivations
 
 const activationsWithLocation = await Promise.all(
   upcomingActivations.map(async (a: any) => {
-    const location = await getEntry(a.data.location);
+    // CORRECCIÓN: Pasar 'locations' como primer argumento
+    const location = a.data.location ? await getEntry('locations', a.data.location) : null;
     return { ...a, locationName: location?.data.name ?? "" };
   }),
 );

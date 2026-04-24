@@ -1,10 +1,10 @@
 ---
-name: Sucursal Lima Norte
-district: Los Olivos
+name: Miraflores
+district: Miraflores
 city: Lima
-address: 'Av. Carlos Izaguirre 345, Los Olivos'
+address: 'Av. Larco 345, Miraflores'
 phone: +51 1 234-5678
-email: limanorte@tutienda.com
+email: miraflores@tutienda.com
 coordinates:
   lat: -12.1191
   lng: -77.031

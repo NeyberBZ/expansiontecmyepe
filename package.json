@@ -11,8 +11,11 @@
     "build": "tinacms build && astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "generate:options": "node scripts/generate-tina-options.mjs",
     "fix:refs": "node scripts/fix-tina-refs.mjs",
-    "fix:refs:watch": "node scripts/fix-tina-refs.mjs --watch",
+    "fix:refs:watch": "node scripts/fix-tina-refs-watch.mjs",
+    "lint": "astro check",
+    "clean": "rm -rf dist .astro node_modules/.vite",
     "prepare": "husky"
   },
   "overrides": {
