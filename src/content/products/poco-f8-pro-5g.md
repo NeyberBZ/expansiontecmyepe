@@ -10,6 +10,7 @@ locations:
   - location: miraflores
 images:
   - /uploads/products/7dd2b9ef0b4ab5ebf56ee5ebcad12a22.png
+  - /uploads/products/poco-f8-pro-5g-1.webp
 specs:
   - key: Sistema Operativo
     value: Xiaomi HyperOS 2

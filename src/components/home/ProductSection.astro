@@ -1,0 +1,159 @@
+---
+// src/components/products/ProductSection.astro
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  products: any[];
+  title: string;
+  icon?: string;
+  gradient?: string; // Para personalizar el color del banner grande
+}
+
+const {
+  products,
+  title,
+  icon = "bag",
+  gradient = "from-indigo-500 via-sky-500 to-emerald-500",
+} = Astro.props;
+
+const mainProduct = products[0];
+const gridProducts = products.slice(1, 5); // Tomamos los siguientes 4 para completar la fila
+---
+
+{
+  products.length > 0 && (
+    <section class="py-12 border-t border-gray-100">
+      <div class="container mx-auto px-4">
+        <div class="flex justify-center items-center mb-8">
+          <div class="flex items-center gap-3">
+            <Icon id="icon-bag" name="bag" class="w-8 h-8 text-orange-500" />
+            <h2 class="font-satoshi text-3xl sm:text-4xl font-medium text-gray-900">
+              {title}
+            </h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 sm:gap-4 lg:gap-4">
+          {/* Producto Principal (Banner Ancho) */}
+          {mainProduct && (
+            <div class="col-span-1 sm:col-span-2">
+              <article
+                class={`group relative bg-gradient-to-r ${gradient} rounded-2xl overflow-hidden hover:shadow-xl transition-all h-full max-h-64 min-h-64`}
+              >
+                <a
+                  href={`/tienda/${mainProduct.slug}`}
+                  class="h-full w-full flex flex-col"
+                >
+                  <div class="absolute top-4 left-4 right-4 z-10 flex flex-col gap-2">
+                    <h3 class="font-bold text-2xl text-white group-hover:text-emerald-100 transition-colors line-clamp-2">
+                      {mainProduct.data.title}
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                      {mainProduct.data.salePrice && (
+                        <span class="w-fit px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-lg border border-white/30">
+                          Ahorras S/{" "}
+                          {(
+                            mainProduct.data.price - mainProduct.data.salePrice
+                          ).toFixed(0)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div class="relative h-72">
+                    <img
+                      src={mainProduct.data.images[0]}
+                      alt={mainProduct.data.title}
+                      class="w-full h-full object-cover p-0 transform group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="absolute bottom-4 left-4 right-4 z-10p-5 flex-1 flex flex-col">
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm text-white group-hover:text-emerald-100">
+                        De
+                      </span>
+                      <span class="text-2xl font-bold text-white group-hover:text-emerald-100">
+                        S/{" "}
+                        {mainProduct.data.salePrice?.toFixed(2) ||
+                          mainProduct.data.price.toFixed(2)}
+                      </span>
+                    </div>
+                    {mainProduct.data.salePrice && (
+                      <div class="text-sm text-gray-300 line-through">
+                        S/ {mainProduct.data.price.toFixed(2)}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              </article>
+            </div>
+          )}
+
+          {/* GRILLA DE PRODUCTOS RESTANTES */}
+          {gridProducts.map((p) => {
+            const discount = p.data.salePrice
+              ? Math.round((1 - p.data.salePrice / p.data.price) * 100)
+              : null;
+            return (
+              <article class="group relative bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 max-h-64 min-h-64">
+                <a
+                  href={`/tienda/${p.slug}`}
+                  class="h-full w-full flex flex-col"
+                >
+                  <div class="relative p-4 flex flex-col gap-1 min-h-[110px]">
+                    <h3 class="font-bold text-base text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2">
+                      {p.data.title}
+                    </h3>
+                    {p.data.shortDescription && (
+                      <p class="text-[0.75rem] text-gray-600 line-clamp-1">
+                        {p.data.shortDescription}
+                      </p>
+                    )}
+                    {p.data.salePrice && (
+                      <span class="w-fit px-2 py-0.5 bg-amber-50 text-amber-700 text-[0.7rem] font-bold rounded border border-amber-100">
+                        Ahorras {(p.data.price - p.data.salePrice).toFixed(0)}{" "}
+                        S/
+                      </span>
+                    )}
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2 flex-1">
+                    <div class="p-4 flex flex-col justify-end">
+                      {p.data.salePrice ? (
+                        <div class="flex flex-col">
+                          <span class="text-xs text-gray-500">
+                            S/ {p.data.price.toFixed(2)}
+                          </span>
+                          <span class="text-lg font-bold text-gray-900">
+                            S/ {p.data.salePrice.toFixed(2)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span class="text-lg font-bold text-gray-900">
+                          S/ {p.data.price.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    <div class="relative h-32 w-full p-2">
+                      <img
+                        src={p.data.images[0]}
+                        alt={p.data.title}
+                        class="w-full h-full object-contain transform group-hover:scale-105 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {discount && (
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-orange-600 text-white text-[0.65rem] font-bold rounded-full">
+                      -{discount}%
+                    </span>
+                  )}
+                </a>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

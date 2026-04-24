@@ -6,6 +6,7 @@ category: celulares
 locations:
   - location: miraflores
 images:
+  - /uploads/products/4bd97b9ea7c180f75cd56ab631cf2320.png
   - /uploads/products/redmi-a5-plus-pro-1.png
   - /uploads/products/redmi-a5-plus-pro-2.png
   - /uploads/products/redmi-a5-plus-pro-3.png

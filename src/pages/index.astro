@@ -5,19 +5,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Badge from "../components/ui/Badge.astro";
 import HeroSlider from "../components/home/HeroSlider.astro";
 import CategoryList from "../components/home/CategoryList.astro";
-import Icon from "../components/ui/Icon.astro";
+import FeaturedProducts from "../components/home/FeaturedProducts.astro";
+import ProductSection from "../components/home/ProductSection.astro";
+import StoreSection from "../components/home/StoreSection.astro";
+// import Icon from "../components/ui/Icon.astro";
 
 // Productos destacados
-const allProducts = await getCollection("products");
+const allProducts = await getCollection(
+  "products",
+  ({ data }: { data: any }) => data.inStock,
+);
 const featured = allProducts
   .filter((p: any) => p.data.featured && p.data.inStock)
-  .slice(0, 6);
+  .slice(0, 7);
 
 const featuredWithData = await Promise.all(
   featured.map(async (p: any) => {
     // CORRECCIÓN: Pasar el nombre de la colección como primer argumento
-    const brand = p.data.brand ? await getEntry('brands', p.data.brand) : null;
-    const category = p.data.category ? await getEntry('categories', p.data.category) : null;
+    const brand = p.data.brand ? await getEntry("brands", p.data.brand) : null;
+    const category = p.data.category
+      ? await getEntry("categories", p.data.category)
+      : null;
 
     return {
       ...p,
@@ -25,6 +33,28 @@ const featuredWithData = await Promise.all(
       categoryName: category?.data.name ?? "",
     };
   }),
+);
+
+// Función para procesar datos (opcional, para obtener nombres de marcas/categorías)
+async function hydrateProducts(productList: any[]) {
+  return await Promise.all(
+    productList.map(async (p) => {
+      const brand = p.data.brand
+        ? await getEntry("brands", p.data.brand)
+        : null;
+      return { ...p, brandName: brand?.data.name || "" };
+    }),
+  );
+}
+
+// 1. Filtrar Celulares
+const smartphones = await hydrateProducts(
+  allProducts.filter((p: any) => p.data.category === "celulares").slice(0, 5),
+);
+
+// 2. Filtrar Accesorios
+const accessories = await hydrateProducts(
+  allProducts.filter((p: any) => p.data.category === "accesorios").slice(0, 5),
 );
 
 // Activaciones próximas
@@ -45,7 +75,9 @@ const upcomingActivations = allActivations
 const activationsWithLocation = await Promise.all(
   upcomingActivations.map(async (a: any) => {
     // CORRECCIÓN: Pasar 'locations' como primer argumento
-    const location = a.data.location ? await getEntry('locations', a.data.location) : null;
+    const location = a.data.location
+      ? await getEntry("locations", a.data.location)
+      : null;
     return { ...a, locationName: location?.data.name ?? "" };
   }),
 );
@@ -59,152 +91,31 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
   description="ExpansionTec — Tecnología y periféricos gaming al mejor precio en Lima. Visítanos en nuestras sucursales."
 >
   <HeroSlider />
+
+  <!-- CATEGORIAS -->
   <CategoryList />
 
-  <!-- STATS -->
-  <!-- <section
-    style="border-bottom:1px solid var(--color-border);background:var(--color-surface);"
-  >
-    <div
-      style="max-width:1200px;margin:0 auto;padding:1.5rem 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;text-align:center;"
-    >
-      {
-        [
-          { value: `${allProducts.length}+`, label: "Productos" },
-          { value: `${locations.length}`, label: "Sucursales" },
-          { value: `${allActivations.length}+`, label: "Activaciones" },
-          { value: "Lima", label: "Cobertura" },
-        ].map((stat) => (
-          <div style="padding:1rem;">
-            <p style="font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:var(--color-primary);">
-              {stat.value}
-            </p>
-            <p style="font-size:0.8rem;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">
-              {stat.label}
-            </p>
-          </div>
-        ))
-      }
-    </div>
-  </section> -->
-
   <!-- PRODUCTOS DESTACADOS -->
-  {
-    featuredWithData.length > 0 && (
-      <section class="py-12 sm:py-16">
-        <div class="container mx-auto px-4">
-          <div class="flex justify-center items-center mb-8">
-            <div class="flex items-center gap-3">
-              <Icon id="icon-bag" name="bag" class="w-8 h-8 text-orange-500" />
-              <h2 class="font-satoshi text-3xl sm:text-4xl font-medium text-gray-900">
-                Productos Destacados
-              </h2>
-              {/* <a
-                href="/tienda"
-                style="font-size:0.875rem;color:var(--color-primary);font-weight:600;text-decoration:none;"
-              >
-                Ver todos →
-              </a> */}
-            </div>
-          </div>
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
-          >
-            {featuredWithData.map((p) => {
-              const discount = p.data.salePrice
-                ? Math.round((1 - p.data.salePrice / p.data.price) * 100)
-                : null;
-              return (
-                <a href={`/tienda/${p.slug}`} style="text-decoration:none;">
-                  <article
-                    class="group relative bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
-                  >
-                    <!-- Contenido izquierdo -->
-                    <div class="relative p-4 flex flex-col gap-1 min-h-28">
-                      <!-- Título -->
-                      <h3 class="font-bold text-base sm:text-lg text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2" >
-                        {p.data.title}
-                      </h3>
-                      {/* DESCRIPCION  */}
-                      <div class="">
-                        {p.data.shortDescription && (
-                          <div class="text-[0.75rem] text-gray-600 line-clamp-1">
-                            {p.data.shortDescription}
-                          </div>
-                        )}
-                      </div>
-                      <!-- Badge "Te ahorras" -->
-                      {p.data.salePrice && (
-                        <div class="flex flex-wrap gap-2">
-                          <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
-                            Te ahorras {(p.data.price - p.data.salePrice).toFixed(0)} S/
-                          </span>
-                        </div>
-                      )}
-                    </div>
+  <FeaturedProducts products={featuredWithData} title="Productos Destacados" />
 
-                    <div class="grid grid-cols-2 gap-2 h-full">
-                      {/* Columna 1: Información del producto */}
-                      <div class="p-4 flex flex-col justify-between">
-                        <!-- Spacer para empujar el contenido hacia abajo -->
-                        <div class="flex-1"></div>
-                        <!-- Precios -->
-                        <div>
-                          {p.data.salePrice ? (
-                            <div class="space-y-1">
-                              <div class="flex flex-col gap-1">
-                                <p class="text-xs text-gray-500">De</p>
-                                <p class="text-xl font-bold text-gray-900">
-                                  S/ {p.data.salePrice.toFixed(2)}
-                                </p>
-                                <p class="text-sm text-gray-400 line-through">
-                                  S/ {p.data.price.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-                          ) : (
-                            <p class="text-xl font-bold text-gray-900">
-                              S/ {p.data.price.toFixed(2)}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      {/* Columna 2: Imagen del producto */}
-                      <div class="relative">
-                        {p.data.images[0] ? (
-                          <img
-                            src={p.data.images[0]}
-                            alt={p.data.title}
-                            class="w-full h-full object-contain p-1 transform group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                            width="200"
-                            height="200"
-                          />
-                        ) : (
-                          <div class="w-full h-full flex items-center justify-center bg-gray-50 rounded-lg">
-                            <Icon id="icon-image" name="image" class="w-12 h-12 text-gray-300" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
+  {/* SECCIÓN CELULARES */}
+  <ProductSection
+    products={smartphones}
+    title="Celulares y Smartphones"
+    icon="device-mobile"
+    gradient="from-slate-900 via-slate-800 to-slate-900"
+  />
 
-                    <!-- Descuento % (opcional, esquina superior derecha) -->
-                    {discount && (
-                      <span
-                        class="absolute top-4 right-4 px-2 py-1 bg-orange-600 text-white text-xs font-bold rounded-full"
-                      >
-                        -{discount}%
-                      </span>
-                    )}
-                  </article>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  {/* SECCIÓN ACCESORIOS */}
+  <ProductSection
+    products={accessories}
+    title="Accesorios Originales"
+    icon="headphones"
+    gradient="from-orange-500 to-rose-500"
+  />
+
+  <!-- SUCURSALES -->
+  <StoreSection locations={locations} />
 
   <!-- ACTIVACIONES PRÓXIMAS -->
   {
@@ -274,79 +185,4 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
       </section>
     )
   }
-
-  <!-- SUCURSALES -->
-  <section
-    style="padding:clamp(2rem,5vw,4rem) 1rem;border-top:1px solid var(--color-border);"
-  >
-    <div style="max-width:1200px;margin:0 auto;">
-      <div
-        style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:8px;"
-      >
-        <h2
-          style="font-family:var(--font-display);font-size:clamp(1.25rem,1rem+1vw,1.75rem);font-weight:700;color:var(--color-text);"
-        >
-          Nuestras tiendas
-        </h2>
-        <a
-          href="/sucursales"
-          style="font-size:0.875rem;color:var(--color-primary);font-weight:600;text-decoration:none;"
-        >
-          Ver todas →
-        </a>
-      </div>
-
-      <div
-        style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:1rem;"
-      >
-        {
-          locations.map((loc: any) => (
-            <a href={`/sucursales/${loc.slug}`} style="text-decoration:none;">
-              <div
-                style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:1.25rem;transition:box-shadow 180ms ease,transform 180ms ease;"
-                onmouseover="this.style.boxShadow='0 4px 12px oklch(0.2 0.01 80/0.08)';this.style.transform='translateY(-2px)'"
-                onmouseout="this.style.boxShadow='none';this.style.transform='none'"
-              >
-                <p style="font-weight:700;font-size:0.9rem;color:var(--color-text);margin-bottom:6px;">
-                  {loc.data.name}
-                </p>
-                <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;">
-                  📍 {loc.data.district}
-                </p>
-                <p style="font-size:0.8rem;color:var(--color-text-muted);">
-                  🕐 {loc.data.schedule}
-                </p>
-              </div>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA FINAL -->
-  <section
-    style="padding:clamp(3rem,6vw,5rem) 1rem;background:var(--color-primary);text-align:center;"
-  >
-    <div style="max-width:640px;margin:0 auto;">
-      <h2
-        style="font-family:var(--font-display);font-size:clamp(1.5rem,1rem+2vw,2.25rem);font-weight:700;color:white;margin-bottom:1rem;"
-      >
-        ¿Tienes alguna consulta?
-      </h2>
-      <p
-        style="color:rgba(255,255,255,0.8);margin-bottom:2rem;font-size:0.95rem;"
-      >
-        Escríbenos y te asesoramos sobre el producto ideal para ti.
-      </p>
-      <a
-        href="/contacto"
-        style="display:inline-block;padding:13px 32px;border-radius:8px;background:white;color:var(--color-primary);font-weight:700;font-size:0.95rem;text-decoration:none;"
-      >
-        Contactar ahora →
-      </a>
-    </div>
-  </section>
 </BaseLayout>
-// test
-// test

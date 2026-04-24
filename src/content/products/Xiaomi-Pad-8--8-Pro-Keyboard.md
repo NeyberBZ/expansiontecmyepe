@@ -1,7 +1,7 @@
 ---
-title: Xiaomi Pad 7 / 7 Pro Keyboard
-price: 550
-salePrice: 450
+title: Xiaomi Pad 8 / 8 Pro Keyboard
+price: 650
+salePrice: 559
 brand: redmi
 category: accesorios
 locations:
@@ -16,13 +16,13 @@ specs:
   - key: Compatibilidad
     value: Redmi Pad Pro
 inStock: true
-featured: true
+featured: false
 tags:
   - xiaomi-pad
-  - xiaomi-pad-7
-  - xiaomi-pad-7-pro
+  - xiaomi-pad-8
+  - xiaomi-pad-8-pro
   - xioami
-seoTitle: Xiaomi Pad 7 / 7 Pro Keyboard
+seoTitle: Xiaomi Pad 8 / 8 Pro Keyboard
 seoDescription: Escritura de nivel PC para una experiencia más eficiente
 publishedAt: 2026-02-10T03:38:05.000Z
 ---
