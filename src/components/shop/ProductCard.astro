@@ -12,7 +12,7 @@ const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
 ---
 
 <article
-  class="bg-white border border-gray-100 rounded-[2.5rem] p-8 flex flex-col items-center text-center group hover:shadow-xl transition-all duration-500 h-full"
+  class="group relative bg-white overflow-hidden hover:shadow-xl transition-all duration-300"
 >
   {
     hasDiscount && (
@@ -22,9 +22,7 @@ const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
     )
   }
 
-  <h3
-    class="font-satoshi text-3xl font-black text-[#1a202c] mb-2 leading-tight"
-  >
+  <h3 class="font-satoshi text-lg font-black text-gray-600 mb-2 leading-tight">
     {product.title}
   </h3>
 
@@ -34,7 +32,7 @@ const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
   </p>
 
   <div class="flex items-baseline justify-center gap-3 mb-8">
-    <span class="text-2xl font-black text-[#1a202c]"
+    <span class="text-xl font-black text-[#1a202c]"
       >S/ {product.salePrice || product.price}</span
     >
     {
@@ -47,13 +45,13 @@ const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
   </div>
 
   <div class="flex gap-3 w-full mb-10">
-    <button
-      class="flex-1 bg-[#0f172a] text-white py-4 rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all active:scale-95"
+    <a href={`/producto/${product.id}`}
+      class="justify-center bg-gray-900 text-white text-sm font-medium px-4 py-2 rounded-xl hover:bg-orange-700 transition-colors tracking-normal"
     >
       Comprar ahora
-    </button>
+    </a>
     <a
-      href={`/productos/${product.id}`}
+      href={`/producto/${product.id}`}
       class="flex-1 bg-[#ff4f00] text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center hover:bg-orange-700 transition-all active:scale-95"
     >
       Más información

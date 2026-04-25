@@ -46,6 +46,10 @@ export const categoryOptions: Option[] = [
   {
     "value": "celulares",
     "label": "Celulares"
+  },
+  {
+    "value": "wearables",
+    "label": "Wearables"
   }
 ];
 

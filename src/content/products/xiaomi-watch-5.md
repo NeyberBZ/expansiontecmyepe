@@ -4,7 +4,7 @@ shortDescription: Habla con Google Gemini directamente en tu muñeca
 price: 1650
 salePrice: 1550
 brand: xiaomi
-category: celulares
+category: wearables
 locations:
   - location: miraflores
 images:

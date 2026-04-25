@@ -1,17 +1,1 @@
-# .husky/pre-commit (NUEVO FORMATO - sin shebang ni .husky.sh)
-echo "🔧 Verificando referencias de Tina CMS..."
-
-# Ejecutar el script de corrección
-node scripts/fix-tina-refs.mjs
-
-# Verificar si hay cambios después de la corrección
-if git diff --quiet; then
-  echo "✨ No se encontraron referencias para corregir"
-else
-  echo "✅ Referencias corregidas automáticamente"
-
-  # Agregar los archivos corregidos al commit actual
-  git add src/content/products/
-
-  echo "📦 Archivos corregidos agregados al commit"
-fi
+npm test
