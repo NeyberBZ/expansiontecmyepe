@@ -4,6 +4,7 @@ import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 import Badge from "../../components/ui/Badge.astro";
+import Icon from "../../components/ui/Icon.astro";
 
 export async function getStaticPaths() {
   const locations = await getCollection("locations");
@@ -16,21 +17,24 @@ if (!location) return Astro.redirect("/sucursales");
 
 const { Content } = await location.render();
 
-// Activaciones vinculadas a esta sucursal
+// ✅ ACTUALIZACIÓN: Buscar en el nuevo arreglo 'locations' de cada activación
 const allActivations = await getCollection("activations");
-const linkedActivations = allActivations.filter(
-  (a: any) => a.data.location.id === slug && a.data.isPublished,
-);
+const now = new Date();
 
-const mapsUrl = `https://www.google.com/maps?q=${location.data.coordinates.lat},${location.data.coordinates.lng}`;
-const embedUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyD-placeholder&q=${location.data.coordinates.lat},${location.data.coordinates.lng}`;
+const linkedActivations = allActivations.filter((a: any) => {
+  const isLinked = a.data.locations?.includes(slug);
+  const isPublished = a.data.isPublished;
+  const hasNotEnded = new Date(a.data.endDate) > now;
+  return isLinked && isPublished && hasNotEnded;
+});
 ---
 
 <BaseLayout
   title={location.data.name}
-  description={`Visita ${location.data.name} en ${location.data.address}, ${location.data.district}. ${location.data.schedule}`}
+  description={`Visita nuestra tienda ${location.data.name} en ${location.data.address}. ${location.data.schedule}`}
 >
-  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+  <div class="w-full mt-20"></div>
+  <div class="container mx-auto px-4 py-8">
     <BreadCrumb
       crumbs={[
         { label: "Inicio", href: "/" },
@@ -39,145 +43,108 @@ const embedUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyD-placeho
       ]}
     />
 
-    <div
-      style="display:grid;grid-template-columns:1fr;gap:2rem;"
-      id="location-layout"
-    >
-      <!-- Info principal -->
-      <div>
-        <div
-          style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;"
-        >
-          <h1
-            style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);"
-          >
-            {location.data.name}
-          </h1>
-          <Badge variant="primary">{location.data.district}</Badge>
-        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-8">
+      <div class="lg:col-span-7 space-y-8">
+        <header>
+          <div class="flex items-center gap-4 mb-4">
+            <h1 class="font-satoshi text-3xl md:text-5xl font-bold text-gray-900">
+              {location.data.name}
+            </h1>
+            <Badge variant="primary">{location.data.district}</Badge>
+          </div>
+          <p class="text-lg text-gray-500 font-medium">Información detallada de la tienda y servicios disponibles.</p>
+        </header>
 
-        <!-- Datos de contacto -->
-        <div
-          style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;"
-        >
-          <h2
-            style="font-size:0.8rem;font-weight:700;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1rem;"
-          >
-            Información de contacto
-          </h2>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            {
-              [
-                {
-                  icon: "📍",
-                  label: "Dirección",
-                  value: `${location.data.address}, ${location.data.district}, ${location.data.city}`,
-                },
-                { icon: "📞", label: "Teléfono", value: location.data.phone },
-                { icon: "🕐", label: "Horario", value: location.data.schedule },
-                ...(location.data.email
-                  ? [{ icon: "✉️", label: "Email", value: location.data.email }]
-                  : []),
-              ].map((item) => (
-                <div style="display:flex;gap:12px;align-items:flex-start;">
-                  <span style="font-size:1.1rem;flex-shrink:0;">
-                    {item.icon}
-                  </span>
-                  <div>
-                    <p style="font-size:0.75rem;color:var(--color-text-faint);margin-bottom:2px;">
-                      {item.label}
-                    </p>
-                    <p style="font-size:0.9rem;color:var(--color-text);">
-                      {item.value}
-                    </p>
-                  </div>
-                </div>
-              ))
-            }
+        {/* Tarjeta de Datos Rápidos */}
+        <div class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
+          <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Detalles de contacto</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex gap-4">
+              <div class="bg-orange-50 p-3 rounded-2xl h-fit">
+                <Icon name="map" class="w-6 h-6 text-orange-600" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">Dirección</p>
+                <p class="text-gray-600 text-sm leading-relaxed">{location.data.address}, {location.data.district}</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="bg-orange-50 p-3 rounded-2xl h-fit">
+                <Icon name="clock" class="w-6 h-6 text-orange-600" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">Horario</p>
+                <p class="text-gray-600 text-sm">{location.data.schedule}</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="bg-orange-50 p-3 rounded-2xl h-fit">
+                <Icon name="phone" class="w-6 h-6 text-orange-600" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">Teléfono</p>
+                <p class="text-gray-600 text-sm">{location.data.phone || "No disponible"}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-gray-50 flex flex-wrap gap-3">
+            <a href={location.data.googleMapsUrl} target="_blank" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-800 transition-colors">
+              <Icon name="direction" class="w-5 h-5" /> Google Maps
+            </a>
+            {location.data.wazeUrl && (
+              <a href={location.data.wazeUrl} target="_blank" class="bg-[#33ccff] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#2bb5e0] transition-colors">
+                <Icon name="waze" class="w-5 h-5" /> Waze
+              </a>
+            )}
           </div>
         </div>
 
-        <!-- Botón Google Maps -->
-        <a
-          href={mapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;background:var(--color-primary);color:white;text-decoration:none;font-size:0.875rem;font-weight:600;"
-        >
-          📍 Ver en Google Maps
-        </a>
-
-        <!-- Descripción Markdown -->
-        {
-          Content && (
-            <div style="margin-top:1.5rem;color:var(--color-text);line-height:1.8;font-size:0.95rem;">
-              <Content />
-            </div>
-          )
-        }
+        {/* Contenido adicional (Markdown) */}
+        {Content && (
+          <div class="prose prose-orange max-w-none prose-p:text-gray-600 prose-headings:font-satoshi">
+            <Content />
+          </div>
+        )}
       </div>
 
-      <!-- Mapa embebido -->
-      <div>
-        <div
-          style="border-radius:12px;overflow:hidden;border:1px solid var(--color-border);aspect-ratio:16/9;background:var(--color-surface-offset);display:flex;align-items:center;justify-content:center;"
-        >
-          <p
-            style="text-align:center;color:var(--color-text-muted);font-size:0.875rem;padding:2rem;"
-          >
-            🗺️ Coordenadas: {location.data.coordinates.lat}, {
-              location.data.coordinates.lng
-            }<br />
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style="color:var(--color-primary);"
-            >
-              Abrir en Google Maps →
-            </a>
-          </p>
+      <div class="lg:col-span-5 space-y-8">
+        {/* Mapa Interactivo */}
+        <div class="rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-lg aspect-square lg:aspect-auto lg:h-[450px]">
+          <iframe
+            src={location.data.mapEmbedUrl}
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            class="grayscale hover:grayscale-0 transition-all duration-500"
+          ></iframe>
         </div>
 
-        <!-- Activaciones vinculadas -->
-        {
-          linkedActivations.length > 0 && (
-            <div style="margin-top:1.5rem;">
-              <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);margin-bottom:1rem;">
-                Activaciones en esta sucursal
-              </h2>
-              <div style="display:flex;flex-direction:column;gap:8px;">
-                {linkedActivations.map((act: any) => (
-                  <a
-                    href={`/activaciones/${act.slug}`}
-                    style="text-decoration:none;"
-                  >
-                    <div style="padding:12px 16px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
-                      <span style="font-size:0.875rem;font-weight:600;color:var(--color-text);">
-                        {act.data.title}
-                      </span>
-                      <span style="font-size:0.75rem;color:var(--color-text-muted);">
-                        {act.data.startDate.toLocaleDateString("es-PE")}
-                      </span>
-                    </div>
-                  </a>
-                ))}
-              </div>
+        {/* Activaciones Activas/Próximas */}
+        {linkedActivations.length > 0 && (
+          <div class="bg-orange-50 rounded-3xl p-6 md:p-8 border border-orange-100">
+            <h3 class="font-satoshi text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span class="text-2xl">🔥</span> Eventos en tienda
+            </h3>
+            <div class="space-y-4">
+              {linkedActivations.map((act: any) => (
+                <a href={`/activaciones/${act.id || act.slug}`} class="flex items-center justify-between bg-white p-4 rounded-2xl border border-orange-200 hover:border-orange-500 hover:shadow-md transition-all group">
+                  <div class="flex flex-col">
+                    <span class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{act.data.title}</span>
+                    <span class="text-xs text-gray-500">{new Date(act.data.startDate).toLocaleDateString("es-PE", { day: '2-digit', month: 'long'})}</span>
+                  </div>
+                  <span class="text-orange-500 font-bold">→</span>
+                </a>
+              ))}
             </div>
-          )
-        }
+          </div>
+        )}
       </div>
     </div>
   </div>
 </BaseLayout>
-
-<script>
-  function handleResize() {
-    const layout = document.getElementById("location-layout");
-    if (!layout) return;
-    layout.style.gridTemplateColumns =
-      window.innerWidth >= 768 ? "1fr 1fr" : "1fr";
-  }
-  handleResize();
-  window.addEventListener("resize", handleResize);
-</script>

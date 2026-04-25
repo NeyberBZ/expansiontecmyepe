@@ -111,7 +111,7 @@ const gridProducts = products.slice(1, 5); // Tomamos los siguientes 4 para comp
                     )}
                     {p.data.salePrice && (
                       <span class="w-fit px-2 py-0.5 bg-amber-50 text-amber-700 text-[0.7rem] font-bold rounded border border-amber-100">
-                        Ahorras {(p.data.price - p.data.salePrice).toFixed(0)}{" "}
+                        Ahorras {(p.data.price - p.data.salePrice).toFixed(0)}
                         S/
                       </span>
                     )}
@@ -152,6 +152,32 @@ const gridProducts = products.slice(1, 5); // Tomamos los siguientes 4 para comp
               </article>
             );
           })}
+
+          <article class="group relative bg-orange-50 hover:bg-gray-100 border border-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+            <a
+              href="/productos"
+              class="h-full flex flex-col items-center justify-center p-6"
+            >
+              <span class="text-gray-900 font-semibold inline-flex items-center gap-2 tracking-wider">
+                Ver más productos
+                <Icon
+                  id="icon-arrow-right-square"
+                  name="arrow-right-square"
+                  class="w-6 h-6" />
+              </span>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <img src="/uploads/ba043cad917abaf964b644e419e858ba.png" />
+                </div>
+                <div>
+                  <img
+                    src="/uploads/a365dac6c6b371e09a6f4ec7ce3fedce.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </a>
+          </article>
         </div>
       </div>
     </section>

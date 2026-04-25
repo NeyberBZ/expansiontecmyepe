@@ -1,0 +1,70 @@
+---
+// src/components/shop/ProductCard.astro
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  product: any;
+}
+
+const { product } = Astro.props;
+const hasDiscount = product.salePrice && product.salePrice < product.price;
+const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
+---
+
+<article
+  class="bg-white border border-gray-100 rounded-[2.5rem] p-8 flex flex-col items-center text-center group hover:shadow-xl transition-all duration-500 h-full"
+>
+  {
+    hasDiscount && (
+      <div class="bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-xs font-black tracking-wide mb-4 border border-orange-100">
+        Te ahorras {saving} S/
+      </div>
+    )
+  }
+
+  <h3
+    class="font-satoshi text-3xl font-black text-[#1a202c] mb-2 leading-tight"
+  >
+    {product.title}
+  </h3>
+
+  <p class="text-gray-400 text-sm mb-6 line-clamp-2 max-w-[250px]">
+    Escritura de nivel PC para una experiencia más fluida y natural en cada
+    trazo.
+  </p>
+
+  <div class="flex items-baseline justify-center gap-3 mb-8">
+    <span class="text-2xl font-black text-[#1a202c]"
+      >S/ {product.salePrice || product.price}</span
+    >
+    {
+      hasDiscount && (
+        <span class="text-gray-400 line-through text-sm">
+          S/ {product.price}
+        </span>
+      )
+    }
+  </div>
+
+  <div class="flex gap-3 w-full mb-10">
+    <button
+      class="flex-1 bg-[#0f172a] text-white py-4 rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all active:scale-95"
+    >
+      Comprar ahora
+    </button>
+    <a
+      href={`/productos/${product.id}`}
+      class="flex-1 bg-[#ff4f00] text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center hover:bg-orange-700 transition-all active:scale-95"
+    >
+      Más información
+    </a>
+  </div>
+
+  <div class="relative w-full aspect-square mt-auto overflow-hidden">
+    <img
+      src={product.images?.[0] || "/uploads/placeholder.jpg"}
+      alt={product.title}
+      class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
+    />
+  </div>
+</article>

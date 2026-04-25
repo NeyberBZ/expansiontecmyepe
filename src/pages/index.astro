@@ -8,7 +8,8 @@ import CategoryList from "../components/home/CategoryList.astro";
 import FeaturedProducts from "../components/home/FeaturedProducts.astro";
 import ProductSection from "../components/home/ProductSection.astro";
 import StoreSection from "../components/home/StoreSection.astro";
-// import Icon from "../components/ui/Icon.astro";
+import BrandList from "../components/home/BrandList.astro";
+import ActivationSection from "../components/home/ActivationSection.astro";
 
 // Productos destacados
 const allProducts = await getCollection(
@@ -59,27 +60,39 @@ const accessories = await hydrateProducts(
 
 // Activaciones próximas
 const now = new Date();
-const allActivations = await getCollection(
-  "activations",
-  (a: any) => a.data.isPublished,
-);
-const upcomingActivations = allActivations
-  .filter((a: any) => new Date(a.data.endDate) > now)
-  .sort(
-    (a: any, b: any) =>
-      new Date(a.data.startDate).getTime() -
-      new Date(b.data.startDate).getTime(),
-  )
-  .slice(0, 3);
+const allActivations = await getCollection("activations");
+// console.log("Activaciones sin procesar:", allActivations); // Debug: Ver qué datos llegan antes de procesar
+// console.log("Activaciones crudas:", allActivations); // Debug: Ver qué datos llegan
 
 const activationsWithLocation = await Promise.all(
-  upcomingActivations.map(async (a: any) => {
-    // CORRECCIÓN: Pasar 'locations' como primer argumento
-    const location = a.data.location
-      ? await getEntry("locations", a.data.location)
-      : null;
-    return { ...a, locationName: location?.data.name ?? "" };
-  }),
+  allActivations
+    .filter((a: any) => {
+      // Filtramos por publicadas, que no hayan vencido y que tengan el nuevo formato de array
+      const isPublished = a.data.isPublished;
+      const hasNotEnded = new Date(a.data.endDate) > now;
+      const hasLocations = Array.isArray(a.data.locations);
+      return isPublished && hasNotEnded && hasLocations;
+    })
+    .map(async (a: any) => {
+      // Recuperamos los objetos completos de cada sucursal vinculada
+      const locationEntries = await Promise.all(
+        a.data.locations.map((id: string) => getEntry("locations", id)),
+      );
+
+      return {
+        ...a,
+        // Guardamos solo los nombres para el componente
+        locationNames: locationEntries
+          .filter((entry) => entry !== undefined)
+          .map((l: any) => l.data.name),
+      };
+    }),
+);
+
+// Ordenamos: las más cercanas a empezar van primero
+activationsWithLocation.sort(
+  (a, b) =>
+    new Date(a.data.startDate).getTime() - new Date(b.data.startDate).getTime(),
 );
 
 // Sucursales activas
@@ -118,71 +131,9 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
   <StoreSection locations={locations} />
 
   <!-- ACTIVACIONES PRÓXIMAS -->
-  {
-    activationsWithLocation.length > 0 && (
-      <section style="padding:clamp(2rem,5vw,4rem) 1rem;background:var(--color-surface);border-top:1px solid var(--color-border);">
-        <div style="max-width:1200px;margin:0 auto;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:8px;">
-            <h2 style="font-family:var(--font-display);font-size:clamp(1.25rem,1rem+1vw,1.75rem);font-weight:700;color:var(--color-text);">
-              Activaciones próximas
-            </h2>
-            <a
-              href="/activaciones"
-              style="font-size:0.875rem;color:var(--color-primary);font-weight:600;text-decoration:none;"
-            >
-              Ver todas →
-            </a>
-          </div>
+  <ActivationSection activations={activationsWithLocation} />
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:1rem;">
-            {activationsWithLocation.map((a) => {
-              const startDate = new Date(a.data.startDate);
-              const endDate = new Date(a.data.endDate);
-              const isActive = startDate < now;
-              return (
-                <a
-                  href={`/activaciones/${a.slug}`}
-                  style="text-decoration:none;"
-                >
-                  <article
-                    style="background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;transition:box-shadow 180ms ease,transform 180ms ease;"
-                    onmouseover="this.style.boxShadow='0 8px 24px oklch(0.2 0.01 80/0.12)';this.style.transform='translateY(-2px)'"
-                    onmouseout="this.style.boxShadow='none';this.style.transform='none'"
-                  >
-                    {a.data.banner && (
-                      <div style="aspect-ratio:16/7;overflow:hidden;background:var(--color-surface-offset);">
-                        <img
-                          src={a.data.banner}
-                          alt={a.data.title}
-                          loading="lazy"
-                          style="width:100%;height:100%;object-fit:cover;"
-                        />
-                      </div>
-                    )}
-                    <div style="padding:1.25rem;">
-                      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;">
-                        <h3 style="font-weight:700;font-size:0.9rem;color:var(--color-text);line-height:1.3;">
-                          {a.data.title}
-                        </h3>
-                        <Badge variant={isActive ? "success" : "primary"}>
-                          {isActive ? "Activa" : "Próxima"}
-                        </Badge>
-                      </div>
-                      <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;">
-                        📍 {a.locationName}
-                      </p>
-                      <p style="font-size:0.75rem;color:var(--color-text-faint);">
-                        {startDate.toLocaleDateString("es-PE")} →{" "}
-                        {endDate.toLocaleDateString("es-PE")}
-                      </p>
-                    </div>
-                  </article>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  <!-- MARCAS -->
+  <BrandList />
+
 </BaseLayout>

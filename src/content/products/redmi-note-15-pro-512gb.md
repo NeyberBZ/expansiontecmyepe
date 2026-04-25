@@ -8,6 +8,7 @@ locations:
   - location: los-olivos
 images:
   - /uploads/a365dac6c6b371e09a6f4ec7ce3fedce.png
+  - /uploads/products/xiaomi-11t-1.webp
 specs:
   - key: Sistema Operativo
     value: Xiaomi HyperOS 2

@@ -1,12 +1,12 @@
 ---
+// src/pages/tienda.astro
 import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FilterPanel from "../../components/shop/FilterPanel.tsx";
+import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 
-// Build time — carga todos los productos con sus referencias resueltas
 const allProducts = await getCollection("products");
 
-// Resuelve referencias de brand y category para cada producto
 const productIndex = await Promise.all(
   allProducts.map(async (p: any) => {
     const brand = p.data.brand ? await getEntry("brands", p.data.brand) : null;
@@ -17,77 +17,48 @@ const productIndex = await Promise.all(
       id: p.slug,
       title: p.data.title,
       price: p.data.price,
-      salePrice: p.data.salePrice ?? null,
-      brand: brand?.data.name ?? "Sin Marca",
-      // CORRECCIÓN: p.data.brand ya es el ID (string), no tiene propiedad .id
-      brandId: p.data.brand,
-      category: category?.data.name ?? "Sin Categoría",
-      // CORRECCIÓN: p.data.category ya es el ID (string)
-      categoryId: p.data.category,
-      // CORRECCIÓN: locations ahora es un array de objetos con strings
-      locations: p.data.locations.map((l: any) => l.location ?? ""),
+      salePrice: p.data.salePrice,
+      brand: brand?.data.name || "Sin Marca",
+      category: category?.data.name || "Sin Categoría",
+      locations: p.data.locations?.map((l: any) => l.location) || [],
       images: p.data.images,
-      inStock: p.data.inStock,
-      featured: p.data.featured,
-      tags: p.data.tags,
     };
   }),
 );
 
-// Opciones únicas para los filtros
-const brands = [...new Set(productIndex.map((p) => p.brand))].filter(Boolean);
-const categories = [...new Set(productIndex.map((p) => p.category))].filter(
-  Boolean,
-);
-const locations = [...new Set(productIndex.flatMap((p) => p.locations))].filter(
-  Boolean,
-);
-const maxPrice = Math.max(...productIndex.map((p) => p.price), 0);
+const brands = [...new Set(productIndex.map((p) => p.brand))];
+const categories = [...new Set(productIndex.map((p) => p.category))];
+const locations = [...new Set(productIndex.flatMap((p) => p.locations))];
 ---
 
 <BaseLayout
-  title="Tienda"
-  description="Encuentra los mejores periféricos gaming y tecnología en ExpansionTec Lima."
+  title="Tienda - ExpansionTec"
+  description="Explora nuestra tienda con una amplia variedad de productos tecnológicos. Encuentra celulares, accesorios y más, disponibles en nuestras sucursales. Compra ahora y disfruta de ofertas exclusivas."
+  image="/assets/tienda-banner.jpg"
 >
-  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
-    <h1
-      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:0.5rem;"
-    >
-      Tienda
-    </h1>
-    <p style="color:var(--color-text-muted);margin-bottom:2rem;">
-      {productIndex.length} productos disponibles
-    </p>
+  <div class="bg-[#f8fafc] min-h-screen">
+    <div class="w-full h-24 bg-white border-b border-gray-100"></div>
 
-    <FilterPanel
-      client:load
-      products={productIndex}
-      brands={brands}
-      categories={categories}
-      locations={locations}
-      maxPrice={maxPrice}
-    />
+    <main class="container mx-auto px-4 py-12 max-w-7xl">
+      <div class="mb-12">
+        <BreadCrumb
+          crumbs={[{ label: "Inicio", href: "/" }, { label: "Tienda" }]}
+        />
+        <h1 class="font-satoshi text-5xl font-black text-gray-900 mt-6">
+          Tienda
+        </h1>
+        <p class="text-gray-500 font-medium mt-2">
+          {productIndex.length} productos exclusivos
+        </p>
+      </div>
+
+      <FilterPanel
+        client:load
+        products={productIndex}
+        brands={brands}
+        categories={categories}
+        locations={locations}
+      />
+    </main>
   </div>
-  <script>
-    // Sidebar filtros: visible siempre en desktop, toggle en mobile
-    const sidebar = document.getElementById("filter-sidebar");
-    const btn = document.getElementById("toggle-filters-btn");
-
-    function handleResize() {
-      if (!sidebar) return;
-      if (window.innerWidth >= 768) {
-        sidebar.style.display = "block";
-      } else {
-        sidebar.style.display = "none";
-      }
-    }
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    btn?.addEventListener("click", () => {
-      if (!sidebar) return;
-      sidebar.style.display =
-        sidebar.style.display === "none" ? "block" : "none";
-    });
-  </script>
 </BaseLayout>

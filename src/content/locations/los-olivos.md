@@ -1,5 +1,6 @@
 ---
 name: Los Olivos
+image: /uploads/sede2.jpg
 district: Los Olivos
 city: Lima
 address: 'Av. Carlos Izaguirre 345, Los Olivos'

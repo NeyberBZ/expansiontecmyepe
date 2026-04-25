@@ -44,15 +44,20 @@ const locationsCollection = defineCollection({
   type: "content",
   schema: z.object({
     name: z.string(),
+    image: z.string().optional(), // ✅ Añadido para la foto de la tienda
     district: z.string(),
     city: z.string().default("Lima"),
     address: z.string(),
     phone: z.string(),
     email: z.string().email().optional(),
+    // ✅ Añadidos para los componentes de mapas y navegación
+    mapEmbedUrl: z.string().optional(),
+    googleMapsUrl: z.string().url().optional(),
+    wazeUrl: z.string().url().optional(),
     coordinates: z.object({
       lat: z.number(),
       lng: z.number(),
-    }),
+    }).optional(),
     schedule: z.string(),
     isActive: z.boolean().default(true),
   }),
@@ -65,9 +70,10 @@ const activationsCollection = defineCollection({
     title: z.string(),
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
-    location: z.string(), // ← Cambiado de reference a string
+    // ✅ Cambiado de z.string() a z.array(z.string())
+    locations: z.array(z.string()),
     products: z.array(z.object({
-      product: z.string(), // ← Cambiado de reference a string
+      product: z.string(),
     })).optional(),
     banner: z.string().optional(),
     isPublished: z.boolean().default(true),
@@ -82,10 +88,10 @@ const productsCollection = defineCollection({
     shortDescription: z.string().max(200).optional(),
     price: z.number().positive(),
     salePrice: z.number().positive().optional(),
-    brand: z.string(), // ← Cambiado de reference a string
-    category: z.string(), // ← Cambiado de reference a string
+    brand: z.string(),
+    category: z.string(),
     locations: z.array(z.object({
-      location: z.string(), // ← Cambiado de reference a string
+      location: z.string(),
     })),
     images: z.array(z.string()).min(1),
     specs: z.array(z.object({

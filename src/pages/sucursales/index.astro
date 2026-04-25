@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 import Badge from "../../components/ui/Badge.astro";
+import Icon from "../../components/ui/Icon.astro";
 
 const locations = await getCollection("locations");
 const active = locations.filter((l: any) => l.data.isActive);
@@ -13,69 +14,90 @@ const active = locations.filter((l: any) => l.data.isActive);
   title="Sucursales"
   description="Encuentra nuestras tiendas en Lima. Visítanos y conoce nuestros productos."
 >
-  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+  <div class="w-full mt-20"></div>
+
+  <div class="container mx-auto px-4 py-8 md:py-12">
     <BreadCrumb
       crumbs={[{ label: "Inicio", href: "/" }, { label: "Sucursales" }]}
     />
 
-    <h1
-      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:0.5rem;"
-    >
-      Nuestras Sucursales
-    </h1>
-    <p style="color:var(--color-text-muted);margin-bottom:2rem;">
-      {active.length} tiendas en Lima
-    </p>
+    <header class="mb-10">
+      <h1
+        class="font-satoshi text-3xl md:text-4xl font-bold text-gray-900 mb-2"
+      >
+        Nuestras Sucursales
+      </h1>
+      <p class="text-gray-500 font-medium">
+        {active.length} tiendas listas para atenderte en Lima
+      </p>
+    </header>
 
-    <div
-      style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:1.5rem;"
-    >
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
         active.map((loc: any) => (
-          <a href={`/sucursales/${loc.slug}`} style="text-decoration:none;">
-            <article
-              style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:1.5rem;transition:box-shadow 180ms ease,transform 180ms ease;"
-              onmouseover="this.style.boxShadow='0 8px 24px oklch(0.2 0.01 80/0.12)';this.style.transform='translateY(-2px)'"
-              onmouseout="this.style.boxShadow='none';this.style.transform='none'"
-            >
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
-                <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);">
+          <a href={`/sucursales/${loc.slug}`} class="group block">
+            <article class="bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
+              {/* Imagen de la sucursal (Estilo similar a productos/activaciones) */}
+              <div class="relative aspect-[16/9] overflow-hidden bg-gray-100">
+                <img
+                  src={loc.data.image || "/uploads/store-placeholder.jpg"}
+                  alt={loc.data.name}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
+                <div class="absolute top-4 right-4">
+                  <Badge variant="primary">{loc.data.district}</Badge>
+                </div>
+              </div>
+
+              <div class="p-6 flex flex-col flex-1">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-orange-600 transition-colors">
                   {loc.data.name}
                 </h2>
-                <Badge variant="primary">{loc.data.district}</Badge>
-              </div>
 
-              <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="display:flex;gap:10px;align-items:flex-start;">
-                  <span style="color:var(--color-primary);flex-shrink:0;">
-                    📍
-                  </span>
-                  <span style="font-size:0.875rem;color:var(--color-text-muted);">
-                    {loc.data.address}
-                  </span>
-                </div>
-                <div style="display:flex;gap:10px;align-items:center;">
-                  <span style="color:var(--color-primary);flex-shrink:0;">
-                    📞
-                  </span>
-                  <span style="font-size:0.875rem;color:var(--color-text-muted);">
-                    {loc.data.phone}
-                  </span>
-                </div>
-                <div style="display:flex;gap:10px;align-items:center;">
-                  <span style="color:var(--color-primary);flex-shrink:0;">
-                    🕐
-                  </span>
-                  <span style="font-size:0.875rem;color:var(--color-text-muted);">
-                    {loc.data.schedule}
-                  </span>
-                </div>
-              </div>
+                <div class="space-y-3 mb-6">
+                  <div class="flex items-start gap-3">
+                    <div class="text-orange-600 mt-1">
+                      <Icon
+                        id={`icon-map-${loc.slug}`}
+                        name="map"
+                        class="w-4 h-4"
+                      />
+                    </div>
+                    <p class="text-sm text-gray-600 leading-snug">
+                      {loc.data.address}
+                    </p>
+                  </div>
 
-              <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--color-divider);">
-                <span style="font-size:0.8rem;color:var(--color-primary);font-weight:600;">
-                  Ver detalles →
-                </span>
+                  <div class="flex items-center gap-3 text-sm text-gray-600">
+                    <Icon
+                      id={`icon-clock-${loc.slug}`}
+                      name="clock"
+                      class="w-4 h-4 text-orange-600"
+                    />
+                    <span>{loc.data.schedule}</span>
+                  </div>
+
+                  {loc.data.phone && (
+                    <div class="flex items-center gap-3 text-sm text-gray-600">
+                      <Icon
+                        id={`icon-phone-${loc.slug}`}
+                        name="phone"
+                        class="w-4 h-4 text-orange-600"
+                      />
+                      <span>{loc.data.phone}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                  <span class="text-sm font-bold text-orange-600 uppercase tracking-wider">
+                    Ver detalles
+                  </span>
+                  <span class="text-orange-600 transform group-hover:translate-x-1 transition-transform">
+                    →
+                  </span>
+                </div>
               </div>
             </article>
           </a>

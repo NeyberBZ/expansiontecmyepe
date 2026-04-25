@@ -1,11 +1,11 @@
 ---
+location: miraflores
 title: Semana de Periféricos Gaming - Abril 2026
 startDate: 2026-05-01T00:00:00.000Z
-endDate: 2026-04-20T00:00:00.000Z
-location: miraflores
-products:
-  - product: content/products/teclado-logitech-g915.md
-banner: ''
+endDate: 2026-04-28T00:00:00.000Z
+locations:
+  - los-olivos
+banner: /uploads/activaciones/activacionesdddss.jpg
 isPublished: true
 ---
 

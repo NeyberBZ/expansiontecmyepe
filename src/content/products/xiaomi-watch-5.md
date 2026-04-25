@@ -1,18 +1,14 @@
 ---
-title: Redmi A5 Plus Pro
-price: 350
-salePrice: 200
-brand: redmi
+title: Xiaomi Watch 5
+shortDescription: Habla con Google Gemini directamente en tu muñeca
+price: 1650
+salePrice: 1550
+brand: xiaomi
 category: celulares
 locations:
   - location: miraflores
 images:
-  - /uploads/products/4bd97b9ea7c180f75cd56ab631cf2320.png
-  - /uploads/products/redmi-a5-plus-pro-1.png
-  - /uploads/products/redmi-a5-plus-pro-2.png
-  - /uploads/products/redmi-a5-plus-pro-3.png
-  - /uploads/products/redmi-a5-plus-pro-4.png
-  - /uploads/products/redmi-a5-plus-pro-5.png
+  - /uploads/wearables.png
 specs:
   - key: Sistema Operativo
     value: Xiaomi HyperOS 2
@@ -63,13 +59,14 @@ specs:
   - key: Sensor de Huella
     value: Sí
 inStock: true
-featured: false
+featured: true
 tags:
-  - redmi
-  - redmi-a5
+  - 512gb
+  - poco
+  - poco-f8
   - xioami
-seoTitle: Redmi A5 Plus Pro
-seoDescription: '&nbsp;'
-publishedAt: 2026-02-09T01:45:59.000Z
+seoTitle: POCO F8 Pro
+seoDescription: Batería de 6580mAh con carga rapida
+publishedAt: 2026-02-09T22:02:13.000Z
 ---
 

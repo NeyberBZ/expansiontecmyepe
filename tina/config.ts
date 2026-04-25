@@ -66,12 +66,18 @@ export default defineConfig({
           },
         },
         fields: [
-          { type: "string", name: "name", label: "Nombre", required: true, searchable: true, isTitle: true },
+          { type: "string", name: "name", label: "Nombre", required: true, isTitle: true },
+          {
+            type: "string",
+            name: "slug",
+            label: "Slug (ID)",
+            required: true,
+            description: "Debe coincidir con el nombre del archivo (ej: celulares)"
+          },
           { type: "string", name: "description", label: "Descripción", searchable: true },
           { type: "image", name: "image", label: "Imagen", searchable: false },
           { type: "image", name: "featuredImage", label: "Imagen destacada (card grande)", searchable: false },
           { type: "image", name: "banner", label: "Banner (cabecera de página)", searchable: false },
-          { type: "string", name: "slug", label: "Slug URL", searchable: false },
         ],
       },
 
@@ -88,6 +94,7 @@ export default defineConfig({
         },
         fields: [
           { type: "string", name: "name", label: "Nombre", required: true, searchable: true, isTitle: true },
+          { type: "image", name: "image", label: "Foto de la tienda" },
           { type: "string", name: "district", label: "Distrito", required: true, searchable: true },
           { type: "string", name: "city", label: "Ciudad", searchable: true },
           { type: "string", name: "address", label: "Dirección", required: true, searchable: true },
@@ -103,6 +110,9 @@ export default defineConfig({
             ],
           },
           { type: "string", name: "schedule", label: "Horario" },
+          { type: "string", name: "mapEmbedUrl", label: "Link de Mapa (Embed)", ui: { description: "El src del iframe de Google Maps" } }, // <--- Faltaba
+          { type: "string", name: "googleMapsUrl", label: "URL Google Maps" }, // <--- Faltaba
+          { type: "string", name: "wazeUrl", label: "URL Waze" }, // <--- Faltaba
           { type: "boolean", name: "isActive", label: "Activa" },
           { type: "rich-text", name: "body", label: "Descripción", isBody: true },
         ],
@@ -120,8 +130,9 @@ export default defineConfig({
           { type: "datetime", name: "endDate", label: "Fecha fin", required: true },
           {
             type: "string",
-            name: "location",
-            label: "Sucursal",
+            name: "locations", // Lo cambiamos a plural para ser consistentes
+            label: "Sucursales",
+            list: true, // ✅ Esto permite agregar múltiples sucursales
             options: locationOptions,
             required: true,
           },

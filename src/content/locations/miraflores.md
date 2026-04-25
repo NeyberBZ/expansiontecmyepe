@@ -1,5 +1,6 @@
 ---
 name: Miraflores
+image: /uploads/sede3.jpeg
 district: Miraflores
 city: Lima
 address: 'Av. Larco 345, Miraflores'

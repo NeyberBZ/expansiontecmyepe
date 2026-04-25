@@ -1,75 +1,127 @@
 ---
-// src/components/layout/Footer.astro
-const year = new Date().getFullYear();
+// src/components/ui/Footer.astro
+import Icon from "../../components/ui/Icon.astro";
+
+const currentYear = new Date().getFullYear();
 ---
 
-<footer
-  class="border-t border-[var(--color-border)] bg-[var(--color-surface)] mt-auto"
->
-  <div class="mx-auto max-w-wide px-4 py-10">
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
-      <div>
-        <p class="font-display font-bold text-[var(--color-text)] mb-2">
-          ExpansionTec
-        </p>
-        <p class="text-sm text-[var(--color-text-muted)]">
-          Tecnología y periféricos gaming en Lima. Visítanos en nuestras
-          sucursales.
-        </p>
+<footer class="bg-[#0a0a0a] text-gray-400 py-16 border-t border-gray-800">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      <div class="space-y-6">
+        <div class="flex items-center gap-3">
+          <img
+            src="/logo.svg"
+            alt="Expansion Logo"
+            class="h-18 w-auto transition-transform group-hover:scale-105"
+            width="120"
+            height="40"
+          />
+        </div>
+        <p class="text-sm">Lo mejor en Equipos</p>
       </div>
 
       <div>
-        <p class="text-sm font-semibold text-[var(--color-text)] mb-3">
-          Navegación
-        </p>
-        <ul class="space-y-2">
-          {
-            [
-              { href: "/tienda", label: "Tienda" },
-              { href: "/sucursales", label: "Sucursales" },
-              { href: "/activaciones", label: "Activaciones" },
-              { href: "/contacto", label: "Contacto" },
-            ].map(({ href, label }) => (
-              <li>
-                <a
-                  href={href}
-                  class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)] transition-colors"
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <div>
-        <p class="text-sm font-semibold text-[var(--color-text)] mb-3">
-          Contacto
-        </p>
-        <ul class="space-y-2 text-sm text-[var(--color-text-muted)]">
-          <li>Lima, Perú</li>
+        <h3 class="text-white font-bold mb-6">Compra y conoce</h3>
+        <ul class="space-y-4 text-sm">
           <li>
-            <a
-              href="/contacto"
-              class="hover:text-[var(--color-primary)] transition-colors"
-            >
-              Escríbenos aquí
-            </a>
+            <a href="/tienda" class="hover:text-white transition-colors"
+              >Tienda</a>
+          </li>
+          <li>
+            <a href="/sucursales" class="hover:text-white transition-colors"
+              >Sucursales</a>
+          </li>
+          <li>
+            <a href="/activaciones" class="hover:text-white transition-colors"
+              >Activaciones</a>
+          </li>
+          <li>
+            <a href="/contacto" class="hover:text-white transition-colors"
+              >Contáctanos</a>
           </li>
         </ul>
       </div>
+
+      <div>
+        <h3 class="text-white font-bold mb-6">Sobre Nosotros</h3>
+        <ul class="space-y-4 text-sm">
+          <li>
+            <a href="/nosotros" class="hover:text-white transition-colors"
+              >Expansion TEC MyT</a>
+          </li>
+          <li>
+            <a
+              href="/politica-cookies"
+              class="hover:text-white transition-colors">Política de cookies</a>
+          </li>
+          <li>
+            <a href="/privacidad" class="hover:text-white transition-colors"
+              >Política de privacidad</a>
+          </li>
+          <li>
+            <a href="/mapa-sitio" class="hover:text-white transition-colors"
+              >Mapa del Sitio</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <h3 class="text-white font-bold mb-4">Siguenos en</h3>
+          <div class="flex gap-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ><Icon name="facebook" class="w-5 h-5" /></a
+            >
+            <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ><Icon name="instagram" class="w-5 h-5" /></a
+            >
+            <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ><Icon name="tiktok" class="w-5 h-5" /></a
+            >
+            <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ><Icon name="youtube" class="w-5 h-5" /></a
+            >
+            <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ><Icon name="whatsapp" class="w-5 h-5" /></a
+            >
+          </div>
+        </div>
+
+        <div class="space-y-4 text-sm">
+          <h3 class="text-white font-bold mb-4">Servicio al cliente</h3>
+          <div class="flex items-center gap-3">
+            <Icon name="phone" class="w-4 h-4 text-gray-500" />
+            <span>+51 984797688</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <Icon name="mail" class="w-4 h-4 text-gray-500" />
+            <span>adm_mye@telcomsway.com</span>
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <h3 class="text-white font-bold mb-4 text-sm">Tienda Principal</h3>
+          <div class="flex items-start gap-3 text-sm">
+            <Icon name="pin" class="w-4 h-4 text-gray-500 mt-1" />
+            <span>Av. La Marina 1234, Lima, Perú</span>
+          </div>
+        </div>
+
+        <a
+          href="/libro-reclamaciones"
+          class="inline-flex items-center gap-3 px-6 py-3 border border-gray-700 rounded-lg hover:bg-gray-800 transition-all w-full"
+        >
+          <Icon name="book" class="w-5 h-5" />
+          <span class="text-white font-medium text-sm"
+            >Libro de Reclamaciones</span
+          >
+        </a>
+      </div>
     </div>
 
-    <div
-      class="mt-8 pt-6 border-t border-[var(--color-divider)] flex flex-col sm:flex-row items-center justify-between gap-2"
-    >
-      <p class="text-xs text-[var(--color-text-faint)]">
-        © {year} ExpansionTec. Todos los derechos reservados.
-      </p>
-      <p class="text-xs text-[var(--color-text-faint)]">
-        Hecho con <span aria-label="amor">♥</span> en Lima
-      </p>
+    <div class="pt-8 border-t border-gray-800 text-center text-xs">
+      <p>© {currentYear} EXPANSION TECMYE. Todos los derechos reservados.</p>
     </div>
   </div>
 </footer>
