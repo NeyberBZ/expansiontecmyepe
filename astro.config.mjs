@@ -39,6 +39,9 @@ export default defineConfig({
   },
 
   vite: {
+    ssr: {
+      noExternal: ['@keystatic/astro', '@keystatic/core']
+    },
     build: {
       cssMinify: true,
       rollupOptions: {
