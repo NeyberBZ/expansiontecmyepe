@@ -5,7 +5,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../../components/ui/BreadCrumb.astro";
 import Badge from "../../../components/ui/Badge.astro";
 import AddToCart from "../../../components/shop/AddToCart.tsx";
-import { Content } from "astro:content";
+// Eliminamos el duplicado de import { Content } ya que se obtiene de product.render()
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -18,13 +18,18 @@ if (!product) return Astro.redirect("/tienda");
 
 const { Content } = await product.render();
 
-// const pdfUrl = `/specs/${product.data.title.toLowerCase().replace(/ /g, "-")}.pdf`;
+// ✅ SINCRONIZACIÓN: Usamos la misma lógica de limpieza que en el script de Node.js
+// Esto elimina diagonales y caracteres especiales para que el link no se rompa
+const safeTitle = product.data.title
+  .toLowerCase()
+  .replace(/\//g, '-')   // Reemplaza "/" por "-"
+  .replace(/[^a-z0-9]/gi, '-') // Quita todo lo que no sea letra/número
+  .replace(/-+/g, '-')   // Evita guiones dobles "--"
+  .replace(/^-|-$/g, ''); // Quita guiones al inicio o final
 
-// Generamos el nombre del archivo igual que en el script
-const pdfFileName = `${product.data.title.toLowerCase().replace(/ /g, "-")}.pdf`;
-const pdfPath = `/specs/${pdfFileName}`;
+const pdfUrl = `/specs/${safeTitle}.pdf`;
 
-// ✅ Simplificado: brand y category ahora son strings directos
+// ✅ brand y category (simplificado)
 const brand = product.data.brand
   ? await getEntry("brands", product.data.brand)
   : undefined;
@@ -54,7 +59,6 @@ const discount = product.data.salePrice
   image={product.data.images[0]}
   type="product"
 >
-  <!-- JSON-LD Product -->
   <script
     type="application/ld+json"
     set:html={JSON.stringify({
@@ -75,13 +79,6 @@ const discount = product.data.salePrice
 
   <div class="w-full mx-auto">
     <div class="w-full h-14"></div>
-    <!-- <BreadCrumb
-      crumbs={[
-        { label: "Inicio", href: "/" },
-        { label: "Tienda", href: "/tienda" },
-        { label: product.data.title },
-      ]}
-    /> -->
 
     <div
       class="sticky top-0 z-40 w-full bg-[#fdf2e3] border-b border-gray-100 shadow-sm overflow-x-auto"
@@ -117,13 +114,18 @@ const discount = product.data.salePrice
           >
             Especificaciones
           </button>
-          <a
-            href={pdfUrl}
-            download
-            class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
-          >
-            <span>⬇️ Descargar Ficha Técnica (PDF)</span>
-          </a>
+
+          {/* ✅ Botón de descarga condicional: Solo aparece si hay especificaciones */}
+          {product.data.specs && product.data.specs.length > 0 && (
+            <a
+              href={pdfUrl}
+              download
+              class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              <span>Ficha Técnica</span>
+            </a>
+          )}
         </nav>
 
         <div class="flex items-center gap-6">
@@ -151,10 +153,13 @@ const discount = product.data.salePrice
     <div class="max-w-[1200px] mx-auto px-4 py-12">
       <div id="general" class="tab-content block">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
-          <div id="product-images">...</div>
+          <div id="product-images">
+             {/* Aquí iría tu lógica de imágenes */}
+             <img src={product.data.images[0]} alt={product.data.title} class="rounded-3xl shadow-xl w-full" />
+          </div>
 
           <div class="prose prose-lg max-w-none">
-            <h2 class="text-2xl font-bold mb-4">Descripción</h2>
+            <h2 class="text-2xl font-bold mb-4 font-satoshi uppercase">Descripción</h2>
             <Content />
           </div>
         </div>
@@ -164,7 +169,7 @@ const discount = product.data.salePrice
         id="specs"
         class="tab-content hidden animate-in fade-in duration-500"
       >
-        <h2 class="text-2xl font-bold mb-8">Especificaciones Técnicas</h2>
+        <h2 class="text-2xl font-bold mb-8 font-satoshi uppercase">Especificaciones Técnicas</h2>
         <div
           class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm"
         >
@@ -188,7 +193,6 @@ const discount = product.data.salePrice
   </div>
 
   <style>
-    /* Estilo para el tab activo */
     .active-tab {
       @apply text-[#ff4f00] relative;
     }
@@ -199,19 +203,15 @@ const discount = product.data.salePrice
   </style>
 
   <script>
-    // Lógica de Tabs
     const tabBtns = document.querySelectorAll(".tab-btn");
     const tabContents = document.querySelectorAll(".tab-content");
 
     tabBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-tab-target");
-
-        // Actualizar botones
         tabBtns.forEach((b) => b.classList.remove("active-tab"));
         btn.classList.add("active-tab");
 
-        // Actualizar contenidos
         tabContents.forEach((content) => {
           if (content.id === target) {
             content.classList.remove("hidden");
@@ -221,9 +221,6 @@ const discount = product.data.salePrice
             content.classList.remove("block");
           }
         });
-
-        // Scroll suave hacia arriba al cambiar de pestaña
-        window.scrollTo({ top: 0, behavior: "smooth" });
       });
     });
   </script>
