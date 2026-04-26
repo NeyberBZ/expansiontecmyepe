@@ -1,12 +1,11 @@
 // scripts/generate-specs.mjs
+const PRODUCTS_DIR = './src/content/products';
+const OUTPUT_DIR = './public/specs';
 
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import puppeteer from 'puppeteer';
-
-const PRODUCTS_DIR = './src/content/products';
-const OUTPUT_DIR = './public/specs';
 
 // Asegurar que la carpeta de salida existe
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -17,6 +16,12 @@ async function generatePDFs() {
     console.log('⏭️ Entorno Vercel detectado. Saltando generación de PDFs (GitHub Actions se encarga).');
     return;
   }
+
+  // Borra la carpeta de PDFs antes de generar los nuevos para no acumular archivos viejos
+  if (fs.existsSync(OUTPUT_DIR)) {
+    fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
+  }
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
   const isMac = process.platform === 'darwin';
   const executablePath = isMac
