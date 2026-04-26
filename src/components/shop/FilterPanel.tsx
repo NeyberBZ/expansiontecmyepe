@@ -98,7 +98,7 @@ function FilterDropdown({ label, options, active, onChange }: any) {
       </div>
 
       {/* Menú Desplegable */}
-      <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
+      <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
         <button
           onClick={() => onChange("Todas")}
           className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${active === "Todas" ? 'bg-orange-50 text-orange-600' : 'hover:bg-gray-50 text-gray-600'}`}
@@ -128,18 +128,23 @@ function ProductCardReact({ product }: any) {
     <article className="group relative bg-white overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="h-full w-full flex flex-col">
         <div className="relative p-4 flex flex-col items-center justify-items-start gap-1 min-h-36">
-          {hasDiscount && (
-            <div className="bg-orange-50 text-orange-600 px-4 py-1.5 rounded-lg text-xs font-black tracking-wide border border-orange-100">
-              Te ahorras {saving} S/
+          <div className="w-full flex justify-start mb-4">
+            <div className="bg-green-50 text-green-600 px-3 py-1.5 rounded-md text-xs font-medium tracking-normal border border-green-600">
+              {product.category}
             </div>
-          )}
+            {hasDiscount && (
+            <div className="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-md text-xs font-medium tracking-normal border border-orange-600 ml-2">
+              Te ahorras S/{saving}
+            </div>
+            )}
+          </div>
 
           <h3 className="font-black text-center text-base sm:text-xl text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2">
             {product.title}
           </h3>
 
           <p className="text-gray-400 text-sm line-clamp-2 max-w-[250px]">
-            {product.brand} — {product.category}
+            {product.shortDescription}
           </p>
 
           <div className="flex items-baseline justify-center gap-3">
@@ -153,7 +158,7 @@ function ProductCardReact({ product }: any) {
         <div className="flex flex-col justify-end items-center p-4" >
           {/*  Botones  */}
           <div className="flex items-center space-y-1 gap-2">
-            <a href="/producto/redmi-smart-pen" className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
+            <a href={`/productos/${product.id}`} className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
               Comprar ahora
             </a>
             <a href={`/productos/${product.id}`} className="justify-center border border-orange-600 text-orange-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-orange-400 hover:border-orange-400 transition-colors tracking-normal">

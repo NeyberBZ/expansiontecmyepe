@@ -62,7 +62,7 @@ const linkedActivations = allActivations.filter((a: any) => {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="flex gap-4">
               <div class="bg-orange-50 p-3 rounded-2xl h-fit">
-                <Icon name="map" class="w-6 h-6 text-orange-600" />
+                <Icon id="icon-map" name="map" class="w-6 h-6 text-orange-600" />
               </div>
               <div>
                 <p class="text-sm font-bold text-gray-900">Dirección</p>
@@ -72,7 +72,7 @@ const linkedActivations = allActivations.filter((a: any) => {
 
             <div class="flex gap-4">
               <div class="bg-orange-50 p-3 rounded-2xl h-fit">
-                <Icon name="clock" class="w-6 h-6 text-orange-600" />
+                <Icon id="icon-clock" name="clock" class="w-6 h-6 text-orange-600" />
               </div>
               <div>
                 <p class="text-sm font-bold text-gray-900">Horario</p>
@@ -82,7 +82,7 @@ const linkedActivations = allActivations.filter((a: any) => {
 
             <div class="flex gap-4">
               <div class="bg-orange-50 p-3 rounded-2xl h-fit">
-                <Icon name="phone" class="w-6 h-6 text-orange-600" />
+                <Icon id="icon-phone" name="phone" class="w-6 h-6 text-orange-600" />
               </div>
               <div>
                 <p class="text-sm font-bold text-gray-900">Teléfono</p>
@@ -93,11 +93,11 @@ const linkedActivations = allActivations.filter((a: any) => {
 
           <div class="pt-6 border-t border-gray-50 flex flex-wrap gap-3">
             <a href={location.data.googleMapsUrl} target="_blank" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-800 transition-colors">
-              <Icon name="direction" class="w-5 h-5" /> Google Maps
+              <Icon id="icon-direction"  name="direction" class="w-5 h-5" /> Google Maps
             </a>
             {location.data.wazeUrl && (
               <a href={location.data.wazeUrl} target="_blank" class="bg-[#33ccff] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#2bb5e0] transition-colors">
-                <Icon name="waze" class="w-5 h-5" /> Waze
+                <Icon id="icon-waze" name="waze" class="w-5 h-5" /> Waze
               </a>
             )}
           </div>
