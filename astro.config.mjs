@@ -40,7 +40,7 @@ export default defineConfig({
 
   vite: {
     ssr: {
-      noExternal: ['@keystatic/astro', '@keystatic/core']
+      noExternal: ['@keystatic/astro', '@keystatic/core', '@keystatic/next']
     },
     build: {
       cssMinify: true,
