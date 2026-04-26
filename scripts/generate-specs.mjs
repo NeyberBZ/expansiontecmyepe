@@ -10,7 +10,12 @@ const OUTPUT_DIR = './public/specs';
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 async function generatePDFs() {
-  // 1. Detección automática del navegador según el sistema
+  // 1. Si estamos en Vercel, salimos del proceso sin error
+  if (process.env.VERCEL) {
+    console.log('⏭️ Entorno Vercel detectado. Saltando generación de PDFs (GitHub Actions se encarga).');
+    return;
+  }
+
   const isMac = process.platform === 'darwin';
   const executablePath = isMac
     ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
