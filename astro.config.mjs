@@ -2,16 +2,20 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
+import keystatic from '@keystatic/astro';
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://expansiontecmyepe.vercel.app",   // ← reemplaza con tu dominio real
+  site: "https://expansiontecmyepe.vercel.app",
+  // ✅ Cambiado a hybrid para que el panel de Keystatic funcione en Vercel
   output: "static",
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
+    keystatic(),
     sitemap({
-      filter: (page) => !page.includes("/admin"),
+      // ✅ Excluimos también /keystatic del sitemap
+      filter: (page) => !page.includes("/admin") && !page.includes("/keystatic"),
       changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),
@@ -21,8 +25,6 @@ export default defineConfig({
     service: {
       entrypoint: "astro/assets/services/sharp"
     },
-    // Agregar dominios si usas imágenes externas
-    // domains: ["expansiontecmyepe.vercel.app"],
   },
   compressHTML: true,
   build: {
@@ -33,7 +35,6 @@ export default defineConfig({
       cssMinify: true,
       rollupOptions: {
         output: {
-          // Mejor splitting
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
             'nanostores': ['nanostores', '@nanostores/react', '@nanostores/persistent'],
@@ -41,13 +42,10 @@ export default defineConfig({
         },
       },
     },
-    // Optimización de dependencias
     optimizeDeps: {
       include: ['react', 'react-dom', 'nanostores'],
     },
   },
-
-  // Prefetch de rutas comunes
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'hover',

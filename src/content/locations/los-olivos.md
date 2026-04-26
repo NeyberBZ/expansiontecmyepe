@@ -12,5 +12,4 @@ coordinates:
 schedule: 'Lun-Sab 10am-8pm, Dom 11am-6pm'
 isActive: true
 ---
-
 Nuestra tienda principal en el corazón de Miraflores.
