@@ -1,5 +1,6 @@
 ---
 title: Redmi A5
+shortDescription: El mejor equipo de todos los tiempos
 price: 450
 salePrice: 320
 brand: redmi

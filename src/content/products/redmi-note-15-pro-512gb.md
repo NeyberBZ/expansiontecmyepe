@@ -1,5 +1,6 @@
 ---
 title: Redmi Note 15 Pro
+shortDescription: El mejor equipo de todos los tiempos
 price: 1250
 salePrice: 1050
 brand: redmi

@@ -1,5 +1,6 @@
 ---
 title: Xiaomi Pad 7 / 7 Pro Keyboard
+shortDescription: El mejor teclado de todos los tiempos
 price: 550
 salePrice: 450
 brand: redmi

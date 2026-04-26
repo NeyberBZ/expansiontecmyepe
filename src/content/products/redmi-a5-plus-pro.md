@@ -1,5 +1,6 @@
 ---
 title: Redmi A5 Plus Pro
+shortDescription: El mejor equipo de todos los tiempos
 price: 350
 salePrice: 200
 brand: redmi

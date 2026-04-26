@@ -1,5 +1,6 @@
 ---
 title: Redmi Smart Pen
+shortDescription: El mejor lapiz de todos los tiempos
 price: 250
 brand: redmi
 category: accesorios
@@ -10,10 +11,10 @@ images:
   - /uploads/products/redmi-smart-pen-2.png
   - /uploads/products/redmi-smart-pen-3.png
 specs:
-  - key: "Tipo"
-    value: "Teclado Bluetooth"
-  - key: "Compatibilidad"
-    value: "Redmi Pad Pro"
+  - key: Tipo
+    value: Teclado Bluetooth
+  - key: Compatibilidad
+    value: Redmi Pad Pro
 inStock: true
 featured: false
 tags:

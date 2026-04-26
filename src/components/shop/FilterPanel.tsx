@@ -121,6 +121,7 @@ function FilterDropdown({ label, options, active, onChange }: any) {
 
 // Replicación de la tarjeta estética en React para que el buscador funcione sin recargar
 function ProductCardReact({ product }: any) {
+  console.log("Renderizando producto:", product);
   const hasDiscount = product.salePrice && product.salePrice < product.price;
   const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
 
@@ -129,11 +130,11 @@ function ProductCardReact({ product }: any) {
       <div className="h-full w-full flex flex-col">
         <div className="relative p-4 flex flex-col items-center justify-items-start gap-1 min-h-36">
           <div className="w-full flex justify-start mb-4">
-            <div className="bg-green-50 text-green-600 px-3 py-1.5 rounded-md text-xs font-medium tracking-normal border border-green-600">
+            <div className="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-xs font-medium tracking-normal border border-blue-600">
               {product.category}
             </div>
             {hasDiscount && (
-            <div className="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-md text-xs font-medium tracking-normal border border-orange-600 ml-2">
+            <div className="bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-xs font-medium tracking-normal border border-orange-600 ml-2">
               Te ahorras S/{saving}
             </div>
             )}
@@ -143,25 +144,26 @@ function ProductCardReact({ product }: any) {
             {product.title}
           </h3>
 
-          <p className="text-gray-400 text-sm line-clamp-2 max-w-[250px]">
-            {product.shortDescription}
-          </p>
-
           <div className="flex items-baseline justify-center gap-3">
-            <span className="text-base font-medium text-gray-900">S/ {product.salePrice || product.price}</span>
+            <span className="text-lg font-medium text-gray-900">S/ {product.salePrice || product.price}</span>
             {hasDiscount && (
-              <span className="text-xs font-medium text-gray-900 line-through">S/ {product.price}</span>
+              <span className="text-sm font-medium text-gray-900 line-through">S/ {product.price}</span>
             )}
           </div>
+
+          <p className="text-gray-900 text-sm line-clamp-1 text-center">
+            {product.shortDescription || "-"}
+          </p>
+
         </div>
 
         <div className="flex flex-col justify-end items-center p-4" >
           {/*  Botones  */}
           <div className="flex items-center space-y-1 gap-2">
-            <a href={`/productos/${product.id}`} className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
+            <a href={`/tienda/producto/${product.id}`} className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
               Comprar ahora
             </a>
-            <a href={`/productos/${product.id}`} className="justify-center border border-orange-600 text-orange-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-orange-400 hover:border-orange-400 transition-colors tracking-normal">
+            <a href={`/tienda/producto/${product.id}`} className="justify-center border border-orange-600 text-orange-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-orange-400 hover:border-orange-400 transition-colors tracking-normal">
               Más información
             </a>
           </div>

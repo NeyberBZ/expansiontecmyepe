@@ -1,5 +1,6 @@
 ---
 title: POCO F8 Pro
+shortDescription: El mejor equipo de todos los tiempos
 price: 650
 salePrice: 550
 brand: xiaomi
@@ -71,3 +72,4 @@ seoDescription: Batería de 6580mAh con carga rapida
 publishedAt: 2026-02-09T22:02:13.000Z
 ---
 
+![](/uploads/Captura-de-Pantalla-2026-02-09-a-las-22.41.15-1024x425.png)![](/uploads/Captura-de-Pantalla-2026-02-09-a-las-22.41.30-1024x536.png)![](/uploads/Captura-de-Pantalla-2026-02-09-a-las-22.41.40-1024x500.png)

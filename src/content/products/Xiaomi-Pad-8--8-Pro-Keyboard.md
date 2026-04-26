@@ -1,5 +1,6 @@
 ---
 title: Xiaomi Pad 8 / 8 Pro Keyboard
+shortDescription: El mejor teclado de todos los tiempos
 price: 650
 salePrice: 559
 brand: redmi
