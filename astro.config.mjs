@@ -4,11 +4,15 @@ import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import keystatic from '@keystatic/astro';
 import sitemap from "@astrojs/sitemap";
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: "https://expansiontecmyepe.vercel.app",
+  adapter: vercel(),
+
   // ✅ Cambiado a hybrid para que el panel de Keystatic funcione en Vercel
   output: "static",
+
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
@@ -21,15 +25,19 @@ export default defineConfig({
       lastmod: new Date(),
     }),
   ],
+
   image: {
     service: {
       entrypoint: "astro/assets/services/sharp"
     },
   },
+
   compressHTML: true,
+
   build: {
     inlineStylesheets: "auto",
   },
+
   vite: {
     build: {
       cssMinify: true,
@@ -46,8 +54,11 @@ export default defineConfig({
       include: ['react', 'react-dom', 'nanostores'],
     },
   },
+
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'hover',
   },
+
+  adapter: vercel(),
 });
