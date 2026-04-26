@@ -1,1 +1,2 @@
-npm test
+node scripts/generate-specs.mjs
+git add public/specs/*.pdf

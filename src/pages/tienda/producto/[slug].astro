@@ -5,7 +5,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../../components/ui/BreadCrumb.astro";
 import Badge from "../../../components/ui/Badge.astro";
 import AddToCart from "../../../components/shop/AddToCart.tsx";
-import { Content } from 'astro:content';
+import { Content } from "astro:content";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -17,6 +17,12 @@ const product = await getEntry("products", slug!);
 if (!product) return Astro.redirect("/tienda");
 
 const { Content } = await product.render();
+
+// const pdfUrl = `/specs/${product.data.title.toLowerCase().replace(/ /g, "-")}.pdf`;
+
+// Generamos el nombre del archivo igual que en el script
+const pdfFileName = `${product.data.title.toLowerCase().replace(/ /g, "-")}.pdf`;
+const pdfPath = `/specs/${pdfFileName}`;
 
 // ✅ Simplificado: brand y category ahora son strings directos
 const brand = product.data.brand
@@ -77,114 +83,148 @@ const discount = product.data.salePrice
       ]}
     /> -->
 
-  <div class="sticky top-0 z-40 w-full bg-[#fdf2e3] border-b border-gray-100 shadow-sm overflow-x-auto">
-    <div class="max-w-[1400px] mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap">
-
-      <div class="flex items-center gap-4">
-        <h1 class="text-2xl font-black text-gray-900 font-satoshi uppercase tracking-tight">
-          {product.data.title}
-        </h1>
-        {discount && (
-          <span class="bg-[#ff4f00] text-white px-3 py-1 rounded-full text-xs font-black">
-            -{discount}% OFF
-          </span>
-        )}
-      </div>
-
-      <nav class="hidden md:flex items-center gap-10">
-        <button
-          data-tab-target="general"
-          class="tab-btn font-bold text-gray-500 hover:text-gray-900 transition-colors active-tab"
-        >
-          General
-        </button>
-        <button
-          data-tab-target="specs"
-          class="tab-btn font-bold text-gray-500 hover:text-gray-900 transition-colors"
-        >
-          Especificaciones
-        </button>
-      </nav>
-
-      <div class="flex items-center gap-6">
-        <div class="flex flex-col items-end">
-          {product.data.salePrice && (
-            <span class="text-xs text-gray-400 line-through">S/ {product.data.price}</span>
-          )}
-          <span class="text-2xl font-black text-gray-900 leading-none">
-            S/ {product.data.salePrice || product.data.price}
-          </span>
+    <div
+      class="sticky top-0 z-40 w-full bg-[#fdf2e3] border-b border-gray-100 shadow-sm overflow-x-auto"
+    >
+      <div
+        class="max-w-[1400px] mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap"
+      >
+        <div class="flex items-center gap-4">
+          <h1
+            class="text-2xl font-black text-gray-900 font-satoshi uppercase tracking-tight"
+          >
+            {product.data.title}
+          </h1>
+          {
+            discount && (
+              <span class="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-black">
+                -{discount}% OFF
+              </span>
+            )
+          }
         </div>
-        <button class="bg-[#0f172a] text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-800 transition-all">
-          Comprar ahora
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <div class="max-w-[1200px] mx-auto px-4 py-12">
-    <div id="general" class="tab-content block">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
-         <div id="product-images"> ... </div>
+        <nav class="hidden md:flex items-center gap-10">
+          <button
+            data-tab-target="general"
+            class="tab-btn font-bold text-gray-500 hover:text-gray-900 transition-colors active-tab"
+          >
+            General
+          </button>
+          <button
+            data-tab-target="specs"
+            class="tab-btn font-bold text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            Especificaciones
+          </button>
+          <a
+            href={pdfUrl}
+            download
+            class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
+          >
+            <span>⬇️ Descargar Ficha Técnica (PDF)</span>
+          </a>
+        </nav>
 
-         <div class="prose prose-lg max-w-none">
-           <h2 class="text-2xl font-bold mb-4">Descripción</h2>
-           <Content />
-         </div>
-      </div>
-    </div>
-
-    <div id="specs" class="tab-content hidden animate-in fade-in duration-500">
-      <h2 class="text-2xl font-bold mb-8">Especificaciones Técnicas</h2>
-      <div class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm">
-        {product.data.specs?.map((spec: any, i: number) => (
-          <div class={`grid grid-cols-1 md:grid-cols-3 p-6 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">{spec.key}</span>
-            <span class="md:col-span-2 text-gray-900 font-medium">{spec.value}</span>
+        <div class="flex items-center gap-6">
+          <div class="flex flex-col items-end">
+            {
+              product.data.salePrice && (
+                <span class="text-xs text-gray-400 line-through">
+                  S/ {product.data.price}
+                </span>
+              )
+            }
+            <span class="text-2xl font-black text-gray-900 leading-none">
+              S/ {product.data.salePrice || product.data.price}
+            </span>
           </div>
-        ))}
+          <button
+            class="bg-[#0f172a] text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-800 transition-all"
+          >
+            Comprar ahora
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-[1200px] mx-auto px-4 py-12">
+      <div id="general" class="tab-content block">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+          <div id="product-images">...</div>
+
+          <div class="prose prose-lg max-w-none">
+            <h2 class="text-2xl font-bold mb-4">Descripción</h2>
+            <Content />
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="specs"
+        class="tab-content hidden animate-in fade-in duration-500"
+      >
+        <h2 class="text-2xl font-bold mb-8">Especificaciones Técnicas</h2>
+        <div
+          class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm"
+        >
+          {
+            product.data.specs?.map((spec: any, i: number) => (
+              <div
+                class={`grid grid-cols-1 md:grid-cols-3 p-6 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+              >
+                <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                  {spec.key}
+                </span>
+                <span class="md:col-span-2 text-gray-900 font-medium">
+                  {spec.value}
+                </span>
+              </div>
+            ))
+          }
+        </div>
       </div>
     </div>
   </div>
-</BaseLayout>
 
-<style>
-  /* Estilo para el tab activo */
-  .active-tab {
-    @apply text-[#ff4f00] relative;
-  }
-  .active-tab::after {
-    content: '';
-    @apply absolute -bottom-7 left-0 w-full h-[3px] bg-[#ff4f00] rounded-full;
-  }
-</style>
+  <style>
+    /* Estilo para el tab activo */
+    .active-tab {
+      @apply text-[#ff4f00] relative;
+    }
+    .active-tab::after {
+      content: "";
+      @apply absolute -bottom-7 left-0 w-full h-[3px] bg-[#ff4f00] rounded-full;
+    }
+  </style>
 
-<script>
-  // Lógica de Tabs
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabContents = document.querySelectorAll('.tab-content');
+  <script>
+    // Lógica de Tabs
+    const tabBtns = document.querySelectorAll(".tab-btn");
+    const tabContents = document.querySelectorAll(".tab-content");
 
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-tab-target');
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-tab-target");
 
-      // Actualizar botones
-      tabBtns.forEach(b => b.classList.remove('active-tab'));
-      btn.classList.add('active-tab');
+        // Actualizar botones
+        tabBtns.forEach((b) => b.classList.remove("active-tab"));
+        btn.classList.add("active-tab");
 
-      // Actualizar contenidos
-      tabContents.forEach(content => {
-        if (content.id === target) {
-          content.classList.remove('hidden');
-          content.classList.add('block');
-        } else {
-          content.classList.add('hidden');
-          content.classList.remove('block');
-        }
+        // Actualizar contenidos
+        tabContents.forEach((content) => {
+          if (content.id === target) {
+            content.classList.remove("hidden");
+            content.classList.add("block");
+          } else {
+            content.classList.add("hidden");
+            content.classList.remove("block");
+          }
+        });
+
+        // Scroll suave hacia arriba al cambiar de pestaña
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
-
-      // Scroll suave hacia arriba al cambiar de pestaña
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-  });
-</script>
+  </script>
+</BaseLayout>
