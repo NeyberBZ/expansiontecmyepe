@@ -8,7 +8,7 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
   site: "https://expansiontecmyepe.vercel.app",
   adapter: vercel(),
-  output: "static", // Keystatic funcionará bien así en Astro 5
+  // Eliminamos output: "static" para que el adaptador tome el control total
 
   integrations: [
     react(),
@@ -19,21 +19,8 @@ export default defineConfig({
     }),
   ],
 
+  // Eliminamos la sección vite.resolve.alias y vite.ssr.noExternal
   vite: {
-    // ✅ ESTE BLOQUE ES LA SOLUCIÓN AL ERROR DE ENTRYPOINT
-    resolve: {
-      alias: [
-        {
-          // Este alias captura el error exacto que te está dando Vercel
-          find: /^astro\/app\/entrypoint$/,
-          replacement: "astro/dist/core/app/entrypoint.js"
-        }
-      ]
-    },
-    ssr: {
-      noExternal: ['@keystatic/astro', '@keystatic/core', '@keystatic/next']
-    },
-    // Mantén tu configuración previa de build/manualChunks debajo
     build: {
       cssMinify: true,
       rollupOptions: {
@@ -44,6 +31,6 @@ export default defineConfig({
           },
         },
       },
-    }
-  }
+    },
+  },
 });
