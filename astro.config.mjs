@@ -7,6 +7,7 @@ import vercel from "@astrojs/vercel";
 
 export default defineConfig({
   site: "https://expansiontecmyepe.vercel.app",
+  output: "static",
   adapter: vercel(),
   // Eliminamos output: "static" para que el adaptador tome el control total
 
