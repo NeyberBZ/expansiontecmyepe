@@ -1,7 +1,6 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
-import keystatic from '@keystatic/astro';
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 
@@ -9,18 +8,15 @@ export default defineConfig({
   site: "https://expansiontecmyepe.vercel.app",
   output: "static",
   adapter: vercel(),
-  // Eliminamos output: "static" para que el adaptador tome el control total
 
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
-    keystatic(),
     sitemap({
-      filter: (page) => !page.includes("/admin") && !page.includes("/keystatic"),
+      filter: (page) => !page.includes("/admin"),
     }),
   ],
 
-  // Eliminamos la sección vite.resolve.alias y vite.ssr.noExternal
   vite: {
     build: {
       cssMinify: true,
