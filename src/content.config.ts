@@ -1,9 +1,11 @@
-// src/content/config.ts
-import { defineCollection, z } from "astro:content";
+// src/content.config.ts  ← nueva ubicación
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "zod";
 
 // ── SLIDERS ──────────────────────────────────────────────
 const sliders = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/sliders" }),
   schema: z.object({
     title: z.string(),
     subtitle: z.string().optional(),
@@ -18,17 +20,17 @@ const sliders = defineCollection({
 
 // ── BRANDS ──────────────────────────────────────────────
 const brandsCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/brands" }),
   schema: z.object({
     name: z.string(),
     logo: z.string().optional(),
-    website: z.string().url().optional(),
+    website: z.url().optional(),
   }),
 });
 
 // ── CATEGORIES ──────────────────────────────────────────
 const categoriesCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/categories" }),
   schema: z.object({
     name: z.string(),
     description: z.string().optional(),
@@ -41,19 +43,18 @@ const categoriesCollection = defineCollection({
 
 // ── LOCATIONS (Sucursales) ───────────────────────────────
 const locationsCollection = defineCollection({
-  type: "content",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/locations" }),
   schema: z.object({
     name: z.string(),
-    image: z.string().optional(), // ✅ Añadido para la foto de la tienda
+    image: z.string().optional(),
     district: z.string(),
     city: z.string().default("Lima"),
     address: z.string(),
     phone: z.string(),
-    email: z.string().email().optional(),
-    // ✅ Añadidos para los componentes de mapas y navegación
+    email: z.email().optional(),
     mapEmbedUrl: z.string().optional(),
-    googleMapsUrl: z.string().url().optional(),
-    wazeUrl: z.string().url().optional(),
+    googleMapsUrl: z.url().optional(),
+    wazeUrl: z.url().optional(),
     coordinates: z.object({
       lat: z.number(),
       lng: z.number(),
@@ -65,12 +66,11 @@ const locationsCollection = defineCollection({
 
 // ── ACTIVATIONS (Eventos) ────────────────────────────────
 const activationsCollection = defineCollection({
-  type: "content",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/activations" }),
   schema: z.object({
     title: z.string(),
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
-    // ✅ Cambiado de z.string() a z.array(z.string())
     locations: z.array(z.string()),
     products: z.array(z.object({
       product: z.string(),
@@ -82,7 +82,7 @@ const activationsCollection = defineCollection({
 
 // ── PRODUCTS ─────────────────────────────────────────────
 const productsCollection = defineCollection({
-  type: "content",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/products" }),
   schema: z.object({
     title: z.string().min(3).max(100),
     shortDescription: z.string().max(200).optional(),
@@ -115,5 +115,5 @@ export const collections = {
   brands: brandsCollection,
   locations: locationsCollection,
   activations: activationsCollection,
-  sliders
+  sliders,
 };

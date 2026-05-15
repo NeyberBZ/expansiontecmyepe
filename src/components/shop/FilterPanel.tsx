@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 export default function FilterPanel({ products, brands, categories, locations }: any) {
   // Estados para los filtros

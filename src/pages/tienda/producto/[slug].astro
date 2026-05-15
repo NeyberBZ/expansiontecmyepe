@@ -2,9 +2,6 @@
 // src/pages/tienda/[slug].astro
 import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import BreadCrumb from "../../../components/ui/BreadCrumb.astro";
-import Badge from "../../../components/ui/Badge.astro";
-import AddToCart from "../../../components/shop/AddToCart.tsx";
 // Eliminamos el duplicado de import { Content } ya que se obtiene de product.render()
 
 export async function getStaticPaths() {
@@ -29,24 +26,6 @@ const safeTitle = product.data.title
 
 const pdfUrl = `/specs/${safeTitle}.pdf`;
 
-// ✅ brand y category (simplificado)
-const brand = product.data.brand
-  ? await getEntry("brands", product.data.brand)
-  : undefined;
-const category = product.data.category
-  ? await getEntry("categories", product.data.category)
-  : undefined;
-
-// Resolver locations
-const resolvedLocations = await Promise.all(
-  (product.data.locations || []).map(async (loc: any) => {
-    const locationId = loc.location;
-    if (!locationId) return null;
-    const location = await getEntry("locations", locationId).catch(() => null);
-    return location;
-  }),
-);
-
 const discount = product.data.salePrice
   ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
   : null;
@@ -61,6 +40,7 @@ const discount = product.data.salePrice
 >
   <script
     type="application/ld+json"
+    is:inline
     set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Product",

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { addToCart } from '../../stores/cart';
-import { useStore } from '@nanostores/react';
 
 interface Props {
   product: {

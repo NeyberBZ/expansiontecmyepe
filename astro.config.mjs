@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";   // ← nuevo
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 
@@ -11,13 +11,16 @@ export default defineConfig({
 
   integrations: [
     react(),
-    tailwind({ applyBaseStyles: false }),
+    // tailwind() ← ya no va aquí
     sitemap({
       filter: (page) => !page.includes("/admin"),
     }),
   ],
 
   vite: {
+    plugins: [
+      tailwindcss(),   // ← va aquí
+    ],
     build: {
       cssMinify: true,
       rollupOptions: {

@@ -33,7 +33,7 @@ const { title, description, image, type, noindex } = Astro.props;
     />
     <!-- Schema Organization global -->
     <script
-      type="application/ld+json"
+      type="application/ld+json" is:inline
       set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Organization",
