@@ -1,6 +1,6 @@
 ---
 // src/pages/sucursales/[slug].astro
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 import Badge from "../../components/ui/Badge.astro";
@@ -8,14 +8,14 @@ import Icon from "../../components/ui/Icon.astro";
 
 export async function getStaticPaths() {
   const locations = await getCollection("locations");
-  return locations.map((l: any) => ({ params: { slug: l.slug } }));
+  return locations.map((l: any) => ({ params: { slug: l.id } }));
 }
 
 const { slug } = Astro.params;
 const location = await getEntry("locations", slug!);
 if (!location) return Astro.redirect("/sucursales");
 
-const { Content } = await location.render();
+const { Content } = await render(location);
 
 // ✅ ACTUALIZACIÓN: Buscar en el nuevo arreglo 'locations' de cada activación
 const allActivations = await getCollection("activations");
@@ -47,32 +47,52 @@ const linkedActivations = allActivations.filter((a: any) => {
       <div class="lg:col-span-7 space-y-8">
         <header>
           <div class="flex items-center gap-4 mb-4">
-            <h1 class="font-satoshi text-3xl md:text-5xl font-bold text-gray-900">
+            <h1
+              class="font-satoshi text-3xl md:text-5xl font-bold text-gray-900"
+            >
               {location.data.name}
             </h1>
             <Badge variant="primary">{location.data.district}</Badge>
           </div>
-          <p class="text-lg text-gray-500 font-medium">Información detallada de la tienda y servicios disponibles.</p>
+          <p class="text-lg text-gray-500 font-medium">
+            Información detallada de la tienda y servicios disponibles.
+          </p>
         </header>
 
         {/* Tarjeta de Datos Rápidos */}
-        <div class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
-          <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Detalles de contacto</h2>
+        <div
+          class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm space-y-6"
+        >
+          <h2
+            class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]"
+          >
+            Detalles de contacto
+          </h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="flex gap-4">
               <div class="bg-orange-50 p-3 rounded-2xl h-fit">
-                <Icon id="icon-map" name="map" class="w-6 h-6 text-orange-600" />
+                <Icon
+                  id="icon-map"
+                  name="map"
+                  class="w-6 h-6 text-orange-600"
+                />
               </div>
               <div>
                 <p class="text-sm font-bold text-gray-900">Dirección</p>
-                <p class="text-gray-600 text-sm leading-relaxed">{location.data.address}, {location.data.district}</p>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {location.data.address}, {location.data.district}
+                </p>
               </div>
             </div>
 
             <div class="flex gap-4">
               <div class="bg-orange-50 p-3 rounded-2xl h-fit">
-                <Icon id="icon-clock" name="clock" class="w-6 h-6 text-orange-600" />
+                <Icon
+                  id="icon-clock"
+                  name="clock"
+                  class="w-6 h-6 text-orange-600"
+                />
               </div>
               <div>
                 <p class="text-sm font-bold text-gray-900">Horario</p>
@@ -82,38 +102,59 @@ const linkedActivations = allActivations.filter((a: any) => {
 
             <div class="flex gap-4">
               <div class="bg-orange-50 p-3 rounded-2xl h-fit">
-                <Icon id="icon-phone" name="phone" class="w-6 h-6 text-orange-600" />
+                <Icon
+                  id="icon-phone"
+                  name="phone"
+                  class="w-6 h-6 text-orange-600"
+                />
               </div>
               <div>
                 <p class="text-sm font-bold text-gray-900">Teléfono</p>
-                <p class="text-gray-600 text-sm">{location.data.phone || "No disponible"}</p>
+                <p class="text-gray-600 text-sm">
+                  {location.data.phone || "No disponible"}
+                </p>
               </div>
             </div>
           </div>
 
           <div class="pt-6 border-t border-gray-50 flex flex-wrap gap-3">
-            <a href={location.data.googleMapsUrl} target="_blank" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-800 transition-colors">
-              <Icon id="icon-direction"  name="direction" class="w-5 h-5" /> Google Maps
+            <a
+              href={location.data.googleMapsUrl}
+              target="_blank"
+              class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-800 transition-colors"
+            >
+              <Icon id="icon-direction" name="direction" class="w-5 h-5" /> Google
+              Maps
             </a>
-            {location.data.wazeUrl && (
-              <a href={location.data.wazeUrl} target="_blank" class="bg-[#33ccff] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#2bb5e0] transition-colors">
-                <Icon id="icon-waze" name="waze" class="w-5 h-5" /> Waze
-              </a>
-            )}
+            {
+              location.data.wazeUrl && (
+                <a
+                  href={location.data.wazeUrl}
+                  target="_blank"
+                  class="bg-[#33ccff] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#2bb5e0] transition-colors"
+                >
+                  <Icon id="icon-waze" name="waze" class="w-5 h-5" /> Waze
+                </a>
+              )
+            }
           </div>
         </div>
 
         {/* Contenido adicional (Markdown) */}
-        {Content && (
-          <div class="prose prose-orange max-w-none prose-p:text-gray-600 prose-headings:font-satoshi">
-            <Content />
-          </div>
-        )}
+        {
+          Content && (
+            <div class="prose prose-orange max-w-none prose-p:text-gray-600 prose-headings:font-satoshi">
+              <Content />
+            </div>
+          )
+        }
       </div>
 
       <div class="lg:col-span-5 space-y-8">
         {/* Mapa Interactivo */}
-        <div class="rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-lg aspect-square lg:aspect-auto lg:h-[450px]">
+        <div
+          class="rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-lg aspect-square lg:aspect-auto lg:h-[450px]"
+        >
           <iframe
             src={location.data.mapEmbedUrl}
             width="100%"
@@ -126,24 +167,36 @@ const linkedActivations = allActivations.filter((a: any) => {
         </div>
 
         {/* Activaciones Activas/Próximas */}
-        {linkedActivations.length > 0 && (
-          <div class="bg-orange-50 rounded-3xl p-6 md:p-8 border border-orange-100">
-            <h3 class="font-satoshi text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <span class="text-2xl">🔥</span> Eventos en tienda
-            </h3>
-            <div class="space-y-4">
-              {linkedActivations.map((act: any) => (
-                <a href={`/activaciones/${act.id || act.slug}`} class="flex items-center justify-between bg-white p-4 rounded-2xl border border-orange-200 hover:border-orange-500 hover:shadow-md transition-all group">
-                  <div class="flex flex-col">
-                    <span class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{act.data.title}</span>
-                    <span class="text-xs text-gray-500">{new Date(act.data.startDate).toLocaleDateString("es-PE", { day: '2-digit', month: 'long'})}</span>
-                  </div>
-                  <span class="text-orange-500 font-bold">→</span>
-                </a>
-              ))}
+        {
+          linkedActivations.length > 0 && (
+            <div class="bg-orange-50 rounded-3xl p-6 md:p-8 border border-orange-100">
+              <h3 class="font-satoshi text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="text-2xl">🔥</span> Eventos en tienda
+              </h3>
+              <div class="space-y-4">
+                {linkedActivations.map((act: any) => (
+                  <a
+                    href={`/activaciones/${act.id || act.slug}`}
+                    class="flex items-center justify-between bg-white p-4 rounded-2xl border border-orange-200 hover:border-orange-500 hover:shadow-md transition-all group"
+                  >
+                    <div class="flex flex-col">
+                      <span class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+                        {act.data.title}
+                      </span>
+                      <span class="text-xs text-gray-500">
+                        {new Date(act.data.startDate).toLocaleDateString(
+                          "es-PE",
+                          { day: "2-digit", month: "long" },
+                        )}
+                      </span>
+                    </div>
+                    <span class="text-orange-500 font-bold">→</span>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 ---
 // src/pages/activaciones/[slug].astro
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 import Badge from "../../components/ui/Badge.astro";
@@ -9,7 +9,7 @@ import Icon from "../../components/ui/Icon.astro";
 export async function getStaticPaths() {
   const activations = await getCollection("activations");
   return activations.map((a: any) => ({
-    params: { slug: a.slug || a.id.replace(/\.[^/.]+$/, "") },
+    params: { slug: a.id },
   }));
 }
 
@@ -17,7 +17,7 @@ const { slug } = Astro.params;
 const activation = await getEntry("activations", slug!);
 if (!activation) return Astro.redirect("/activaciones");
 
-const { Content } = await activation.render();
+const { Content } = await render(activation);
 
 // 1. Resolución de localizaciones (Múltiples sedes)
 const locationEntries = await Promise.all(
@@ -67,7 +67,7 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
     {/* Banner Hero */}
     {
       activation.data.banner && (
-        <div class="relative aspect-[21/9] md:aspect-[16/6] rounded-3xl overflow-hidden mt-8 mb-10 shadow-2xl shadow-orange-500/10">
+        <div class="relative aspect-21/9 md:aspect-16/6 rounded-3xl overflow-hidden mt-8 mb-10 shadow-2xl shadow-orange-500/10">
           <img
             src={activation.data.banner}
             alt={activation.data.title}
@@ -98,7 +98,7 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
             validLocations.map((loc) => (
               <a
                 href={`/sucursales/${loc.id || loc.slug}`}
-                class="flex items-center gap-1.5 text-sm font-bold text-orange-600 hover:text-orange-700 transition-colors bg-orange-50 px-3 py-1.5 rounded-full"
+                class="flex items-center gap-1.5 text-sm font-bold text-red-600 hover:text-red-700 transition-colors bg-red-50 px-3 py-1.5 rounded-full"
               >
                 <Icon id="icon-location" name="location" class="w-4 h-4" />
                 {loc.data.name}
@@ -109,7 +109,7 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
       </div>
 
       <h1
-        class="font-satoshi text-3xl md:text-5xl font-bold text-gray-900 leading-tight"
+        class="font-body text-3xl md:text-5xl font-bold text-gray-900 leading-tight"
       >
         {activation.data.title}
       </h1>
@@ -141,7 +141,7 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
       {/* Contenido Markdown */}
       <div
         class="prose prose-orange prose-lg max-w-none mt-4
-        prose-headings:font-satoshi prose-headings:font-bold prose-headings:text-gray-900
+        prose-headings:font-body prose-headings:font-bold prose-headings:text-gray-900
         prose-p:text-gray-600 prose-p:leading-relaxed
         prose-li:text-gray-600 prose-strong:text-gray-900"
       >
@@ -152,7 +152,7 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
       <div class="pt-10 border-t border-gray-100 mt-10">
         <a
           href="/activaciones"
-          class="inline-flex items-center gap-2 text-gray-500 hover:text-orange-600 font-bold transition-colors"
+          class="inline-flex items-center gap-2 text-gray-500 hover:text-red-600 font-bold transition-colors"
         >
           <Icon name="arrow-left" class="w-5 h-5" />
           Volver a todas las activaciones
