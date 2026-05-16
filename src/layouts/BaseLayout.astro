@@ -19,12 +19,25 @@ const { title, description, image, type, noindex } = Astro.props;
 <!doctype html>
 <html lang="es">
   <head>
+    <!-- Script para evitar flash de tema incorrecto -->
+    <script is:inline>
+      (function () {
+        const saved = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        if (saved === "dark" || (!saved && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
     <SEOHead
       title={title}
       description={description}
-      image={image}
-      type={type}
-      noindex={noindex}
+      {...image ? { image } : {}}
+      {...type ? { type } : {}}
+      {...noindex ? { noindex } : {}}
     />
     <!-- Fonts: Cabinet Grotesk (display) + Satoshi (body) -->
     <link
@@ -33,7 +46,8 @@ const { title, description, image, type, noindex } = Astro.props;
     />
     <!-- Schema Organization global -->
     <script
-      type="application/ld+json" is:inline
+      type="application/ld+json"
+      is:inline
       set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -49,7 +63,7 @@ const { title, description, image, type, noindex } = Astro.props;
       })}
     />
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-gray-100 dark:bg-black">
     <Header />
     <main id="main-content">
       <slot />

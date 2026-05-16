@@ -303,10 +303,10 @@ if (!icons[name]) {
   id={id ? id : `icon-${name}`}
   role="img"
   class={className}
-  fill={icon.fill ? "currentColor" : "none"}
-  stroke={icon.fill ? "none" : "currentColor"}
-  viewBox={icon.viewBox || "0 0 24 24"}
+  fill={icon?.fill ? "currentColor" : "none"}
+  stroke={icon?.fill ? "none" : "currentColor"}
+  viewBox={icon?.viewBox || "0 0 24 24"}
   xmlns="http://www.w3.org/2000/svg"
 >
-  <Fragment set:html={icon.content} />
+  <Fragment set:html={icon?.content} />
 </svg>

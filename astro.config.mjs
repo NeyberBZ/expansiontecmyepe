@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
-import tailwindcss from "@tailwindcss/vite";   // ← nuevo
+import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 
@@ -11,7 +11,6 @@ export default defineConfig({
 
   integrations: [
     react(),
-    // tailwind() ← ya no va aquí
     sitemap({
       filter: (page) => !page.includes("/admin"),
     }),
@@ -19,7 +18,7 @@ export default defineConfig({
 
   vite: {
     plugins: [
-      tailwindcss(),   // ← va aquí
+      tailwindcss(),
     ],
     build: {
       cssMinify: true,
@@ -31,6 +30,12 @@ export default defineConfig({
           },
         },
       },
+    },
+  },
+
+  image: {
+    service: {
+      entrypoint: "astro/assets/services/sharp"
     },
   },
 });

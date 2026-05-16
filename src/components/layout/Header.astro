@@ -2,6 +2,7 @@
 // src/components/layout/Header.astro
 import Icon from "../../components/ui/Icon.astro";
 import CartIcon from "../../components/shop/CartIcon.tsx";
+import ThemeToggle from "../../components/ui/ThemeToggle";
 const navLinks = [
   { href: "/tienda", label: "Tienda" },
   { href: "/sucursales", label: "Sucursales" },
@@ -12,21 +13,33 @@ const currentPath = Astro.url.pathname;
 ---
 
 <header
-  class="fixed w-full top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/80 dark:bg-black/80 shadow-lg backdrop-blur-sm"
+  class="fixed w-full top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/80 shadow-xl backdrop-blur-sm dark:bg-black/80"
 >
+  <div
+    class="w-full mx-auto items-center text-sm pt-1 pb-0.5 text-center text-white font-medium bg-red-600"
+  >
+    Distribuidor Autorizado
+    <img
+      src="/icons/claro.svg"
+      alt="Distribuidor Autorizado de Claro"
+      class="h-4 w-auto inline-flex mb-2.5 mt-0.5"
+      width="120"
+      height="40"
+    />
+  </div>
   <div class="w-full mx-auto px-4">
     <div class="flex items-center justify-between h-14">
       <!-- LOGO -->
       <a
         href="/"
-        class="flex items-center gap-2 text-lg font-bold shrink-0"
+        class="flex items-center gap-2 text-lg font-bold shrink-0 dark:bg-white/70 dark:rounded-lg dark:px-2 dark:py-1"
         aria-label="Expansion - Inicio"
       >
         <!-- Ícono circular rojo -->
         <img
           src="/logo.svg"
           alt="Expansion Logo"
-          class="h-10 w-auto transition-transform group-hover:scale-105"
+          class="h-12 w-auto transition-transform group-hover:scale-105"
           width="120"
           height="40"
         />
@@ -45,10 +58,10 @@ const currentPath = Astro.url.pathname;
             return (
               <a
                 href={href}
-                class="px-3.5 py-1.5 font-medium text-base tracking-wider text-gray-700 hover:text-orange-600 dark:text-gray-200 dark:hover:text-red-600"
+                class="font-body px-3.5 py-1.5 font-medium text-base tracking-wider text-gray-700 hover:text-orange-600 dark:text-slate-50 dark:hover:text-red-600"
                 style={`
                 transition: all 180ms ease;
-                ${isActive ? "color: #ea580c" : "color: #374151;"}
+                ${isActive ? "color: #ea580c" : "var(--color-text)"}
               `}
               >
                 {label}
@@ -95,7 +108,7 @@ const currentPath = Astro.url.pathname;
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                class="w-8 h-8 flex items-center justify-center px-1.5 text-gray-500 hover:text-orange-600 transition-colors duration-200 dark:text-gray-400 dark:hover:text-orange-600 dark:hover:bg-red-50"
+                class="w-8 h-8 flex items-center justify-center px-1.5 text-gray-800 hover:text-orange-600 transition-colors duration-200 dark:text-white dark:hover:text-orange-600"
               >
                 <Fragment set:html={s.icon} />
               </a>
@@ -103,40 +116,21 @@ const currentPath = Astro.url.pathname;
           }
 
           <!-- Separador -->
-          <div
-            style="width:1px;height:20px;background:var(--color-border);margin:0 4px;"
-          >
-          </div>
+          <div class="w-px h-5 bg-gray-800 mx-2 dark:bg-white"></div>
         </div>
 
         <!-- Búsqueda -->
         <button
           id="search-btn"
           aria-label="Buscar"
-          class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-orange-600 transition-colors duration-200 dark:text-gray-400 dark:hover:text-orange-600"
+          class="w-8 h-8 flex items-center justify-center text-gray-800 hover:text-orange-600 transition-colors duration-200 dark:text-white dark:hover:text-orange-600"
         >
           <Icon id="icon-search" name="search" class="w-5 h-5" />
         </button>
 
         <CartIcon client:load />
 
-        <!-- Dark/Light toggle -->
-        <button
-          data-theme-toggle
-          aria-label="Cambiar tema"
-          class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-orange-600 transition-colors duration-200 dark:text-gray-400 dark:hover:text-orange-600"
-        >
-          <Icon
-            id="icon-sun"
-            name="sun"
-            class="w-6 h-6 text-gray-500 hover:text-orange-600 transition-colors duration-200 dark:text-gray-400 dark:hover:text-orange-600"
-          />
-          <Icon
-            id="icon-moon"
-            name="moon"
-            class="w-5 h-5 text-gray-500 hover:text-orange-600 transition-colors duration-200 dark:text-gray-400 dark:hover:text-orange-600"
-          />
-        </button>
+        <ThemeToggle client:load />
 
         <!-- Hamburguesa mobile -->
         <button
@@ -229,31 +223,6 @@ const currentPath = Astro.url.pathname;
 
 <script is:inline>
   (function () {
-    // ── Theme ──────────────────────────────────────────────
-    const root = document.documentElement;
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    let theme = prefersDark ? "dark" : "light";
-    root.setAttribute("data-theme", theme);
-
-    function updateIcons() {
-      const sun = document.getElementById("icon-sun");
-      const moon = document.getElementById("icon-moon");
-      if (!sun || !moon) return;
-      sun.style.display = theme === "dark" ? "block" : "none";
-      moon.style.display = theme === "light" ? "block" : "none";
-    }
-    updateIcons();
-
-    document
-      .querySelector("[data-theme-toggle]")
-      ?.addEventListener("click", () => {
-        theme = theme === "dark" ? "light" : "dark";
-        root.setAttribute("data-theme", theme);
-        updateIcons();
-      });
-
     // ── Responsive ────────────────────────────────────────
     const navDesktop = document.getElementById("nav-desktop");
     const socialLinks = document.getElementById("social-links");
