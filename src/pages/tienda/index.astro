@@ -14,7 +14,7 @@ const productIndex = await Promise.all(
       ? await getEntry("categories", p.data.category)
       : null;
     return {
-      id: p.slug,
+      id: p.id,
       title: p.data.title,
       shortDescription: p.data.shortDescription,
       price: p.data.price,
@@ -23,9 +23,12 @@ const productIndex = await Promise.all(
       category: category?.data.name || "Sin Categoría",
       locations: p.data.locations?.map((l: any) => l.location) || [],
       images: p.data.images,
+      url: `/tienda/producto/${p.id}`,
     };
   }),
 );
+
+console.log("Productos indexados:", productIndex);
 
 const brands = [...new Set(productIndex.map((p) => p.brand))];
 const categories = [...new Set(productIndex.map((p) => p.category))];
@@ -38,7 +41,7 @@ const locations = [...new Set(productIndex.flatMap((p) => p.locations))];
   image="/assets/tienda-banner.jpg"
 >
   <div class="bg-gray-100 w-full">
-    <div class="w-full h-14"></div>
+    <div class="w-full h-20"></div>
 
     <main class="w-full mx-auto px-4 py-8">
       <div class="mb-4">
@@ -47,7 +50,9 @@ const locations = [...new Set(productIndex.flatMap((p) => p.locations))];
         />
       </div>
 
-      <div class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-center align-middle">
+      <div
+        class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-center align-middle"
+      >
         <div class="space-y-4">
           <h1 class="font-satoshi text-4xl font-black text-gray-900 mt-4">
             Tienda

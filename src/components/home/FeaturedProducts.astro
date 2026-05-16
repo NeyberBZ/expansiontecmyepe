@@ -20,8 +20,8 @@ const gridProducts = products.slice(1);
       <div class="container mx-auto px-4">
         <div class="flex justify-center items-center mb-8">
           <div class="flex items-center gap-3">
-            <Icon id="icon-bag" name="bag" class="w-8 h-8 text-orange-500" />
-            <h2 class="font-satoshi text-3xl sm:text-4xl font-medium text-gray-900">
+            <Icon id="icon-bag" name="bag" class="w-8 h-8 text-red-600" />
+            <h2 class="font-body text-3xl sm:text-4xl font-medium text-gray-900">
               {title}
             </h2>
           </div>
@@ -31,18 +31,18 @@ const gridProducts = products.slice(1);
           {/* BANNER GRANDE (Primer producto) */}
           {mainProduct && (
             <div class="col-span-1 sm:col-span-2">
-              <article class="group relative bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 h-full max-h-64 min-h-64">
+              <article class="group relative bg-linear-to-r from-blue-100 to-teal-200 to-50% rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 h-full max-h-64 min-h-64">
                 <a
-                  href={`/tienda/${mainProduct.slug}`}
+                  href={`/tienda/producto/${mainProduct.id}`}
                   class="h-full w-full flex flex-col"
                 >
                   <div class="absolute top-4 left-4 right-4 z-10 flex flex-col gap-2">
-                    <h3 class="font-bold text-2xl text-white group-hover:text-emerald-100 transition-colors line-clamp-2">
+                    <h3 class="font-bold text-2xl text-black group-hover:text-black/50 transition-colors line-clamp-2">
                       {mainProduct.data.title}
                     </h3>
                     <div class="flex flex-wrap gap-2">
                       {mainProduct.data.salePrice && (
-                        <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
+                        <span class="px-3 py-1 bg-linear-to-r from-red-600 to-red-800 text-white text-xs font-bold rounded-lg">
                           Te ahorras{" "}
                           {(
                             mainProduct.data.price - mainProduct.data.salePrice
@@ -54,26 +54,26 @@ const gridProducts = products.slice(1);
                   </div>
                   <div class="relative h-72">
                     <img
-                      src={mainProduct.data.images[1]}
+                      src={mainProduct.data.images[0]}
                       alt={mainProduct.data.title}
-                      class="w-full h-full object-cover p-0 transform group-hover:scale-105 transition-transform duration-500"
+                      class="w-full h-full object-contain mb-4 p-0 transform group-hover:scale-125 transition-transform duration-500"
                       loading="lazy"
                     />
                   </div>
-                  <div class="absolute bottom-4 left-4 right-4 z-10p-5 flex-1 flex flex-col">
+                  <div class="absolute bottom-4 left-4 right-4 z-10 flex-1 flex flex-col">
                     <div class="flex items-baseline gap-2">
-                      <span class="text-sm text-white group-hover:text-emerald-100">
-                        De
+                      <span class="text-sm text-black group-hover:text-black/50">
+                        A
                       </span>
-                      <span class="text-2xl font-bold text-white group-hover:text-emerald-100">
+                      <span class="text-2xl font-bold text-black group-hover:text-black/50">
                         S/{" "}
                         {mainProduct.data.salePrice?.toFixed(2) ||
                           mainProduct.data.price.toFixed(2)}
                       </span>
                     </div>
                     {mainProduct.data.salePrice && (
-                      <div class="text-sm text-gray-300 line-through">
-                        S/ {mainProduct.data.price.toFixed(2)}
+                      <div class="text-sm text-black/30">
+                        de <span class="line-through">S/ {mainProduct.data.price.toFixed(2)}</span>
                       </div>
                     )}
                   </div>
@@ -90,11 +90,11 @@ const gridProducts = products.slice(1);
             return (
               <article class="group relative bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 max-h-64 min-h-64">
                 <a
-                  href={`/tienda/${p.slug}`}
+                  href={`/tienda/producto/${p.id}`}
                   class="h-full w-full flex flex-col"
                 >
-                  <div class="relative p-4 flex flex-col gap-1 min-h-[110px]">
-                    <h3 class="font-bold text-base text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2">
+                  <div class="relative p-4 flex flex-col gap-1 min-h-27.5 bg-linear-to-r from-slate-100 to-slate-300">
+                    <h3 class="font-bold text-base text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
                       {p.data.title}
                     </h3>
                     {p.data.shortDescription && (
@@ -103,7 +103,7 @@ const gridProducts = products.slice(1);
                       </p>
                     )}
                     {p.data.salePrice && (
-                      <span class="w-fit px-2 py-0.5 bg-amber-50 text-amber-700 text-[0.7rem] font-bold rounded border border-amber-100">
+                      <span class="w-fit px-2 py-0.5 bg-red-50 text-red-700 text-[0.7rem] font-bold rounded border border-red-100">
                         Ahorras {(p.data.price - p.data.salePrice).toFixed(0)}{" "}
                         S/
                       </span>
@@ -114,7 +114,7 @@ const gridProducts = products.slice(1);
                     <div class="p-4 flex flex-col justify-end">
                       {p.data.salePrice ? (
                         <div class="flex flex-col">
-                          <span class="text-xs text-gray-500">
+                          <span class="text-xs text-gray-500 line-through">
                             S/ {p.data.price.toFixed(2)}
                           </span>
                           <span class="text-lg font-bold text-gray-900">
@@ -131,13 +131,13 @@ const gridProducts = products.slice(1);
                       <img
                         src={p.data.images[0]}
                         alt={p.data.title}
-                        class="w-full h-full object-contain transform group-hover:scale-105 transition-all"
+                        class="w-full h-full object-contain transform group-hover:scale-125 transition-all"
                       />
                     </div>
                   </div>
 
                   {discount && (
-                    <span class="absolute top-2 right-2 px-2 py-1 bg-orange-600 text-white text-[0.65rem] font-bold rounded-full">
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-[0.65rem] font-bold rounded-full">
                       -{discount}%
                     </span>
                   )}

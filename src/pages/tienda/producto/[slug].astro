@@ -1,28 +1,41 @@
 ---
-// src/pages/tienda/[slug].astro
-import { getCollection, getEntry } from "astro:content";
+// src/pages/tienda/producto/[slug].astro
+import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-// Eliminamos el duplicado de import { Content } ya que se obtiene de product.render()
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
-  return products.map((p: any) => ({ params: { slug: p.slug } }));
+
+  // Siempre retornar al menos un path
+  if (!products || products.length === 0) {
+    return [{ params: { slug: "placeholder" } }];
+  }
+
+  return products.map((p: any) => ({
+    params: { slug: p.id },
+  }));
 }
 
 const { slug } = Astro.params;
-const product = await getEntry("products", slug!);
+
+// ✅ Manejar placeholder
+if (!slug || slug === "no-products") {
+  return Astro.redirect("/tienda");
+}
+
+const product = await getEntry("products", slug);
 if (!product) return Astro.redirect("/tienda");
 
-const { Content } = await product.render();
+const { Content } = await render(product);
 
 // ✅ SINCRONIZACIÓN: Usamos la misma lógica de limpieza que en el script de Node.js
 // Esto elimina diagonales y caracteres especiales para que el link no se rompa
 const safeTitle = product.data.title
   .toLowerCase()
-  .replace(/\//g, '-')   // Reemplaza "/" por "-"
-  .replace(/[^a-z0-9]/gi, '-') // Quita todo lo que no sea letra/número
-  .replace(/-+/g, '-')   // Evita guiones dobles "--"
-  .replace(/^-|-$/g, ''); // Quita guiones al inicio o final
+  .replace(/\//g, "-") // Reemplaza "/" por "-"
+  .replace(/[^a-z0-9]/gi, "-") // Quita todo lo que no sea letra/número
+  .replace(/-+/g, "-") // Evita guiones dobles "--"
+  .replace(/^-|-$/g, ""); // Quita guiones al inicio o final
 
 const pdfUrl = `/specs/${safeTitle}.pdf`;
 
@@ -58,17 +71,17 @@ const discount = product.data.salePrice
   />
 
   <div class="w-full mx-auto">
-    <div class="w-full h-14"></div>
+    <div class="w-full h-23"></div>
 
     <div
-      class="sticky top-0 z-40 w-full bg-[#fdf2e3] border-b border-gray-100 shadow-sm overflow-x-auto"
+      class="z-40 w-full bg-[#fdf2e3] border-b border-gray-100 shadow-sm overflow-x-auto"
     >
       <div
         class="max-w-350 mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap"
       >
         <div class="flex items-center gap-4">
           <h1
-            class="text-2xl font-black text-gray-900 font-satoshi uppercase tracking-tight"
+            class="text-2xl font-body font-medium text-gray-900 uppercase tracking-tight"
           >
             {product.data.title}
           </h1>
@@ -95,16 +108,20 @@ const discount = product.data.salePrice
             Especificaciones
           </button>
 
-          {/* ✅ Botón de descarga condicional: Solo aparece si hay especificaciones */}
-          {product.data.specs && product.data.specs.length > 0 && (
-            <a
-              href={pdfUrl}
-              download
-              class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
-            >
-              Ficha Técnica
-            </a>
-          )}
+          {
+            /* ✅ Botón de descarga condicional: Solo aparece si hay especificaciones */
+          }
+          {
+            product.data.specs && product.data.specs.length > 0 && (
+              <a
+                href={pdfUrl}
+                download
+                class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
+              >
+                Ficha Técnica
+              </a>
+            )
+          }
         </nav>
 
         <div class="flex items-center gap-6">
@@ -133,12 +150,18 @@ const discount = product.data.salePrice
       <div id="general" class="tab-content block">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
           <div id="product-images">
-             {/* Aquí iría tu lógica de imágenes */}
-             <img src={product.data.images[0]} alt={product.data.title} class="rounded-3xl shadow-xl w-full" />
+            {/* Aquí iría tu lógica de imágenes */}
+            <img
+              src={product.data.images[0]}
+              alt={product.data.title}
+              class="rounded-3xl shadow-xl w-full"
+            />
           </div>
 
           <div class="prose prose-lg max-w-none">
-            <h2 class="text-2xl font-bold mb-4 font-satoshi uppercase">Descripción</h2>
+            <h2 class="text-2xl font-bold mb-4 font-satoshi uppercase">
+              Descripción
+            </h2>
             <Content />
           </div>
         </div>
@@ -148,7 +171,9 @@ const discount = product.data.salePrice
         id="specs"
         class="tab-content hidden animate-in fade-in duration-500"
       >
-        <h2 class="text-2xl font-bold mb-8 font-satoshi uppercase">Especificaciones Técnicas</h2>
+        <h2 class="text-2xl font-bold mb-8 font-satoshi uppercase">
+          Especificaciones Técnicas
+        </h2>
         <div
           class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm"
         >
@@ -173,11 +198,11 @@ const discount = product.data.salePrice
 
   <style>
     .active-tab {
-      @apply text-[#ff4f00] relative;
+      @apply text-red-600 relative;
     }
     .active-tab::after {
       content: "";
-      @apply absolute w-full bg-[#ff4f00] rounded-full;
+      @apply absolute w-full bg-red-600 rounded-full;
     }
   </style>
 

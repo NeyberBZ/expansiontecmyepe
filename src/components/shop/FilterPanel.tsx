@@ -121,7 +121,7 @@ function FilterDropdown({ label, options, active, onChange }: any) {
 
 // Replicación de la tarjeta estética en React para que el buscador funcione sin recargar
 function ProductCardReact({ product }: any) {
-  console.log("Renderizando producto:", product);
+  // console.log("Renderizando producto:", product);
   const hasDiscount = product.salePrice && product.salePrice < product.price;
   const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
 
@@ -160,10 +160,10 @@ function ProductCardReact({ product }: any) {
         <div className="flex flex-col justify-end items-center p-4" >
           {/*  Botones  */}
           <div className="flex items-center space-y-1 gap-2">
-            <a href={`/tienda/producto/${product.id}`} className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
+            <a href={`${product.url}`} className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
               Comprar ahora
             </a>
-            <a href={`/tienda/producto/${product.id}`} className="justify-center border border-orange-600 text-orange-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-orange-400 hover:border-orange-400 transition-colors tracking-normal">
+            <a href={`${product.url}`} className="justify-center border border-orange-600 text-orange-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-orange-400 hover:border-orange-400 transition-colors tracking-normal">
               Más información
             </a>
           </div>
