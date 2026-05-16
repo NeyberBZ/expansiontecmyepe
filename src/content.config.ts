@@ -84,28 +84,28 @@ const activationsCollection = defineCollection({
 const productsCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/products" }),
   schema: z.object({
-    title: z.string().min(3).max(100),
-    shortDescription: z.string().max(200).optional(),
-    price: z.number().positive(),
-    salePrice: z.number().positive().optional(),
+    title: z.string(),
+    shortDescription: z.string().optional(),
+    price: z.number(),
+    salePrice: z.number().optional(),
     brand: z.string(),
     category: z.string(),
     locations: z.array(z.object({
       location: z.string(),
-    })),
-    images: z.array(z.string()).min(1),
+    })).default([]),  // ← default vacío si no existe
+    images: z.array(z.string()).default([]),  // ← sin .min(1), con default
     specs: z.array(z.object({
-      key: z.string().min(1),
-      value: z.string().min(1),
-    })).optional(),
+      key: z.string(),
+      value: z.string(),
+    })).default([]),  // ← sin .optional(), con default vacío
     inStock: z.boolean().default(true),
     featured: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
-    seoTitle: z.string().max(60).optional(),
-    seoDescription: z.string().max(160).optional(),
-    publishedAt: z.coerce.date().default(() => new Date()),
-    stockQuantity: z.number().int().min(0).default(0),
-    maxPerOrder: z.number().int().min(1).default(5),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
+    publishedAt: z.coerce.date().optional(),
+    stockQuantity: z.number().default(0),
+    maxPerOrder: z.number().default(5),
   }),
 });
 

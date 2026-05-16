@@ -28,8 +28,6 @@ const productIndex = await Promise.all(
   }),
 );
 
-console.log("Productos indexados:", productIndex);
-
 const brands = [...new Set(productIndex.map((p) => p.brand))];
 const categories = [...new Set(productIndex.map((p) => p.category))];
 const locations = [...new Set(productIndex.flatMap((p) => p.locations))];

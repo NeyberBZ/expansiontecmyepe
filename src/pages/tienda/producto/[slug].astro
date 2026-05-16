@@ -4,11 +4,20 @@ import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const products = await getCollection("products");
+  let products = [];
 
-  // Siempre retornar al menos un path
+  try {
+    products = await getCollection("products");
+    console.log("✅ Products loaded:", products.length);
+  } catch (e) {
+    console.error("❌ Zod validation error:", e);
+    // Si hay error de Zod, retornar placeholder
+    return [{ params: { slug: "zod-error" } }];
+  }
+
   if (!products || products.length === 0) {
-    return [{ params: { slug: "placeholder" } }];
+    console.warn("⚠️ No products after validation!");
+    return [{ params: { slug: "no-products" } }];
   }
 
   return products.map((p: any) => ({
@@ -17,6 +26,8 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+
+console.log("Slug:", slug);
 
 // ✅ Manejar placeholder
 if (!slug || slug === "no-products") {
@@ -74,7 +85,7 @@ const discount = product.data.salePrice
     <div class="w-full h-23"></div>
 
     <div
-      class="z-40 w-full bg-[#fdf2e3] border-b border-gray-100 shadow-sm overflow-x-auto"
+      class="z-40 w-full bg-orange-100 shadow-sm overflow-x-auto"
     >
       <div
         class="max-w-350 mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap"
@@ -87,7 +98,7 @@ const discount = product.data.salePrice
           </h1>
           {
             discount && (
-              <span class="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-black">
+              <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black">
                 -{discount}% OFF
               </span>
             )
