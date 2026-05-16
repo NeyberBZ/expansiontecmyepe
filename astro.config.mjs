@@ -17,19 +17,21 @@ export default defineConfig({
   ],
 
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
+    plugins: [tailwindcss()],
     build: {
       cssMinify: true,
       rollupOptions: {
         output: {
           manualChunks: {
-            'react-vendor': ['react', 'react-dom'],
-            'nanostores': ['nanostores', '@nanostores/react', '@nanostores/persistent'],
+            // ❌ No incluir react, nanostores, etc.
+            // ✅ Solo si tienes módulos propios grandes
+            // 'shop': ['./src/components/shop/AddToCart.tsx', './src/components/shop/CartDrawer.tsx'],
           },
         },
       },
+    },
+    ssr: {
+      noExternal: ['@nanostores/react', 'nanostores'],
     },
   },
 

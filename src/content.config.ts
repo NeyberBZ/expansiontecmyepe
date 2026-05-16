@@ -24,7 +24,7 @@ const brandsCollection = defineCollection({
   schema: z.object({
     name: z.string(),
     logo: z.string().optional(),
-    website: z.url().optional(),
+    website: z.string().url().optional(),
   }),
 });
 
@@ -51,10 +51,10 @@ const locationsCollection = defineCollection({
     city: z.string().default("Lima"),
     address: z.string(),
     phone: z.string(),
-    email: z.email().optional(),
+    email: z.string().email().optional(),
     mapEmbedUrl: z.string().optional(),
-    googleMapsUrl: z.url().optional(),
-    wazeUrl: z.url().optional(),
+    googleMapsUrl: z.string().url().optional(),
+    wazeUrl: z.string().url().optional(),
     coordinates: z.object({
       lat: z.number(),
       lng: z.number(),
