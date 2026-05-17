@@ -29,7 +29,7 @@ export default function FilterPanel({ products, brands, categories, locations }:
   return (
     <div className="space-y-12">
       {/* Buscador y Filtros */}
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-white rounded-lg shadow-md p-4 dark:border dark:border-gray-100 dark:bg-black">
         <div className="flex flex-col gap-2">
           <input
             type="text"

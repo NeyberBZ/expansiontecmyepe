@@ -32,14 +32,21 @@ const currentPath = Astro.url.pathname;
       <!-- LOGO -->
       <a
         href="/"
-        class="flex items-center gap-2 text-lg font-bold shrink-0 dark:bg-white/70 dark:rounded-lg dark:px-2 dark:py-1"
+        class="flex items-center gap-2 text-lg font-bold shrink-0"
         aria-label="Expansion - Inicio"
       >
         <!-- Ícono circular rojo -->
         <img
           src="/logo.svg"
           alt="Expansion Logo"
-          class="h-12 w-auto transition-transform group-hover:scale-105"
+          class="h-12 w-auto transition-transform group-hover:scale-105 dark:hidden"
+          width="120"
+          height="40"
+        />
+        <img
+          src="/logo_dark.svg"
+          alt="Expansion Logo"
+          class="hidden h-12 w-auto transition-transform group-hover:scale-105 dark:flex"
           width="120"
           height="40"
         />
@@ -58,7 +65,7 @@ const currentPath = Astro.url.pathname;
             return (
               <a
                 href={href}
-                class="font-body px-3.5 py-1.5 font-medium text-base tracking-wider text-gray-700 hover:text-orange-600 dark:text-slate-50 dark:hover:text-red-600"
+                class="font-body px-3.5 py-1.5 font-medium text-base tracking-wider text-gray-700 hover:text-red-600 dark:text-slate-50 dark:hover:text-red-600"
                 style={`
                 transition: all 180ms ease;
                 ${isActive ? "color: #ea580c" : "var(--color-text)"}

@@ -38,7 +38,7 @@ const locations = [...new Set(productIndex.flatMap((p) => p.locations))];
   description="Explora nuestra tienda con una amplia variedad de productos tecnológicos. Encuentra celulares, accesorios y más, disponibles en nuestras sucursales. Compra ahora y disfruta de ofertas exclusivas."
   image="/assets/tienda-banner.jpg"
 >
-  <div class="bg-gray-100 w-full">
+  <div class="w-full bg-gray-100 dark:bg-black">
     <div class="w-full h-20"></div>
 
     <main class="w-full mx-auto px-4 py-8">
@@ -52,12 +52,12 @@ const locations = [...new Set(productIndex.flatMap((p) => p.locations))];
         class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-center align-middle"
       >
         <div class="space-y-4">
-          <h1 class="font-satoshi text-4xl font-black text-gray-900 mt-4">
+          <h1 class="font-body text-4xl font-medium text-gray-900 dark:text-white  mt-4">
             Tienda
           </h1>
         </div>
         <div>
-          <p class="text-gray-500 font-normal mt-2 text-right">
+          <p class="text-gray-500 dark:text-white font-normal mt-2 text-right">
             {productIndex.length} productos exclusivos
           </p>
         </div>
