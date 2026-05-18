@@ -1,5 +1,5 @@
 ---
-name: Los Olivos
+name: Sucursal Independencia
 image: /uploads/sede2.jpg
 district: Los Olivos
 city: Lima

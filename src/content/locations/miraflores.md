@@ -1,5 +1,5 @@
 ---
-name: Miraflores
+name: Sucursal Av. Larco
 image: /uploads/locations/miraflores/image.jpeg
 district: Miraflores
 city: Lima

@@ -34,7 +34,7 @@ export default function FilterPanel({ products, brands, categories, locations }:
           <input
             type="text"
             placeholder="Buscar producto..."
-            className="w-full px-6 py-4 rounded-lg border border-orange-200 focus:ring-2 focus:ring-orange-600/50 text-xl text-gray-700 placeholder:text-gray-300 transition-all"
+            className="w-full px-6 py-4 rounded-lg border border-red-200 focus:ring-2 focus:ring-red-600/50 text-xl text-gray-700 placeholder:text-gray-300 transition-all dark:text-white dark:placeholder-gray-100"
             onChange={(e) => setSearch(e.target.value)}
           />
 
@@ -91,17 +91,17 @@ function FilterDropdown({ label, options, active, onChange }: any) {
     <div className="group relative py-2">
       <div className="flex items-center gap-2 cursor-pointer">
         <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">{label}:</span>
-        <span className="text-sm font-bold text-gray-900">{active}</span>
+        <span className="text-sm font-bold text-gray-900 dark:text-white">{active}</span>
         <svg className="w-4 h-4 text-gray-400 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
         </svg>
       </div>
 
       {/* Menú Desplegable */}
-      <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
+      <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 dark:bg-black dark:border-gray-700">
         <button
           onClick={() => onChange("Todas")}
-          className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${active === "Todas" ? 'bg-orange-50 text-orange-600' : 'hover:bg-gray-50 text-gray-600'}`}
+          className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${active === "Todas" ? 'bg-red-50 text-red-600' : 'hover:bg-gray-50 text-gray-600'}`}
         >
           Todas
         </button>
@@ -109,7 +109,7 @@ function FilterDropdown({ label, options, active, onChange }: any) {
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${active === opt ? 'bg-orange-50 text-orange-600' : 'hover:bg-gray-50 text-gray-600'}`}
+            className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${active === opt ? 'bg-orange-50 text-red-600' : 'hover:bg-gray-50 text-gray-600 dark:text-white dark:hover:text-black'}`}
           >
             {opt}
           </button>
@@ -126,32 +126,32 @@ function ProductCardReact({ product }: any) {
   const saving = hasDiscount ? Math.round(product.price - product.salePrice) : 0;
 
   return (
-    <article className="group relative bg-white overflow-hidden hover:shadow-xl transition-all duration-300">
+    <article className="group relative bg-white dark:bg-black dark:border dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="h-full w-full flex flex-col">
         <div className="relative p-4 flex flex-col items-center justify-items-start gap-1 min-h-36">
           <div className="w-full flex justify-start mb-4">
-            <div className="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-xs font-medium tracking-normal border border-blue-600">
+            <div className="bg-blue-50 dark:bg-transparent text-teal-600 px-2 py-1 rounded-md text-xs font-medium tracking-normal border border-teal-600">
               {product.category}
             </div>
             {hasDiscount && (
-            <div className="bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-xs font-medium tracking-normal border border-orange-600 ml-2">
+            <div className="bg-orange-50 dark:bg-transparent text-red-600 px-2 py-1 rounded-md text-xs font-medium tracking-normal border border-red-600 ml-2">
               Te ahorras S/{saving}
             </div>
             )}
           </div>
 
-          <h3 className="font-black text-center text-base sm:text-xl text-gray-900 group-hover:text-orange-500 transition-colors line-clamp-2">
+          <h3 className="font-body font-medium text-center text-base sm:text-xl text-gray-900 dark:text-white group-hover:text-red-600 transition-colors line-clamp-2">
             {product.title}
           </h3>
 
           <div className="flex items-baseline justify-center gap-3">
-            <span className="text-lg font-medium text-gray-900">S/ {product.salePrice || product.price}</span>
+            <span className="text-lg font-medium text-gray-900 dark:text-white">S/ {product.salePrice || product.price}</span>
             {hasDiscount && (
-              <span className="text-sm font-medium text-gray-900 line-through">S/ {product.price}</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white/50 line-through">S/ {product.price}</span>
             )}
           </div>
 
-          <p className="text-gray-900 text-sm line-clamp-1 text-center">
+          <p className="text-gray-900 dark:text-white text-sm line-clamp-1 text-center">
             {product.shortDescription || "-"}
           </p>
 
@@ -163,7 +163,7 @@ function ProductCardReact({ product }: any) {
             <a href={`${product.url}`} className="justify-center bg-gray-700 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-900 transition-colors tracking-normal">
               Comprar ahora
             </a>
-            <a href={`${product.url}`} className="justify-center border border-orange-600 text-orange-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-orange-400 hover:border-orange-400 transition-colors tracking-normal">
+            <a href={`${product.url}`} className="justify-center border border-red-600 text-red-600 text-xs font-bold px-4 py-2 rounded-xl hover:text-red-400 hover:border-red-400 transition-colors tracking-normal">
               Más información
             </a>
           </div>

@@ -3,6 +3,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
+import Icon from "../../components/ui/Icon.astro";
 
 const locations = await getCollection("locations", (l: any) => l.data.isActive);
 ---
@@ -11,47 +12,43 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
   title="Contacto"
   description="Contáctanos en ExpansionTec. Estamos en Lima con varias sucursales para atenderte."
 >
-  <div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+  <div class="w-full mt-20"></div>
+
+  <div class="max-w-6xl mx-auto py-8 sm:py-12 lg:py-12">
     <BreadCrumb
       crumbs={[{ label: "Inicio", href: "/" }, { label: "Contacto" }]}
     />
 
     <h1
-      style="font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem+1.25vw,2.25rem);font-weight:700;color:var(--color-text);margin-bottom:0.5rem;"
+      class="font-body text-3xl md:text-4xl font-medium tracking-tight text-gray-900 dark:text-white"
     >
       Contacto
     </h1>
-    <p style="color:var(--color-text-muted);margin-bottom:2rem;">
+    <p class="text-sm text-gray-500 mt-2 mb-8 dark:text-gray-400">
       Escríbenos o visítanos en nuestras sucursales
     </p>
 
-    <div
-      style="display:grid;grid-template-columns:1fr;gap:2rem;"
-      id="contact-layout"
-    >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="contact-layout">
       <!-- Formulario -->
       <div>
         <div
-          style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:1.75rem;"
+          class="bg-white border border-gray-100 rounded-3xl p-7 dark:bg-black dark:border-gray-700"
         >
           <h2
-            style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);margin-bottom:1.5rem;"
+            class="font-body font-medium text-xl text-gray-700 dark:text-white mb-4"
           >
             Envíanos un mensaje
           </h2>
 
-          <form
-            id="contact-form"
-            style="display:flex;flex-direction:column;gap:1.25rem;"
-          >
+          <form id="contact-form" class="flex flex-col gap-6">
             <div
-              style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;"
               id="name-email-grid"
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               <div>
                 <label
                   for="name"
-                  style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                  class="font-body text-sm font-medium mb-2 uppercase tracking-wide text-gray-500 dark:text-gray-400"
                 >
                   Nombre *
                 </label>
@@ -61,15 +58,13 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
                   name="name"
                   required
                   placeholder="Tu nombre"
-                  style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;transition:border-color 180ms ease;"
-                  onfocus="this.style.borderColor='var(--color-primary)'"
-                  onblur="this.style.borderColor='var(--color-border)'"
+                  class="w-full px-4 py-2 rounded-sm border border-red-200 focus:ring-2 focus:ring-red-600/50 text-gray-700 placeholder:text-gray-300 focus:border-red-600 dark:bg-transparent dark:border-red-600 dark:text-white dark:placeholder:text-gray-500"
                 />
               </div>
               <div>
                 <label
                   for="email"
-                  style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                  class="font-body text-sm font-medium mb-2 uppercase tracking-wide text-gray-500 dark:text-gray-400"
                 >
                   Email *
                 </label>
@@ -79,9 +74,7 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
                   name="email"
                   required
                   placeholder="tu@email.com"
-                  style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;transition:border-color 180ms ease;"
-                  onfocus="this.style.borderColor='var(--color-primary)'"
-                  onblur="this.style.borderColor='var(--color-border)'"
+                  class="w-full px-4 py-2 rounded-sm border border-red-200 focus:ring-2 focus:ring-red-600/50 text-gray-700 placeholder:text-gray-300 focus:border-red-600 dark:bg-transparent dark:border-red-600 dark:text-white dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -89,14 +82,14 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
             <div>
               <label
                 for="subject"
-                style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                class="font-body text-sm font-medium mb-2 uppercase tracking-wide text-gray-500 dark:text-gray-400"
               >
                 Asunto
               </label>
               <select
                 id="subject"
                 name="subject"
-                style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;cursor:pointer;"
+                class="w-full px-4 py-2 rounded-sm border border-red-200 focus:ring-2 focus:ring-red-600/50 text-gray-700 placeholder:text-gray-300 focus:border-red-600 dark:bg-transparent dark:border-red-600 dark:text-white dark:placeholder:text-gray-500"
               >
                 <option value="">Selecciona un tema</option>
                 <option value="producto">Consulta de producto</option>
@@ -112,7 +105,7 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
             <div>
               <label
                 for="message"
-                style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                class="font-body text-sm font-medium mb-2 uppercase tracking-wide text-gray-500 dark:text-gray-400"
               >
                 Mensaje *
               </label>
@@ -122,9 +115,7 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
                 required
                 rows="5"
                 placeholder="¿En qué podemos ayudarte?"
-                style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;resize:vertical;font-family:inherit;transition:border-color 180ms ease;"
-                onfocus="this.style.borderColor='var(--color-primary)'"
-                onblur="this.style.borderColor='var(--color-border)'"
+                class="w-full px-4 py-2 rounded-sm border border-red-200 focus:ring-2 focus:ring-red-600/50 text-gray-700 placeholder:text-gray-300 focus:border-red-600 dark:bg-transparent dark:border-red-600 dark:text-white dark:placeholder:text-gray-500"
               ></textarea>
             </div>
 
@@ -132,14 +123,14 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
             <div>
               <label
                 for="location"
-                style="display:block;font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;"
+                class="font-body text-sm font-medium mb-2 uppercase tracking-wide text-gray-500 dark:text-gray-400"
               >
                 Sucursal de interés
               </label>
               <select
                 id="location"
                 name="location"
-                style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text);font-size:0.9rem;outline:none;cursor:pointer;"
+                class="w-full px-4 py-2 rounded-sm border border-red-200 focus:ring-2 focus:ring-red-600/50 text-gray-700 placeholder:text-gray-300 focus:border-red-600 dark:bg-transparent dark:border-red-600 dark:text-white dark:placeholder:text-gray-500"
               >
                 <option value="">Cualquier sucursal</option>
                 {
@@ -156,9 +147,7 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
             <button
               type="submit"
               id="submit-btn"
-              style="padding:12px 28px;border-radius:8px;background:var(--color-primary);color:white;font-weight:600;font-size:0.95rem;border:none;cursor:pointer;transition:background 180ms ease;align-self:flex-start;"
-              onmouseover="this.style.background='var(--color-primary-hover)'"
-              onmouseout="this.style.background='var(--color-primary)'"
+              class="w-full text-black py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 bg-linear-to-r from-red-300 to-red-500 focus:ring-2 focus:ring-red-600/50 placeholder:text-gray-300 dark:placeholder:text-gray-500 cursor-pointer hover:from-red-400 hover:to-red-700 hover:text-black/80 transition-colors duration-300"
             >
               Enviar mensaje →
             </button>
@@ -170,68 +159,43 @@ const locations = await getCollection("locations", (l: any) => l.data.isActive);
       </div>
 
       <!-- Sucursales + Mapa -->
-      <div style="display:flex;flex-direction:column;gap:1rem;">
-        <h2
-          style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--color-text);"
-        >
+      <div class="flex flex-col gap-6">
+        <h2 class="font-body text-xl font-medium text-gray-700 dark:text-white">
           Nuestras tiendas
         </h2>
 
         {
           locations.map((loc: any) => (
-            <a href={`/sucursales/${loc.slug}`} style="text-decoration:none;">
-              <div
-                style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:1rem 1.25rem;transition:box-shadow 180ms ease;"
-                onmouseover="this.style.boxShadow='0 4px 12px oklch(0.2 0.01 80/0.08)'"
-                onmouseout="this.style.boxShadow='none'"
-              >
-                <p style="font-weight:700;font-size:0.9rem;color:var(--color-text);margin-bottom:6px;">
+            <a href={`/sucursales/${loc.id}`} class="group">
+              <div class="bg-white border border-gray-100 rounded-xl p-4 transition-shadow group-hover:shadow-lg dark:bg-black dark:border-gray-700">
+                <p class="font-body text-gray-700 text-base mb-2 font-medium group-hover:text-red-600 transition-colors dark:text-white">
                   {loc.data.name}
                 </p>
-                <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;">
-                  📍 {loc.data.address}
+                <p class="font-body text-gray-500 text-sm mb-2 dark:text-white/80">
+                  <Icon
+                    name="location"
+                    class="w-5 h-5 inline-block text-red-600 mr-1"
+                  />
+                  {loc.data.address}
                 </p>
-                <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;">
-                  📞 {loc.data.phone}
+                <p class="font-body text-gray-500 text-sm mb-2 dark:text-white/80">
+                  <Icon
+                    name="phone"
+                    class="w-5 h-5 inline-block text-red-600 mr-1"
+                  />
+                  {loc.data.phone}
                 </p>
-                <p style="font-size:0.8rem;color:var(--color-text-muted);">
-                  🕐 {loc.data.schedule}
+                <p class="font-body text-gray-500 text-sm dark:text-white/80">
+                  <Icon
+                    name="clock"
+                    class="w-5 h-5 inline-block text-red-600 mr-1"
+                  />
+                  {loc.data.schedule}
                 </p>
               </div>
             </a>
           ))
         }
-
-        <!-- Mapa estático con link -->
-        <div
-          style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;overflow:hidden;"
-        >
-          <div
-            style="padding:1rem 1.25rem;border-bottom:1px solid var(--color-divider);"
-          >
-            <p
-              style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);"
-            >
-              📍 Encuéntranos en Lima
-            </p>
-          </div>
-          <div
-            style="aspect-ratio:16/9;background:var(--color-surface-offset);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;"
-          >
-            <p style="font-size:2rem;">🗺️</p>
-            <p style="font-size:0.8rem;color:var(--color-text-muted);">
-              Lima, Perú
-            </p>
-            <a
-              href="https://www.google.com/maps/search/Lima,Peru"
-              target="_blank"
-              rel="noopener noreferrer"
-              style="font-size:0.8rem;color:var(--color-primary);font-weight:600;"
-            >
-              Abrir Google Maps →
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   </div>

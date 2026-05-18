@@ -1,5 +1,5 @@
 ---
-name: La Molina
+name: Sucursal La Rambla
 image: /uploads/locations/la-molina/image.jpg
 district: La Molina
 city: La Molina
