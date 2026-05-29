@@ -14,12 +14,14 @@ interface Props {
 }
 
 const { title, description, image, type, noindex } = Astro.props;
+
+// ✅ La condición se evalúa en el servidor (frontmatter), no en el script
+// const tinaEnabled = import.meta.env.PUBLIC_TINA_ENABLED === "true";
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
-    <!-- Script para evitar flash de tema incorrecto -->
     <script is:inline>
       (function () {
         const saved = localStorage.getItem("theme");
@@ -39,12 +41,10 @@ const { title, description, image, type, noindex } = Astro.props;
       {...type ? { type } : {}}
       {...noindex ? { noindex } : {}}
     />
-    <!-- Fonts: Cabinet Grotesk (display) + Satoshi (body) -->
     <link
       href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=satoshi@400,500,600,700&display=swap"
       rel="stylesheet"
     />
-    <!-- Schema Organization global -->
     <script
       type="application/ld+json"
       is:inline
@@ -69,5 +69,9 @@ const { title, description, image, type, noindex } = Astro.props;
       <slot />
     </main>
     <Footer />
+
+    <!-- ✅ Fuera de <main>, justo antes de </body> -->
+    <!-- ✅ Condición evaluada en frontmatter, no en script -->
+    <!-- {tinaEnabled && <script src="/admin/index.html" type="module" is:inline />} -->
   </body>
 </html>

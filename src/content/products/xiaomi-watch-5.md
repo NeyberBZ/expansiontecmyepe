@@ -1,5 +1,5 @@
 ---
-title: Xiaomi Watch 5
+title: Xiaomi Watch 5 2026
 shortDescription: Habla con Google Gemini directamente en tu muñeca
 price: 1650
 salePrice: 1550

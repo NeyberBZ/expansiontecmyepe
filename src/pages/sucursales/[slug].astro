@@ -1,6 +1,8 @@
 ---
 // src/pages/sucursales/[slug].astro
+export const prerender = true;
 import { getCollection, getEntry, render } from "astro:content";
+import { tinaField } from "tinacms/dist/react";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BreadCrumb from "../../components/ui/BreadCrumb.astro";
 import Badge from "../../components/ui/Badge.astro";
@@ -27,6 +29,8 @@ const linkedActivations = allActivations.filter((a: any) => {
   const hasNotEnded = new Date(a.data.endDate) > now;
   return isLinked && isPublished && hasNotEnded;
 });
+
+const tinaEnabled = import.meta.env.PUBLIC_TINA_ENABLED === "true";
 ---
 
 <BaseLayout
@@ -48,6 +52,9 @@ const linkedActivations = allActivations.filter((a: any) => {
         <div class="flex items-center gap-4 mb-4">
           <h1
             class="font-body text-3xl md:text-5xl font-bold text-gray-900 dark:text-white"
+            {...tinaEnabled
+              ? { "data-tina-field": tinaField(location, "name") }
+              : {}}
           >
             {location.data.name}
           </h1>
@@ -203,7 +210,9 @@ const linkedActivations = allActivations.filter((a: any) => {
                         )}
                       </span>
                     </div>
-                    <span class="text-red-500 dark:group-hover:text-red-600 dark:text-white font-bold">→</span>
+                    <span class="text-red-500 dark:group-hover:text-red-600 dark:text-white font-bold">
+                      →
+                    </span>
                   </a>
                 ))}
               </div>

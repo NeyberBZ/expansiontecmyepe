@@ -163,7 +163,7 @@ export default defineConfig({
         path: "src/content/products",
         format: "md",
         ui: {
-          previewSrc: (values) => values.images?.[0] || '',
+          previewSrc: (values) => Array.isArray(values?.images) ? values.images[0] ?? "" : "",
         },
         fields: [
           {
@@ -186,13 +186,11 @@ export default defineConfig({
             name: "price",
             label: "Precio",
             required: true,
-            searchable: false
           },
           {
             type: "number",
             name: "salePrice",
             label: "Precio oferta",
-            searchable: false
           },
           // ✅ CAMBIO: reference → string con options
           {

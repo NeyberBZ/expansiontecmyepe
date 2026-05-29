@@ -1,5 +1,6 @@
 ---
 // src/pages/tienda.astro
+export const prerender = true;
 import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FilterPanel from "../../components/shop/FilterPanel.tsx";
@@ -52,7 +53,9 @@ const locations = [...new Set(productIndex.flatMap((p) => p.locations))];
         class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-center align-middle"
       >
         <div class="space-y-4">
-          <h1 class="font-body text-4xl font-medium text-gray-900 dark:text-white  mt-4">
+          <h1
+            class="font-body text-4xl font-medium text-gray-900 dark:text-white mt-4"
+          >
             Tienda
           </h1>
         </div>
