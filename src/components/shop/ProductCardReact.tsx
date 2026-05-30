@@ -8,6 +8,7 @@ type Product = {
   url: string;
   hasDiscount?: boolean;
   saving?: string | null;
+  images?: string[];
 };
 
 export default function ProductCardReact({ product }: { product: Product }) {
