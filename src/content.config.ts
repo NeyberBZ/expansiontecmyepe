@@ -76,6 +76,7 @@ const activationsCollection = defineCollection({
       product: z.string(),
     })).optional(),
     banner: z.string().optional(),
+    gallery: z.array(z.string()).default([]),
     isPublished: z.boolean().default(true),
   }),
 });

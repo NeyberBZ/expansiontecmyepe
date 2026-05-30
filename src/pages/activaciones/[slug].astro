@@ -20,6 +20,14 @@ if (!activation) return Astro.redirect("/activaciones");
 
 const { Content } = await render(activation);
 
+const gallery = activation.data.gallery ?? [];
+const hasGallery = gallery.length > 0;
+const heroImages = hasGallery
+  ? gallery
+  : activation.data.banner
+    ? [activation.data.banner]
+    : [];
+
 // 1. Resolución de localizaciones (Múltiples sedes)
 const locationEntries = await Promise.all(
   (activation.data.locations || []).map((id: string) =>
@@ -65,21 +73,61 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
       ]}
     />
 
-    {/* Banner Hero */}
+    {/* Banner o Gallery Hero */}
     {
-      activation.data.banner && (
-        <div class="relative aspect-21/9 md:aspect-16/6 rounded-3xl overflow-hidden mt-8 mb-10 shadow-2xl shadow-orange-500/10">
-          <img
-            src={activation.data.banner}
-            alt={activation.data.title}
-            class="w-full h-full object-cover"
-            loading="eager"
-          />
-        </div>
+      heroImages.length > 0 && (
+        <section class="relative">
+          <div
+            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth rounded-2xl scrollbar-none"
+            id="activation-hero-slider"
+          >
+            {heroImages.map((image: any, index: any) => (
+              <div class="min-w-full snap-start relative" data-slide>
+                <img
+                  src={image}
+                  alt={`${activation.data.title} - imagen ${index + 1}`}
+                  class="w-full h-70 sm:h-95 lg:h-125 object-cover"
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+                <div class="absolute inset-0 bg-black/25" />
+                <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8 text-white">
+                  <p class="text-sm uppercase tracking-[0.2em] text-white/80 mb-2">
+                    Activación
+                  </p>
+                  <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
+                    {activation.data.title}
+                  </h1>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {heroImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                id="hero-prev"
+                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 text-white hover:bg-black/60"
+                aria-label="Imagen anterior"
+              >
+                ←
+              </button>
+
+              <button
+                type="button"
+                id="hero-next"
+                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 text-white hover:bg-black/60"
+                aria-label="Siguiente imagen"
+              >
+                →
+              </button>
+            </>
+          )}
+        </section>
       )
     }
 
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-6 mt-4">
       {/* Estado y Ubicaciones */}
       <div class="flex flex-wrap items-center gap-4">
         <Badge
@@ -109,11 +157,11 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
         </div>
       </div>
 
-      <h1
+      <!-- <h1
         class="font-body text-3xl md:text-5xl font-medium text-gray-900 leading-tight dark:text-white"
       >
         {activation.data.title}
-      </h1>
+      </h1> -->
 
       {/* Info Card de Fechas */}
       <div
@@ -165,4 +213,23 @@ const endDisplay = formatDate(new Date(activation.data.endDate));
       </div>
     </div>
   </article>
+  <script>
+    const slider = document.getElementById("activation-hero-slider");
+    const slides = slider?.querySelectorAll("[data-slide]") ?? [];
+    const prev = document.getElementById("hero-prev");
+    const next = document.getElementById("hero-next");
+    let current = 0;
+
+    const goTo = (index: any) => {
+      if (!slider || !slides.length) return;
+      current = (index + slides.length) % slides.length;
+      slider.scrollTo({
+        left: slides[current].offsetLeft,
+        behavior: "smooth",
+      });
+    };
+
+    prev?.addEventListener("click", () => goTo(current - 1));
+    next?.addEventListener("click", () => goTo(current + 1));
+  </script>
 </BaseLayout>

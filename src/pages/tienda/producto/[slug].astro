@@ -35,7 +35,7 @@ if (!slug || slug === "no-products") {
 const product = await getEntry("products", slug);
 if (!product) return Astro.redirect("/tienda");
 
-const { Content } = await render(product);
+// const { Content } = await render(product);
 
 // ✅ SINCRONIZACIÓN: Usamos la misma lógica de limpieza que en el script de Node.js
 // Esto elimina diagonales y caracteres especiales para que el link no se rompa

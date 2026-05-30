@@ -1,5 +1,5 @@
 ---
-// src/pages/tienda.astro
+// src/pages/tienda/index.astro
 export const prerender = true;
 import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -14,6 +14,7 @@ const productIndex = await Promise.all(
     const category = p.data.category
       ? await getEntry("categories", p.data.category)
       : null;
+
     return {
       id: p.id,
       title: p.data.title,

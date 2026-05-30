@@ -151,6 +151,7 @@ export default defineConfig({
             ],
           },
           { type: "image", name: "banner", label: "Banner" },
+          { type: "image", name: "gallery", label: "Galería", list: true },
           { type: "boolean", name: "isPublished", label: "Publicado" },
           { type: "rich-text", name: "body", label: "Descripción", isBody: true },
         ],
