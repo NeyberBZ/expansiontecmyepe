@@ -1,28 +1,15 @@
-# dependencies
 node_modules/
-
-# build
 dist/
 .astro/
-
-# local / deployment
 .vercel/
-
-# env
 .env
 .env.*
 !.env.example
-
-# logs
+.DS_Store
+.idea/
+node_modules/.vite
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
-# OS / editor
-.DS_Store
-.idea/
-
-# caches
-node_modules/.vite
 *.tsbuildinfo
