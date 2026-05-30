@@ -7,7 +7,7 @@ import tina from '@tinacms/astro/integration';
 
 export default defineConfig({
   site: "https://expansiontecmyepe.vercel.app",
-  output: "server",
+  output: "static",
   adapter: vercel(),
 
   integrations: [
