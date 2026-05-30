@@ -1,33 +1,24 @@
 ---
 // src/pages/tienda/producto/[slug].astro
 import client from "../../../../tina/__generated__/client";
-import { tinaField } from "@tinacms/astro/tina-field";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
-// export const prerender = false;
+export async function getStaticPaths() {
+  const productsResponse = await client.queries.productsConnection();
+  const products = productsResponse.data.productsConnection.edges;
+
+  return (products || []).map((edge) => ({
+    params: { slug: edge?.node?._sys?.filename },
+  })).filter((item) => item.params.slug);
+}
 
 const { slug } = Astro.params;
 
-if (!slug) {
-  return Astro.redirect("/tienda");
-}
-
-let tinaData;
-
-try {
-  tinaData = await client.queries.products({
-    relativePath: `${slug}.md`,
-  });
-} catch (error) {
-  console.error("❌ Error cargando producto desde Tina:", error);
-  return Astro.redirect("/tienda");
-}
+const tinaData = await client.queries.products({
+  relativePath: `${slug}.md`,
+});
 
 const producto = tinaData?.data?.products;
-
-if (!producto) {
-  return Astro.redirect("/tienda");
-}
 
 const safeTitle = producto.title
   .toLowerCase()
@@ -45,8 +36,9 @@ const discount = producto.salePrice
 
 <BaseLayout
   title={producto.seoTitle ?? producto.title}
-  description={producto.seoDescription ?? `Compra ${producto.title} en ExpansionTec Lima.`}
-  image={producto.images?.[0]}
+  description={producto.seoDescription ??
+    `Compra ${producto.title} en ExpansionTec Lima.`}
+  image={producto.images?.[0] || ""}
   type="product"
 >
   <script
@@ -72,20 +64,23 @@ const discount = producto.salePrice
     <div class="w-full h-23"></div>
 
     <div class="z-40 w-full bg-orange-100 shadow-sm overflow-x-auto">
-      <div class="max-w-350 mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap">
+      <div
+        class="max-w-350 mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap"
+      >
         <div class="flex items-center gap-4">
           <h1
-            data-tina-field={tinaField(producto, "title")}
             class="text-2xl font-body font-medium text-gray-900 uppercase tracking-tight"
           >
             {producto.title}
           </h1>
 
-          {discount && (
-            <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black">
-              -{discount}% OFF
-            </span>
-          )}
+          {
+            discount && (
+              <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black">
+                -{discount}% OFF
+              </span>
+            )
+          }
         </div>
 
         <nav class="hidden md:flex items-center gap-10">
@@ -103,30 +98,36 @@ const discount = producto.salePrice
             Especificaciones
           </button>
 
-          {producto.specs && producto.specs.length > 0 && (
-            <a
-              href={pdfUrl}
-              download
-              class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
-            >
-              Ficha Técnica
-            </a>
-          )}
+          {
+            producto.specs && producto.specs.length > 0 && (
+              <a
+                href={pdfUrl}
+                download
+                class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
+              >
+                Ficha Técnica
+              </a>
+            )
+          }
         </nav>
 
         <div class="flex items-center gap-6">
           <div class="flex flex-col items-end">
-            {producto.salePrice && (
-              <span class="text-xs text-gray-400 line-through">
-                S/ {producto.price}
-              </span>
-            )}
+            {
+              producto.salePrice && (
+                <span class="text-xs text-gray-400 line-through">
+                  S/ {producto.price}
+                </span>
+              )
+            }
             <span class="text-2xl font-black text-gray-900 leading-none">
               S/ {producto.salePrice || producto.price}
             </span>
           </div>
 
-          <button class="bg-[#0f172a] text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-800 transition-all">
+          <button
+            class="bg-[#0f172a] text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-800 transition-all"
+          >
             Comprar ahora
           </button>
         </div>
@@ -141,7 +142,6 @@ const discount = producto.salePrice
               src={producto.images?.[0]}
               alt={producto.title}
               class="rounded-3xl shadow-xl w-full"
-              data-tina-field={tinaField(producto, "images")}
             />
           </div>
 
@@ -150,32 +150,38 @@ const discount = producto.salePrice
               Descripción
             </h2>
 
-            <div data-tina-field={tinaField(producto, "shortDescription")}>
+            <div>
               {producto.shortDescription}
             </div>
           </div>
         </div>
       </div>
 
-      <div id="specs" class="tab-content hidden animate-in fade-in duration-500">
+      <div
+        id="specs"
+        class="tab-content hidden animate-in fade-in duration-500"
+      >
         <h2 class="text-2xl font-bold mb-8 font-satoshi uppercase">
           Especificaciones Técnicas
         </h2>
 
-        <div class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm">
-          {producto.specs?.map((spec, i) => (
-            <div
-              class={`grid grid-cols-1 md:grid-cols-3 p-6 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
-              data-tina-field={tinaField(spec)}
-            >
-              <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">
-                {spec.key}
-              </span>
-              <span class="md:col-span-2 text-gray-900 font-medium">
-                {spec.value}
-              </span>
-            </div>
-          ))}
+        <div
+          class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm"
+        >
+          {
+            producto.specs?.map((spec, i) => spec && (
+              <div
+                class={`grid grid-cols-1 md:grid-cols-3 p-6 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+              >
+                <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                  {spec.key}
+                </span>
+                <span class="md:col-span-2 text-gray-900 font-medium">
+                  {spec.value}
+                </span>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
