@@ -6,15 +6,17 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="gap-0">
-  <div class="w-full bg-linear-to-r from-black to-black/80">
+  <div
+    class="w-full bg-linear-to-r from-black to-gray-950 dark:bg-linear-to-r dark:from-gray-800 dark:to-gray-900"
+  >
     <div class="container mx-auto px-4 pt-16 pb-8">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-        <div class="space-y-6">
+        <div class="space-y-6 text-center md:text-left">
           <div class="flex items-center gap-3">
             <img
               src="/logo_dark.svg"
               alt="Expansion Logo"
-              class="h-18 w-auto transition-transform group-hover:scale-105"
+              class="h-18 w-auto transition-transform group-hover:scale-105 mx-auto md:mx-0"
               width="120"
               height="40"
             />
@@ -22,7 +24,7 @@ const currentYear = new Date().getFullYear();
           <p class="text-sm text-white">Lo mejor en Equipos</p>
         </div>
 
-        <div>
+        <div class="text-center md:text-left">
           <h3
             class="font-body text-lg text-white/80 font-medium mb-6 tracking-wide"
           >
@@ -60,7 +62,7 @@ const currentYear = new Date().getFullYear();
           </ul>
         </div>
 
-        <div>
+        <div class="text-center md:text-left">
           <h3
             class="font-body text-lg text-white/80 font-medium mb-6 tracking-wide"
           >
@@ -98,11 +100,11 @@ const currentYear = new Date().getFullYear();
             <li>
               <a
                 href="/libro-reclamaciones"
-                class="group inline-flex bg-linear-to-r from-red-400 to-red-600 items-center gap-3 px-6 py-3 rounded-lg hover:bg-gray-800 transition-all w-full mt-4"
+                class="group inline-flex bg-linear-to-r from-red-400 to-red-600 items-center gap-3 px-6 py-3 rounded-lg hover:bg-gray-800 transition-all w-full mt-4 justify-center md:justify-start"
               >
                 <Icon
                   name="book"
-                  class="w-5 h-5 text-black group-hover:text-black/60"
+                  class="w-8 h-8 text-black group-hover:text-black/60"
                 />
                 <span
                   class="text-black font-medium text-base group-hover:text-black/60 transition-colors"
@@ -113,14 +115,14 @@ const currentYear = new Date().getFullYear();
           </ul>
         </div>
 
-        <div class="space-y-8">
+        <div class="space-y-8 text-center md:text-left">
           <div>
             <h3
               class="font-body text-lg text-white/80 font-medium mb-6 tracking-wide"
             >
               Siguenos en
             </h3>
-            <div class="flex gap-4">
+            <div class="flex gap-4 justify-center md:justify-start">
               <a href="#" class="text-white hover:text-white transition-all"
                 ><Icon name="facebook" class="w-5 h-5" /></a
               >
@@ -145,11 +147,11 @@ const currentYear = new Date().getFullYear();
             >
               Servicio al cliente
             </h3>
-            <div class="text-white flex items-center gap-2">
+            <div class="text-white flex items-center gap-2 justify-center md:justify-start">
               <Icon name="phone" class="w-5 h-5 text-white" />
               <span>+51 984797688</span>
             </div>
-            <div class="text-white flex items-center gap-2">
+            <div class="text-white flex items-center gap-2 justify-center md:justify-start">
               <Icon name="mail" class="w-5 h-5 text-white" />
               <span>adm_mye@telcomsway.com</span>
             </div>

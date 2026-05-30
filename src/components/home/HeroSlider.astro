@@ -7,7 +7,7 @@ const slides = allSlides
   .sort((a: any, b: any) => a.data.order - b.data.order);
 ---
 
-<section class="hero-slider relative w-full h-96 md:h-96 lg:h-120 overflow-hidden">
+<section class="hero-slider relative w-full h-120 md:h-96 lg:h-120 overflow-hidden">
   <!-- Slides -->
   {slides.map((slide: any, i: number) => (
     <div
@@ -18,23 +18,25 @@ const slides = allSlides
       <img
         src={slide.data.image}
         alt={slide.data.imageAlt ?? slide.data.title}
-        class="absolute inset-0 w-full h-full object-cover"
+        class="absolute inset-0 w-full h-full object-cover md:object-cover object-[60%_75%] md:obhect-center"
       />
       <!-- Overlay oscuro -->
       <div class="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-black/10"></div>
 
       <!-- Contenido -->
-      <div class="relative z-10 h-full flex flex-col justify-center px-12 max-w-2xl">
-        <h2 class="text-white font-display font-black text-5xl md:text-6xl leading-tight mb-3">
+      <div class="relative z-10 h-full flex flex-col justify-end md:justify-center px-12 max-w-2xl">
+        <h2 class="text-white font-display font-black text-3xl md:text-6xl leading-tight mb-1 md:mb-3 ">
           {slide.data.title}
         </h2>
         {slide.data.subtitle && (
-          <p class="text-white/80 text-lg mb-6">{slide.data.subtitle}</p>
+          <p class="text-white/80 text-lg mb-2 md:mb-6 text-left">
+            {slide.data.subtitle}
+          </p>
         )}
         {slide.data.ctaUrl && slide.data.ctaLabel && (
           <a
             href={slide.data.ctaUrl}
-            class="inline-flex items-center gap-2 self-start border border-white text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-white hover:text-black transition-colors duration-200"
+            class="justify-center md:inline-flex items-center gap-2 self-start border border-white text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-white hover:text-black transition-colors duration-200 mb-10 md:mb-0"
           >
             {slide.data.ctaLabel}
             <span>→</span>

@@ -64,10 +64,10 @@ const gridProducts = products.slice(1, 5); // Tomamos los siguientes 4 para comp
                   </div>
                   <div class="absolute bottom-4 left-4 right-4 z-10p-5 flex-1 flex flex-col">
                     <div class="flex items-baseline gap-2">
-                      <span class="text-sm text-black group-hover:text-black/50 dark:text-white">
+                      <span class="text-sm text-black group-hover:text-black/50 dark:text-white dark:group-hover:text-white">
                         A
                       </span>
-                      <span class="text-2xl font-bold text-black group-hover:text-black/50 dark:text-white">
+                      <span class="text-2xl font-bold text-black group-hover:text-black/50 dark:text-white dark:group-hover:text-white">
                         S/{" "}
                         {mainProduct.data.salePrice?.toFixed(2) ||
                           mainProduct.data.price.toFixed(2)}
@@ -102,11 +102,11 @@ const gridProducts = products.slice(1, 5); // Tomamos los siguientes 4 para comp
                   class="h-full w-full flex flex-col"
                 >
                   <div class="relative p-4 flex flex-col gap-1 min-h-27.5 bg-linear-to-r from-slate-100 to-slate-300 group-hover:from-blue-100 group-hover:to-teal-300 transition-colors duration-300 dark:from-slate-800 dark:to-slate-900 dark:group-hover:from-gray-700 dark:group-hover:to-gray-800">
-                    <h3 class="font-bold text-base text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                    <h3 class="font-bold text-base text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 dark:text-white">
                       {p.data.title}
                     </h3>
                     {p.data.shortDescription && (
-                      <p class="text-[0.75rem] text-gray-600 line-clamp-1">
+                      <p class="text-[0.75rem] text-gray-600 line-clamp-1 dark:text-white/70">
                         {p.data.shortDescription}
                       </p>
                     )}
@@ -125,12 +125,12 @@ const gridProducts = products.slice(1, 5); // Tomamos los siguientes 4 para comp
                           <span class="text-xs text-gray-500 line-through">
                             S/ {p.data.price.toFixed(2)}
                           </span>
-                          <span class="text-lg font-bold text-gray-900">
+                          <span class="text-lg font-bold text-gray-900 dark:text-white">
                             S/ {p.data.salePrice.toFixed(2)}
                           </span>
                         </div>
                       ) : (
-                        <span class="text-lg font-bold text-gray-900">
+                        <span class="text-lg font-bold text-gray-900 dark:text-white">
                           S/ {p.data.price.toFixed(2)}
                         </span>
                       )}
