@@ -1,58 +1,28 @@
 # dependencies
 node_modules/
-jspm_packages/
 
-# build output
+# build
 dist/
 .astro/
+
+# local / deployment
 .vercel/
-out/
-.next/
-.nuxt/
-.svelte-kit/
-coverage/
-
-# caches
-.cache/
-.parcel-cache/
-.nyc_output/
-.npm
-.eslintcache
-.stylelintcache
-*.tsbuildinfo
-
-# logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
 # env
 .env
 .env.*
 !.env.example
 
-# OS / editors
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
 .DS_Store
 .idea/
-.vscode-test
 
-# misc
-pids
-*.pid
-*.seed
-*.pid.lock
-*.tgz
-.yarn-integrity
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+# caches
+node_modules/.vite
+*.tsbuildinfo
