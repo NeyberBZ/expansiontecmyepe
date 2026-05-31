@@ -87,6 +87,12 @@ const productsCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     shortDescription: z.string().optional(),
+    availableColors: z.array(
+      z.object({
+        name: z.string(),
+        hex: z.string(),
+      })
+    ).default([]),
     price: z.number(),
     salePrice: z.number().optional(),
     brand: z.string(),
@@ -94,10 +100,11 @@ const productsCollection = defineCollection({
     locations: z.array(z.object({
       location: z.string(),
     })).default([]),  // ← default vacío si no existe
+    mainImage: z.string().optional(),
     images: z.array(z.string()).default([]),  // ← sin .min(1), con default
     specs: z.array(z.object({
       key: z.string(),
-      value: z.string(),
+      value: z.any(),
     })).default([]),  // ← sin .optional(), con default vacío
     inStock: z.boolean().default(true),
     featured: z.boolean().default(false),

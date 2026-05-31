@@ -183,6 +183,33 @@ export default defineConfig({
             searchable: true
           },
           {
+            type: "object",
+            name: "availableColors",
+            label: "Colores disponibles",
+            list: true,
+            ui: {
+              itemProps: (item) => ({
+                label: item?.name || item?.hex || "Nuevo color",
+              }),
+            },
+            fields: [
+              {
+                type: "string",
+                name: "name",
+                label: "Nombre del color",
+              },
+              {
+                type: "string",
+                name: "hex",
+                label: "Color",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                },
+              },
+            ],
+          },
+          {
             type: "number",
             name: "price",
             label: "Precio",
@@ -217,6 +244,13 @@ export default defineConfig({
             name: "locations",
             label: "Sucursales disponibles",
             list: true,
+            ui: {
+              itemProps: (item) => {
+                return {
+                  label: item?.location || "Sucursal",
+                };
+              },
+            },
             fields: [
               {
                 type: "string",
@@ -229,6 +263,20 @@ export default defineConfig({
           },
           {
             type: "image",
+            name: "mainImage",
+            label: "Imagen principal",
+            ui: {
+              clearable: true,
+              format(value) {
+                return value?.startsWith("/") ? value : `/${value}`;
+              },
+              parse(value) {
+                return value?.startsWith("/") ? value.slice(1) : value;
+              },
+            },
+          },
+          {
+            type: "image",
             name: "images",
             label: "Imágenes",
             list: true,
@@ -238,9 +286,16 @@ export default defineConfig({
             name: "specs",
             label: "Especificaciones técnicas",
             list: true,
+            ui: {
+              itemProps: (item) => {
+                return {
+                  label: item?.key || "Nueva especificación",
+                };
+              },
+            },
             fields: [
-              { type: "string", name: "key", label: "Característica" },
-              { type: "string", name: "value", label: "Valor" },
+              { type: "string", name: "key", label: "Título" },
+              { type: "rich-text", name: "value", label: "Descripción" },
             ],
           },
           { type: "boolean", name: "inStock", label: "En stock" },

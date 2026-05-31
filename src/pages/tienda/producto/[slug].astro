@@ -2,6 +2,7 @@
 // src/pages/tienda/producto/[slug].astro
 import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { TinaMarkdown } from "tinacms/dist/rich-text";
 
 export async function getStaticPaths() {
   let products = [];
@@ -35,7 +36,7 @@ if (!slug || slug === "no-products") {
 const product = await getEntry("products", slug);
 if (!product) return Astro.redirect("/tienda");
 
-// const { Content } = await render(product);
+const { Content } = await render(product);
 
 // ✅ SINCRONIZACIÓN: Usamos la misma lógica de limpieza que en el script de Node.js
 // Esto elimina diagonales y caracteres especiales para que el link no se rompa
@@ -51,6 +52,20 @@ const pdfUrl = `/specs/${safeTitle}.pdf`;
 const discount = product.data.salePrice
   ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
   : null;
+
+// función simple de md a html para specs
+function mdToHtml(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // negrita
+    .replace(/\*(.*?)\*/g, "<em>$1</em>") // cursiva
+    .replace(/\\n|\n/g, "<br>") // saltos de línea
+    .replace(/\\\*/g, "*"); // asteriscos escapados
+}
+function normalizeImagePath(path?: string) {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return path.startsWith("/") ? path : `/${path}`;
+}
 ---
 
 <BaseLayout
@@ -66,11 +81,11 @@ const discount = product.data.salePrice
     set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Product",
-      name: product.title,
-      image: product.images,
+      name: product.data.title,
+      image: product.data.images,
       offers: {
         "@type": "Offer",
-        price: product.salePrice ?? product.price,
+        price: product.data.salePrice ?? product.data.price,
         priceCurrency: "PEN",
         availability: product.data.inStock
           ? "https://schema.org/InStock"
@@ -79,24 +94,26 @@ const discount = product.data.salePrice
     })}
   />
 
-  <div class="w-full mx-auto">
-    <div class="w-full h-23"></div>
+  <div class="w-full mx-auto bg-white dark:bg-black">
+    <div class="w-full h-22"></div>
 
-    <div class="z-40 w-full bg-orange-100 shadow-sm overflow-x-auto">
+    <div
+      class="z-40 w-full bg-linear-to-r from-blue-100 to-teal-200 shadow-sm overflow-x-auto dark:from-gray-900 dark:to-gray-950"
+    >
       <div
-        class="max-w-350 mx-auto px-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap"
+        class="w-full mx-auto px-4 pt-5 pb-4 h-20 flex items-center justify-between gap-8 whitespace-nowrap"
       >
         <div class="flex items-center gap-4">
           <h1
-            class="text-2xl font-body font-medium text-gray-900 uppercase tracking-tight"
+            class="text-2xl font-body font-medium text-gray-900 uppercase tracking-tight dark:text-white"
           >
-            {product.title}
+            {product.data.title}
           </h1>
 
           {
             discount && (
-              <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black">
-                -{discount}% OFF
+              <span class="bg-linear-to-r from-red-700 to-red-300 text-white px-3 py-1 rounded-full text-xs font-black">
+                -{discount}%
               </span>
             )
           }
@@ -105,14 +122,14 @@ const discount = product.data.salePrice
         <nav class="hidden md:flex items-center gap-10">
           <button
             data-tab-target="general"
-            class="tab-btn font-bold text-gray-500 hover:text-gray-900 transition-colors active-tab"
+            class="tab-btn active-tab font-medium text-gray-800 hover:text-red-600 transition-colors tracking-wider dark:text-white"
           >
             General
           </button>
 
           <button
             data-tab-target="specs"
-            class="tab-btn font-bold text-gray-500 hover:text-gray-900 transition-colors"
+            class="tab-btn font-normal text-gray-800 hover:text-red-600 transition-colors tracking-wider dark:text-white"
           >
             Especificaciones
           </button>
@@ -122,7 +139,7 @@ const discount = product.data.salePrice
               <a
                 href={pdfUrl}
                 download
-                class="flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-colors"
+                class="flex items-center gap-2 text-red-600 font-normal hover:text-red-700 transition-colors tracking-wider"
               >
                 Ficha Técnica
               </a>
@@ -139,13 +156,13 @@ const discount = product.data.salePrice
                 </span>
               )
             }
-            <span class="text-2xl font-black text-gray-900 leading-none">
+            <span class="text-2xl font-black text-gray-900 leading-none dark:text-white">
               S/ {product.data.salePrice || product.data.price}
             </span>
           </div>
 
           <button
-            class="bg-[#0f172a] text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-800 transition-all"
+            class="bg-black text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-800 transition-all dark:bg-red-600"
           >
             Comprar ahora
           </button>
@@ -153,24 +170,41 @@ const discount = product.data.salePrice
       </div>
     </div>
 
-    <div class="max-w-300 mx-auto px-4 py-12">
+    <div
+      class="max-w-7xl mx-auto px-4 py-12 justify-center bg-white dark:bg-black mt-2"
+    >
       <div id="general" class="tab-content block">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
-          <div id="product-images">
+        <div class="grid grid-cols-1 gap-12 mb-20">
+          <!-- <div id="product-images">
             <img
               src={product.data.images?.[0]}
               alt={product.data.title}
-              class="rounded-3xl shadow-xl w-full"
+              class="w-full"
             />
-          </div>
+          </div> -->
 
-          <div class="prose prose-lg max-w-none">
-            <h2 class="text-2xl font-bold mb-4 font-satoshi uppercase">
-              Descripción
-            </h2>
-
-            <div>
+          <div>
+            <div class="text-3xl font-sans font-medium mb-4 text-center">
               {product.data.shortDescription}
+            </div>
+            <div
+              class="product-body
+              prose
+              prose-lg
+              max-w-none
+              prose-headings:font-bold
+              prose-headings:text-blue-900
+              prose-p:text-center
+              prose-p:text-gray-700
+              prose-p:leading-relaxed
+              prose-a:text-blue-800
+              prose-strong:text-gray-900
+              prose-ul:text-gray-700
+              prose-ol:text-gray-700
+              prose-blockquote:border-blue-900
+              prose-blockquote:text-gray-600"
+            >
+              <Content />
             </div>
           </div>
         </div>
@@ -178,28 +212,69 @@ const discount = product.data.salePrice
 
       <div
         id="specs"
-        class="tab-content hidden animate-in fade-in duration-500"
+        class="tab-content w-full mx-auto px-6 hidden animate-in fade-in duration-500"
       >
-        <h2 class="text-2xl font-bold mb-8 font-satoshi uppercase">
-          Especificaciones Técnicas
-        </h2>
-
-        <div
-          class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm"
-        >
+        <div>
+          <div id="product-image justify-center">
+            <img
+              src={normalizeImagePath(product.data.mainImage) ??
+                normalizeImagePath(product.data.images)?.[0]}
+              alt={product.data.title}
+              class="w-full py-16 object-contain max-h-160"
+            />
+          </div>
+          {
+            product.data.availableColors?.length > 0 && (
+              <div class="grid grid-cols-1 gap-4 py-16">
+                <div class="flex flex-wrap justify-center gap-4">
+                  {product.data.availableColors.map((color: any) => (
+                    <div class="flex items-center gap-6">
+                      <span
+                        class="w-8 h-8 rounded-full border-2 shadow-xs"
+                        style={`background-color: ${color.hex}; border-color: ${color.hex};`}
+                        title={color.name}
+                      />
+                      <span class="text-xl text-gray-700">{color.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          }
           {
             product.data.specs?.map(
-              (spec: any, i: any) =>
+              (spec: any) =>
                 spec && (
-                  <div
-                    class={`grid grid-cols-1 md:grid-cols-3 p-6 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
-                  >
-                    <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 py-16 border-t border-black">
+                    <div class="text-4xl font-medium text-black capitalize tracking-normal dark:text-white">
                       {spec.key}
-                    </span>
-                    <span class="md:col-span-2 text-gray-900 font-medium">
-                      {spec.value}
-                    </span>
+                    </div>
+
+                    <div
+                      class="col-span-2
+                        text-gray-950
+                        prose
+                        prose-lg
+                        max-w-none
+                        prose-headings:font-bold
+                        prose-headings:text-blue-900
+                        prose-p:text-gray-700
+                        prose-p:leading-relaxed
+                        prose-a:text-blue-800
+                        prose-strong:text-gray-900
+                        prose-ul:text-gray-700
+                        prose-ol:text-gray-700
+                        prose-blockquote:border-blue-900
+                        prose-blockquote:text-gray-600
+                        dark:text-white
+                    "
+                    >
+                      {typeof spec.value === "string" ? (
+                        <Fragment set:html={mdToHtml(spec.value)} />
+                      ) : (
+                        <TinaMarkdown content={spec.value} />
+                      )}
+                    </div>
                   </div>
                 ),
             )
@@ -216,8 +291,8 @@ const discount = product.data.salePrice
     tabBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-tab-target");
-        tabBtns.forEach((b) => b.classList.remove("active-tab"));
-        btn.classList.add("active-tab");
+        tabBtns.forEach((b) => b.classList.remove("active-tab", "font-normal", "font-medium"));
+        btn.classList.add("active-tab", "font-medium");
 
         tabContents.forEach((content) => {
           if (content.id === target) {
@@ -231,4 +306,18 @@ const discount = product.data.salePrice
       });
     });
   </script>
+  <style>
+    .product-body p:has(img) {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .product-body p img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
 </BaseLayout>
