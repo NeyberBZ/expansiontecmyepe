@@ -19,7 +19,10 @@
     "fix:refs:watch": "node scripts/fix-tina-refs-watch.mjs",
     "lint": "astro check",
     "clean": "rm -rf dist .astro node_modules/.vite",
-    "prepare": "husky"
+    "prepare": "husky",
+    "backup:content": "node scripts/backup-content-to-supabase.mjs",
+    "backup:media": "node scripts/backup-media-to-supabase.mjs",
+    "backup:full": "npm run backup:content && npm run backup:media"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -28,6 +31,7 @@
     "@astrojs/vercel": "^10.0.7",
     "@nanostores/persistent": "^1.3.3",
     "@nanostores/react": "^1.1.0",
+    "@supabase/supabase-js": "^2.108.2",
     "@tailwindcss/vite": "^4.3.0",
     "@tinacms/astro": "^0.3.0",
     "@tinacms/bridge": "^0.3.0",
