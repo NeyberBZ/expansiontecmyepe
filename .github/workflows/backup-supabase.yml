@@ -1,4 +1,6 @@
+# .github/workflows/backup-supabase.yml
 name: Backup to Supabase
+
 on:
   push:
     branches: [main]   # se dispara cada vez que haces merge a main
