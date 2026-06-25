@@ -8,7 +8,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
-  brand: string;
+  brand: string;s
   maxStock?: number;
 }
 

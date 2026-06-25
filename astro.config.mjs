@@ -3,43 +3,33 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
-import tina from '@tinacms/astro/integration';
 
 export default defineConfig({
   site: "https://expansiontecmyepe.vercel.app",
-  output: "static",
+  output: "server",
   adapter: vercel(),
-
   integrations: [
     react(),
-    tina(),
+
     sitemap({
       filter: (page) => !page.includes("/admin"),
     }),
   ],
-
   vite: {
     plugins: [tailwindcss()],
     build: {
       cssMinify: true,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // ❌ No incluir react, nanostores, etc.
-            // ✅ Solo si tienes módulos propios grandes
-            // 'shop': ['./src/components/shop/AddToCart.tsx', './src/components/shop/CartDrawer.tsx'],
-          },
-        },
-      },
     },
     ssr: {
-      noExternal: ['@nanostores/react', 'nanostores'],
+      noExternal: [
+        "@nanostores/react",
+        "nanostores",
+      ],
     },
   },
-
   image: {
     service: {
-      entrypoint: "astro/assets/services/sharp"
+      entrypoint: "astro/assets/services/sharp",
     },
   },
 });
